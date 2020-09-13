@@ -24,5 +24,29 @@ entries:
    - config
   comment: null
   start: 2020-09-13 15:17:40
-  stop:
+  stop: 2020-09-13 15:31:13
+ -
+  subproject: env
+  task: Setup firebase
+  tags:
+   - config
+  comment: null
+  start: 2020-09-13 15:31:31
+  stop: 2020-09-13 16:21:18
+ -
+  subproject: frontend
+  task: Setup vue
+  tags:
+   - frontend
+  comment: null
+  start: 2020-09-13 18:34:16
+  stop: 2020-09-13 18:42:52
+ -
+  subproject: frontend
+  task: Setup vue
+  tags:
+   - frontend
+  comment: null
+  start: 2020-09-13 18:45:37
+  stop: 2020-09-13 19:07:10
 
