@@ -42,5 +42,16 @@ service cloud.firestore {
     match /roles/member/uids/{uid} {
       allow write: if userHasRole("leader", request.auth.uid);
     }
+
+
+
+    ///////////
+    // Users //
+    ///////////
+
+    match /users/{uid} {
+      allow write: if false;
+      allow read: if userHasRole("leader", request.auth.uid);
+    }
   }
 }
