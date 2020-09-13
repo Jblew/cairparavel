@@ -4,7 +4,8 @@
     "indexes": "firestore/indexes.json"
   },
   "hosting": {
-    "public": "web/public",
+    "site": "cairparavelapp",
+    "public": "web/dist",
     "ignore": [
       "firebase.json",
       "**/.*",
