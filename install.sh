@@ -4,6 +4,10 @@ cd "${DIR}"
 
 echo "# Installing cairparavel"
 
+echo "## Building web"
+./web/build.sh
+echo "## Building web done"
+
 echo "## Deploying firestore and hosting"
 firebase deploy --only firestore,hosting
 echo "## Deploying firestore and hosting done"
