@@ -40,7 +40,7 @@ service cloud.firestore {
 
     // Role: member
     match /roles/member/uids/{uid} {
-      allow write: if userHasRole("leader");
+      allow write: if userHasRole("leader", request.auth.uid);
     }
   }
 }
