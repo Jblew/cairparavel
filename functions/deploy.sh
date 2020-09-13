@@ -17,6 +17,8 @@ fi
 
 ./generate-config.sh
 
+gcloud config set project "${GCP_PROJECT_ID}"
+
 gcloud functions deploy FnOnUserCreated \
   --trigger-event providers/firebase.auth/eventTypes/user.create \
   --trigger-resource "${GCP_PROJECT_ID}" \

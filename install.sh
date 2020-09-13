@@ -5,6 +5,10 @@ set -e
 
 echo "# Installing cairparavel"
 
+echo "## Deploying functions"
+./functions/deploy.sh
+echo "## Deploying functions done"
+
 echo "## Building web"
 ./web/build.sh
 echo "## Building web done"
