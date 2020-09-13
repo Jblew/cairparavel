@@ -3,15 +3,25 @@
     <img src="/logo.svg" class="logo" />
 
     <h1>Hi, {{ user.displayName }}</h1>
-    <div class="logout-link">
-      <router-link to="/logout">Log me out</router-link>
+    <div class="logout-link-container">
+      <logout-link />
     </div>
+
+    <menu-bar />
+    <br />
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
+import LogoutLink from './LogoutLink.vue'
+import MenuBar from './MenuBar.vue'
 
-@Component
+@Component({
+  components: {
+    LogoutLink,
+    MenuBar,
+  }
+})
 export default class AuthenticatedHeader extends Vue {
   @Inject()
   public readonly firebase!: firebase.app.App;
@@ -32,14 +42,12 @@ export default class AuthenticatedHeader extends Vue {
   margin: 0;
 }
 
-.logout-link {
-  text-align: left;
-  width: 100%;
-  font-size: 75%;
-}
-
 .logo {
   height: 3rem;
   float: right;
+}
+
+.logout-link-container {
+  width: 100%;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <authenticated-layout>
-    <p>Lorem ipsum</p>
+    <p>Members</p>
   </authenticated-layout>
 </template>
 <script lang="ts">
@@ -12,11 +12,8 @@ import { AuthenticatedLayout } from '@/features/layout';
     AuthenticatedLayout,
   },
 })
-export default class HomePage extends Vue {
-  @Inject()
-  public readonly firebase!: firebase.app.App;
+export default class MembersPage extends Vue {
 
-  public user: firebase.User = this.firebase.auth().currentUser!;
 }
 </script>
 

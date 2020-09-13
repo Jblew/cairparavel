@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { App } from './components';
 import { constructFirebaseApp } from './config';
 import { HomePage } from '@/features/home';
+import { MembersPage } from '@/features/members';
 import { LoginPage, LogoutPage, installFirebaseAuthHooksToVueRouter } from '@/features/auth';
 import VueRouter from 'vue-router';
 import VueHotkey from 'v-hotkey';
@@ -17,6 +18,7 @@ const firebase = constructFirebaseApp();
 
 const routes = [
   { path: '/', component: HomePage, meta: { requiresAuth: true } },
+  { path: '/members', component: MembersPage, meta: { requiresAuth: true } },
   { path: '/login', component: LoginPage },
   { path: '/logout', component: LogoutPage },
 ];
