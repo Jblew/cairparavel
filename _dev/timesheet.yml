@@ -1,0 +1,28 @@
+###################
+# Doing timesheet #
+###################
+
+# This time sheet was created using Doing time tracker:
+#   https://github.com/Jblew/doing-time-tracker
+# For convenience it uses a yaml document format.
+
+
+---
+entries:
+ -
+  subproject: env
+  task: Setup workspace
+  tags:
+   - config
+  comment: null
+  start: 2020-09-13 15:17:28
+  stop: 2020-09-13 15:17:38
+ -
+  subproject: env
+  task: Setup workspace
+  tags:
+   - config
+  comment: null
+  start: 2020-09-13 15:17:40
+  stop:
+
