@@ -17,9 +17,9 @@ type AuthEvent struct {
 
 // UserDoc is type for /users/{uid} document
 type UserDoc struct {
-	Email    string    `json:"email"`
-	UID      string    `json:"uid"`
-	JoinedAt time.Time `json:"joinedAt"`
+	Email    string    `json:"Email"`
+	UID      string    `json:"UID"`
+	JoinedAt time.Time `json:"JoinedAt"`
 }
 
 const usersCol = "users"
