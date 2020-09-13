@@ -17,3 +17,4 @@ import AuthenticatedHeader from './AuthenticatedHeader.vue'
 export default class AuthenticatedLayout extends Vue {
 }
 </script>
+

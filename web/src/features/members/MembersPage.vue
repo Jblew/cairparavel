@@ -3,7 +3,7 @@
     <stateful-resource :resource="membersResource">
       <ul>
         <li v-for="member in members" :key="member.uid">
-          {{ member.email }}
+          {{ member.Email }}
         </li>
       </ul>
     </stateful-resource>
@@ -29,7 +29,9 @@ export default class MembersPage extends Vue {
   }
 
   get members(): UserDoc[] {
-    return this.membersResource.result || []
+    const members = this.membersResource.result || []
+    console.log({ members })
+    return members
   }
 }
 </script>
