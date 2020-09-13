@@ -37,4 +37,7 @@ export default class MembersPage extends Vue {
 </script>
 
 <style scoped>
+ul li {
+  text-align: left;
+}
 </style>

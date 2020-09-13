@@ -29,4 +29,7 @@ export default class extends Vue {
 </script>
 
 <style scoped>
+span {
+  text-align: left;
+}
 </style>
