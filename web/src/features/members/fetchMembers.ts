@@ -1,10 +1,11 @@
 import firebase from 'firebase/app';
-
-const usersColName = "users"
+import { projectConfig } from '@/config';
 
 export async function fetchMembers(): Promise<UserDoc[]> {
-  const snapshot = await firebase.firestore().collection(usersColName).orderBy('JoinedAt', 'desc').get()
-  console.log(snapshot)
+  const snapshot = await firebase.firestore()
+    .collection(projectConfig.users.firestoreCollection)
+    .orderBy('JoinedAt', 'desc')
+    .get()
   if (snapshot.empty) return []
   return snapshot.docs.map(doc => doc.data() as UserDoc)
 }

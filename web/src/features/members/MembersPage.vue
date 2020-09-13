@@ -3,7 +3,7 @@
     <stateful-resource :resource="membersResource">
       <ul>
         <li v-for="member in members" :key="member.uid">
-          {{ member.Email }}
+          <member-item :member="member" />
         </li>
       </ul>
     </stateful-resource>
@@ -14,11 +14,13 @@ import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
 import { AuthenticatedLayout } from '@/features/layout';
 import { StatefulResource, Resource } from 'vue-stateful-resource';
 import { UserDoc, fetchMembers } from './fetchMembers'
+import MemberItem from './MemberItem.vue'
 
 @Component({
   components: {
     AuthenticatedLayout,
     StatefulResource,
+    MemberItem,
   },
 })
 export default class MembersPage extends Vue {
@@ -29,9 +31,7 @@ export default class MembersPage extends Vue {
   }
 
   get members(): UserDoc[] {
-    const members = this.membersResource.result || []
-    console.log({ members })
-    return members
+    return this.membersResource.result || []
   }
 }
 </script>
