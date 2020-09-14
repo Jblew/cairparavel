@@ -7,8 +7,8 @@ export interface Event {
   endTime: number
   timeConfirmed: boolean
   signupTime: number,
-  votes: Record<Uid, EventTimeVote>
-  signedMembers: Record<Uid, UserDisplayName>
+  votes: Record<Uid, EventTimeVotes>
+  signedMembers: Record<Uid, { displayName: UserDisplayName }>
   minParticipants: number
   maxParticipants: number
   name: string
@@ -17,9 +17,9 @@ export interface Event {
   canSuggestTime: boolean
 }
 
-interface EventTimeVote {
-  userDisplayName: UserDisplayName
-  time: number
+export interface EventTimeVotes {
+  displayName: UserDisplayName
+  times: number[]
 }
 
 type Uid = string
