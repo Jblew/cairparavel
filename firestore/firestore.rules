@@ -73,7 +73,7 @@ service cloud.firestore {
     }
 
     function ensureEventCreateFields() {
-      return notUpdating('votes', 'signedMembers')
+      return notUpdating('votes') && notUpdating('signedMembers')
     }
 
     function inVotingModificationPeriod() {
@@ -88,7 +88,7 @@ service cloud.firestore {
       allow list: if isAuthenticatedMember();
       allow create: if isAuthenticatedMember() && ensureOwnerUid() && ensureEventCreateFields();
       allow delete: if false;
-      allow update: if ensureEventCreateFields() || ownerConfirming();
+      allow update: if ensureEventCreateFields() || resource.data.ownerUid == request.auth.uid;
 
       match /votes/{uid} {
         allow read: if isAuthenticatedMember();
