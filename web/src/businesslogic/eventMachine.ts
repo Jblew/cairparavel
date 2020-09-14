@@ -175,6 +175,7 @@ export const eventMachine = Machine<
   },
   {
     actions: {
+      logError: (_, { data }: any) => console.error(new Error(data)),
     },
   },
 )
