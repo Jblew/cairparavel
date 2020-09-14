@@ -16,6 +16,7 @@ interface Schema {
     SignupClosed: {}
     InProggress: {}
     Finished: {}
+    DoUpdateDetails: {}
   }
 }
 
@@ -31,6 +32,7 @@ type Events =
   | { type: 'CONFIRM_TIME' }
   | { type: 'SIGNUP_MEMBER' }
   | { type: 'SIGNOUT_MEMBER' }
+  | { type: 'UPDATE_DETAILS', name: string, description: string }
   | { type: 'ERROR', message: string }
 
 interface Context {
@@ -49,8 +51,9 @@ export const eventMachine = Machine<
     states: {
       TimeVoting: {
         on: {
-          '': { target: 'WaitingForTimeConfirm', cond: (ctx) => nowS() >= ctx.event.votingTimeS },
+          '': { target: 'WaitingForTimeConfirm', cond: (ctx) => now() >= ctx.event.votingTime },
           TIME_VOTE: 'DoTimeVote',
+          UPDATE_DETAILS: { target: 'DoUpdateDetails', cond: (ctx) => ctx.currentUid === ctx.event.ownerUid },
           UPDATED: '',
         },
         after: { 1000: '' }
@@ -66,10 +69,11 @@ export const eventMachine = Machine<
         on: {
           '': [
             { target: 'MembersSignup', cond: (ctx) => ctx.event.timeConfirmed },
-            { target: 'TimeVoting', cond: (ctx) => nowS() < ctx.event.votingTimeS },
-            { target: 'Cancelled', cond: (ctx) => nowS() >= ctx.event.startTimeS },
+            { target: 'TimeVoting', cond: (ctx) => now() < ctx.event.votingTime },
+            { target: 'Cancelled', cond: (ctx) => now() >= ctx.event.startTime },
           ],
-          CONFIRM_TIME: { target: 'DoTimeConfirm', cond: (ctx) => ctx.currentUid === ctx.event.ownerUid && nowS() < ctx.event.startTimeS },
+          UPDATE_DETAILS: { target: 'DoUpdateDetails', cond: (ctx) => ctx.currentUid === ctx.event.ownerUid },
+          CONFIRM_TIME: { target: 'DoTimeConfirm', cond: (ctx) => ctx.currentUid === ctx.event.ownerUid && now() < ctx.event.startTime },
           UPDATED: '',
         },
         after: { 1000: '' }
@@ -84,11 +88,11 @@ export const eventMachine = Machine<
       MembersSignup: {
         on: {
           '': [
-            { target: 'SignupClosed', cond: (ctx) => nowS() >= ctx.event.signupTimeS && Object.keys(ctx.event.signedMembers).length >= ctx.event.minParticipants },
-            { target: 'Cancelled', cond: (ctx) => nowS() >= ctx.event.signupTimeS && Object.keys(ctx.event.signedMembers).length < ctx.event.minParticipants },
+            { target: 'SignupClosed', cond: (ctx) => now() >= ctx.event.signupTime && Object.keys(ctx.event.signedMembers).length >= ctx.event.minParticipants },
+            { target: 'Cancelled', cond: (ctx) => now() >= ctx.event.signupTime && Object.keys(ctx.event.signedMembers).length < ctx.event.minParticipants },
           ],
-          SIGNUP_MEMBER: { target: 'DoMemberSignup', cond: (ctx) => Object.keys(ctx.event.signedMembers).length < ctx.event.maxParticipants && nowS() < ctx.event.signupTimeS },
-          SIGNOUT_MEMBER: { target: 'DoMemberSignout', cond: (ctx) => nowS() < ctx.event.signupTimeS },
+          SIGNUP_MEMBER: { target: 'DoMemberSignup', cond: (ctx) => Object.keys(ctx.event.signedMembers).length < ctx.event.maxParticipants && now() < ctx.event.signupTime },
+          SIGNOUT_MEMBER: { target: 'DoMemberSignout', cond: (ctx) => now() < ctx.event.signupTime },
           UPDATED: '',
         },
         after: { 1000: '' }
@@ -110,7 +114,7 @@ export const eventMachine = Machine<
       SignupClosed: {
         on: {
           '': [
-            { target: 'InProggress', cond: (ctx) => nowS() >= ctx.event.startTimeS },
+            { target: 'InProggress', cond: (ctx) => now() >= ctx.event.startTime },
           ],
           UPDATED: '',
         },
@@ -119,7 +123,7 @@ export const eventMachine = Machine<
       InProggress: {
         on: {
           '': [
-            { target: 'Finished', cond: (ctx) => nowS() >= ctx.event.endTimeS },
+            { target: 'Finished', cond: (ctx) => now() >= ctx.event.endTime },
           ],
           UPDATED: '',
         },
@@ -127,6 +131,13 @@ export const eventMachine = Machine<
       },
       Finished: {},
       Cancelled: {},
+      DoUpdateDetails: {
+        invoke: {
+          src: 'updateDetails',
+          onDone: 'TimeVoting',
+          onError: { target: 'TimeVoting', actions: ['logError', send({ type: 'ERROR', message: 'Cannot update details' })] }
+        }
+      },
       Error: {
         on: {
           UPDATED: 'TimeVoting',
@@ -140,7 +151,7 @@ export const eventMachine = Machine<
   },
 )
 
-function nowS() {
+function now() {
   return Date.now() / 1000
 }
 

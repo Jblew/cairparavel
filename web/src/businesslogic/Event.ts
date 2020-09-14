@@ -2,21 +2,24 @@
 export interface Event {
   ownerUid: Uid
   ownerDisplayName: UserDisplayName
-  votingTimeS: number
-  startTimeS: number
-  endTimeS: number
+  votingTime: number
+  startTime: number
+  endTime: number
   timeConfirmed: boolean
-  signupTimeS: number,
-  votes: EventTimeVote[]
+  signupTime: number,
+  votes: Record<Uid, EventTimeVote>
   signedMembers: Record<Uid, UserDisplayName>
   minParticipants: number
   maxParticipants: number
+  name: string
+  description: string
+  allowedTimes: number[]
+  canSuggestTime: boolean
 }
 
 interface EventTimeVote {
-  uid: Uid,
   userDisplayName: UserDisplayName
-  timeS: number
+  time: number
 }
 
 type Uid = string

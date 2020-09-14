@@ -17,6 +17,11 @@ service cloud.firestore {
         return request.auth != null;
     }
 
+    function notUpdating(field) {
+      return !(field in request.resource.data)
+        || resource.data[field] == request.resource.data[field]
+    }
+
 
 
     /////////////////
@@ -52,6 +57,50 @@ service cloud.firestore {
     match /users/{uid} {
       allow write: if false;
       allow read: if userHasRole("leader", request.auth.uid);
+    }
+
+    function isAuthenticatedMember() {
+      return userHasRole("member", request.auth.uid);
+    }
+
+    ////////////
+    // Events //
+    ////////////
+
+    function ensureOwnerUid() {
+      return isAuthenticatedMember() && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerDisplayName == request.auth.token.name
+    }
+
+    function ensureEventCreateFields() {
+      return notUpdating('votes', 'signedMembers')
+    }
+
+    function inVotingModificationPeriod() {
+      return request.time < resource.data.votingTime
+    }
+
+    function inSignupPeriod() {
+      return request.time > resource.data.votingTime && request.time < resource.data.signupTime
+    }
+
+    match /events/{eventId} {
+      allow list: if isAuthenticatedMember();
+      allow create: if isAuthenticatedMember() && ensureOwnerUid() && ensureEventCreateFields();
+      allow delete: if false;
+      allow update: if ensureEventCreateFields() || ownerConfirming();
+
+      match /votes/{uid} {
+        allow read: if isAuthenticatedMember();
+        allow delete: if uid == request.auth.uid && inVotingModificationPeriod();
+        allow create, update: if uid == request.auth.uid && inVotingModificationPeriod();
+      }
+
+      match /signedMembers/{uid} {
+        allow read: if isAuthenticatedMember();
+        allow delete: if uid == request.auth.uid && inSignupPeriod();
+        allow create, update: if uid == request.auth.uid && inSignupPeriod();
+      }
     }
   }
 }
