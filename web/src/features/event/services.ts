@@ -16,7 +16,7 @@ export function syncEventActorFactory(eventId: string) {
   }
 }
 
-export async function timeVote(ctx: EventMachineContext, evt: { time: number }) {
+export async function timeVote(ctx: EventMachineContext, evt: { time: number } | any) {
   const docPath = projectConfig.events.firestoreEventVoteDoc(ctx.eventId, ctx.currentUid)
   const docRef = firebase.firestore().doc(docPath)
   const displayName = firebase.auth().currentUser!.displayName || 'Unknown'
@@ -29,7 +29,7 @@ export async function timeVote(ctx: EventMachineContext, evt: { time: number }) 
   return docRef.set(votes)
 }
 
-export async function timeUnvote(ctx: EventMachineContext, evt: { time: number }) {
+export async function timeUnvote(ctx: EventMachineContext, evt: { time: number } | any) {
   const docPath = projectConfig.events.firestoreEventVoteDoc(ctx.eventId, ctx.currentUid)
   const docRef = firebase.firestore().doc(docPath)
   const displayName = firebase.auth().currentUser!.displayName || 'Unknown'
@@ -42,7 +42,7 @@ export async function timeUnvote(ctx: EventMachineContext, evt: { time: number }
   return docRef.set(votes)
 }
 
-export async function timeConfirm(ctx: EventMachineContext, evt: { startTime: number, endTime: number }) {
+export async function timeConfirm(ctx: EventMachineContext, evt: { startTime: number, endTime: number } | any) {
   const docPath = projectConfig.events.firestoreEventDoc(ctx.eventId)
   const docRef = firebase.firestore().doc(docPath)
   const update: Partial<Event> = {
@@ -66,7 +66,7 @@ export async function memberSignout(ctx: EventMachineContext) {
   return docRef.delete()
 }
 
-export async function updateDetails(ctx: EventMachineContext, evt: { name: string, description: string }) {
+export async function updateDetails(ctx: EventMachineContext, evt: { name: string, description: string } | any) {
   const docPath = projectConfig.events.firestoreEventSignupDoc(ctx.eventId, ctx.currentUid)
   const docRef = firebase.firestore().doc(docPath)
   return docRef.set({
