@@ -48,6 +48,10 @@ export const eventMachine = Machine<
   {
     id: 'event',
     initial: 'TimeVoting',
+    activities: ['syncEvent'],
+    on: {
+      UPDATED: { actions: assign({ event: (_, evt: any) => evt.event }), }
+    },
     states: {
       TimeVoting: {
         on: {
