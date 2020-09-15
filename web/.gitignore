@@ -1,4 +1,5 @@
 .DS_Store
+serviceAccount.json
 node_modules
 /dist
 
