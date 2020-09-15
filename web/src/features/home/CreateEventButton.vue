@@ -1,6 +1,8 @@
 <template>
   <div class="create-event-btn">
-    <router-link to="/create-event">Create event</router-link>
+    <router-link to="/create-event" data-test="create-event-btn"
+      >Create event</router-link
+    >
   </div>
 </template>
 <script lang="ts">

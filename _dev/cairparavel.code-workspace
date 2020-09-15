@@ -7,6 +7,9 @@
       "path": "../web"
     },
     {
+      "path": "../web/tests/e2e/specs"
+    },
+    {
       "path": "../functions"
     }
   ],
