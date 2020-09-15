@@ -1,15 +1,33 @@
 <template>
   <div>
     <state-matches :state="state">
-      <template #DetailsSetup><panel-details-setup /></template>
-      <template #QuestionVoting><panel-question-voting /></template>
-      <template #VotingSetup><panel-voting-setup /></template>
-      <template #EventTimeSetup><panel-event-time-setup /></template>
-      <template #SignupSetup><panel-signup-setup /></template>
-      <template #ParticipantLimits><panel-participant-limits /></template>
-      <template #Confirm><panel-confirm /></template>
-      <template #Success><panel-success /></template>
-      <template #Error><panel-error /></template>
+      <template #DetailsSetup
+        ><panel-details-setup :machine="machine" :state="state"
+      /></template>
+      <template #QuestionVoting
+        ><panel-question-voting :machine="machine" :state="state"
+      /></template>
+      <template #VotingSetup
+        ><panel-voting-setup :machine="machine" :state="state"
+      /></template>
+      <template #EventTimeSetup
+        ><panel-event-time-setup :machine="machine" :state="state"
+      /></template>
+      <template #SignupSetup
+        ><panel-signup-setup :machine="machine" :state="state"
+      /></template>
+      <template #ParticipantLimits
+        ><panel-participant-limits :machine="machine" :state="state"
+      /></template>
+      <template #Confirm
+        ><panel-confirm :machine="machine" :state="state"
+      /></template>
+      <template #Success
+        ><panel-success :machine="machine" :state="state"
+      /></template>
+      <template #Error
+        ><panel-error :machine="machine" :state="state"
+      /></template>
     </state-matches>
   </div>
 </template>
@@ -42,10 +60,10 @@ import PanelVotingSetup from './PanelVotingSetup.vue'
   }
 })
 export default class extends Vue {
-  @Inject()
+  @Prop()
   machine: CreateEventInterpreter
 
-  @Inject()
+  @Prop()
   state: CreateEventInterpreter['state']
 }
 </script>

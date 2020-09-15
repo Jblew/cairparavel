@@ -1,5 +1,5 @@
 <template>
-  <create-event-panels />
+  <create-event-panels :machine="machine" :state="state" />
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Provide } from 'vue-property-decorator';
@@ -14,10 +14,8 @@ import { CreateEventPanels } from './panels'
   }
 })
 export default class CreateForm extends Vue {
-  @Provide()
   machine: CreateEventInterpreter = interpret(createEventMachine)
 
-  @Provide()
   state: CreateEventInterpreter['state'] = createEventMachine.initialState
 
   beforeMount() {

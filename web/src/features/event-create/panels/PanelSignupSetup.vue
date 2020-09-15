@@ -9,10 +9,10 @@ import { CreateEventInterpreter } from '../machine'
 
 @Component
 export default class extends Vue {
-  @Inject()
+  @Prop()
   machine: CreateEventInterpreter
 
-  @Inject()
+  @Prop()
   state: CreateEventInterpreter['state']
 }
 </script>
