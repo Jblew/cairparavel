@@ -1,0 +1,34 @@
+<template>
+  <create-event-panels />
+</template>
+<script lang="ts">
+import { Component, Prop, Vue, Provide } from 'vue-property-decorator';
+import { AuthenticatedLayout } from '@/features/layout';
+import { CreateEventInterpreter, createEventMachine } from './machine'
+import { interpret } from 'xstate';
+import { CreateEventPanels } from './panels'
+
+@Component({
+  components: {
+    CreateEventPanels,
+  }
+})
+export default class CreateForm extends Vue {
+  @Provide()
+  machine: CreateEventInterpreter = interpret(createEventMachine)
+
+  @Provide()
+  state: CreateEventInterpreter['state']
+
+  beforeMount() {
+    this.machine.onTransition((state) => this.state = state).start()
+  }
+
+  beforeDestroy() {
+    this.machine.stop()
+  }
+}
+</script>
+
+<style scoped>
+</style>

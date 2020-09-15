@@ -150,10 +150,10 @@ export const createEventMachine = Machine<
   }
 )
 
-export type EventMachineInterpreter = Interpreter<
+export type CreateEventInterpreter = Interpreter<
   Context,
   Schema,
   Events
 >
 
-export type EventMachineContext = Context
+export type CreateEventContext = Context
