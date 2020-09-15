@@ -1,69 +1,7 @@
 
 import { assign, Interpreter, Machine, send } from 'xstate'
-import { Event } from '@/businesslogic'
+import { Context, Events, Schema } from './types'
 
-const every = (...guards: any[]) => ({
-  type: 'every',
-  guards
-});
-
-interface Schema {
-  states: {
-    DetailsSetup: {}
-    QuestionVoting: {
-      states: {
-        Initial: {}
-        Voting: {},
-        NoVoting: {}
-      }
-    }
-    VotingSetup: {}
-    EventTimeSetup: {}
-    SignupSetup: {}
-    ParticipantLimits: {}
-    Confirm: {}
-    DoSave: {}
-    Success: {}
-    Error: {}
-  }
-}
-
-type Events =
-  | { type: 'BACK' }
-  | { type: 'NEXT' }
-  | {
-    type: 'SET_DETAILS'
-    details: { name: string, description: string }
-  }
-  | { type: 'CHOOSE_VOTING' }
-  | { type: 'CHOOSE_NO_VOTING' }
-  | {
-    type: 'SET_VOTING'
-    voting: {
-      canSuggestTime: boolean,
-      allowedTimes: number[]
-      votingTime: number
-    }
-  }
-  | {
-    type: 'SET_EVENT_TIME'
-    time: { startTime: number, endTime: number }
-  }
-  | {
-    type: 'SET_SIGNUP_TIME'
-    time: number
-  }
-  | {
-    type: 'SET_PARTICIPANT_LIMITS'
-    limits: { minParticipants: number, maxParticipants: number }
-  }
-  | {
-    type: 'DO_SAVE'
-  }
-
-interface Context {
-  event: Event
-}
 
 const initialContext: Context = {
   event: {
@@ -180,16 +118,37 @@ export const createEventMachine = Machine<
   {
     actions: {
       logError: (_, { data }: any) => console.error(new Error(data)),
+      assignDetails: assign({
+        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.details })
+      }),
+      enableVoting: assign({
+        event: (ctx) => ({ ...ctx.event, votingTime: Date.now() + 14 * 24 * 3600 })
+      }),
+      disableVoting: assign({
+        event: (ctx) => ({ ...ctx.event, votingTime: -1 })
+      }),
+      assignVoting: assign({
+        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.voting })
+      }),
+      assignEventTime: assign({
+        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.time })
+      }),
+      assignSignupTime: assign({
+        event: (ctx, evt: any) => ({ ...ctx.event, signupTime: evt.time })
+      }),
+      assignParticipantLimits: assign({
+        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.limits })
+      }),
     },
     guards: {
-      every: (ctx, event, { guard }: any) => {
-        const { guards } = guard;
-        return guards.every((guardKey: any) => guards[guardKey](ctx, event));
-      }
+      isDetailsValid: (_, evt: any) => evt.details.name.length > 5 && evt.details.description.length > 5,
+      isVotingValid: (_, evt: any) => evt.voting.votingTime > Date.now() && evt.voting.allowedTimes.every((time: number) => time > evt.voting.votingTime),
+      isEventTimeValid: (_, evt: any) => evt.time.startTime < evt.time.endTime && evt.time.startTime > Date.now(),
+      isSignupTimeValid: (_, evt: any) => evt.time > Date.now() && evt.time < evt.time.startTime,
+      isParticipantLimitsValid: (_, evt: any) => evt.limits.minParticipants > 0 && evt.limits.maxParticipants > evt.limits.minParticipants
     }
   }
 )
-
 
 export type EventMachineInterpreter = Interpreter<
   Context,
