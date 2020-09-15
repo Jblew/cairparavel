@@ -49,4 +49,100 @@ entries:
   comment: null
   start: 2020-09-13 18:45:37
   stop: 2020-09-13 19:07:10
+ -
+  subproject: design
+  task: Build use case diagrams
+  tags:
+   - uml
+   - planning
+  comment: null
+  start: 2020-09-13 19:30:24
+  stop: 2020-09-13 20:30:32
+ -
+  subproject: frontend
+  task: Build members view
+  tags:
+   - frontend
+  comment: null
+  start: 2020-09-13 20:30:36
+  stop: 2020-09-13 21:07:13
+ -
+  subproject: env
+  task: Setup go functions
+  tags:
+   - config
+   - functions
+  comment: null
+  start: 2020-09-13 21:07:14
+  stop: 2020-09-13 22:15:22
+ -
+  subproject: frontend
+  task: Members grant panel
+  tags:
+   - frontend
+   - members
+  comment: null
+  start: 2020-09-13 22:15:10
+  stop: 2020-09-13 23:00:20
+ -
+  subproject: frontend
+  task: Members grant panel
+  tags:
+   - frontend
+   - members
+  comment: null
+  start: 2020-09-13 23:18:22
+  stop: 2020-09-13 23:27:41
+ -
+  subproject: frontend
+  task: Members grant panel
+  tags:
+   - frontend
+   - members
+  comment: null
+  start: 2020-09-13 23:27:43
+  stop: 2020-09-13 23:45:51
+ -
+  subproject: design
+  task: Build statechart diagrams
+  tags:
+   - uml
+   - planning
+  comment: null
+  start: 2020-09-13 23:45:52
+  stop: 2020-09-14 00:14:08
+ -
+  subproject: frontend
+  task: Implement state machines with xstate
+  tags:
+   - statemachines
+  comment: null
+  start: 2020-09-14 00:14:09
+  stop: 2020-09-14 00:25:09
+ -
+  subproject: frontend
+  task: Implement state machines with xstate
+  tags:
+   - statemachines
+  comment: null
+  start: 2020-09-14 16:38:54
+  stop: 2020-09-14 19:50:14
+ -
+  subproject: frontend
+  task: Implement create event state machine
+  tags:
+   - statemachines
+   - create-event
+  comment: null
+  start: 2020-09-15 18:06:53
+  stop: 2020-09-16 20:32:25
+ -
+  subproject: frontend
+  task: Implement create event ui
+  tags:
+   - ui
+   - create-event
+  comment: null
+  start: 2020-09-16 00:03:40
+  stop: 2020-09-16 00:22:56
 
