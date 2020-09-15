@@ -12,6 +12,7 @@ describe("Create event", () => {
 
     cy.get('[data-test="panel-voting-question"]').should('be.visible')
     cy.get('[data-test="btn-choose-voting"]').click()
+    cy.get('[data-test="btn-next"]').click()
 
     cy.get('[data-test="panel-voting-setup"]').should('be.visible')
     cy.get('[data-test="input-can-suggest-time"]').click()
