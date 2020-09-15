@@ -29,7 +29,7 @@ export const createEventMachine = Machine<
   Events
 >(
   {
-    id: 'creaeEvent',
+    id: 'createEvent',
     initial: 'DetailsSetup',
     context: initialContext,
     states: {
@@ -56,12 +56,12 @@ export const createEventMachine = Machine<
           },
           Voting: {
             on: {
-              NEXT: { target: 'VotingSetup', actions: 'enableVoting' }
+              NEXT: { target: '#createEvent.VotingSetup', actions: 'enableVoting' }
             }
           },
           NoVoting: {
             on: {
-              NEXT: { target: 'EventTimeSetup', actions: 'disableVoting' }
+              NEXT: { target: '#createEvent.EventTimeSetup', actions: 'disableVoting' }
             }
           }
         }

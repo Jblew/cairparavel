@@ -15,6 +15,7 @@ export default class extends Vue {
   state!: State<any, any>
 
   get stateNames() {
+    console.log(this.state.toStrings())
     return this.state.toStrings()
   }
 }

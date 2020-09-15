@@ -23,15 +23,15 @@ describe("Create event", () => {
     cy.get('[data-test="input-voting-time"]').type('2030-04-15 00:00')
     cy.get('[data-test="btn-next"]').click()
 
-    cy.get('[data-test="panel-signup-time"]').should('be.visible')
-    cy.get('[data-test="input-signup-time"]').type('2030-04-20 17:00')
+    cy.get('[data-test="panel-signup-setup"]').should('be.visible')
+    cy.get('[data-test="input-signup-setup"]').type('2030-04-20 17:00')
     cy.get('[data-test="btn-next"]').click()
 
-    cy.get('[data-test="panel-participants-limits"]').should('be.visible')
+    cy.get('[data-test="panel-participant-limits"]').should('be.visible')
     cy.get('[data-test="btn-back"]').click()
     cy.get('[data-test="btn-next"]').click()
 
-    cy.get('[data-test="panel-participants-limits"]').should('be.visible')
+    cy.get('[data-test="panel-participant-limits"]').should('be.visible')
     cy.get('[data-test="input-min-participants"]').type('5')
     cy.get('[data-test="input-max-participants"]').type('10')
     cy.get('[data-test="btn-next"]').click()

@@ -18,10 +18,13 @@ export default class CreateForm extends Vue {
   machine: CreateEventInterpreter = interpret(createEventMachine)
 
   @Provide()
-  state: CreateEventInterpreter['state']
+  state: CreateEventInterpreter['state'] = createEventMachine.initialState
 
   beforeMount() {
-    this.machine.onTransition((state) => this.state = state).start()
+    this.machine.onTransition((state) => {
+      console.log(state)
+      this.state = state
+    }).start()
   }
 
   beforeDestroy() {
