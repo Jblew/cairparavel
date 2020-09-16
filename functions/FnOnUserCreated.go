@@ -22,7 +22,7 @@ type UserDoc struct {
 	JoinedAt time.Time `json:"JoinedAt"`
 }
 
-const usersCols = []string{
+var usersCols = []string{
 	"envs/prod/users",
 	"envs/test/users",
 }
@@ -44,7 +44,7 @@ func buildUserDoc(e AuthEvent) UserDoc {
 }
 
 func publishUserDoc(userDoc UserDoc) error {
-	for i, usersCol := range usersCols {
+	for _, usersCol := range usersCols {
 		docRef := application.Firestore.Collection(usersCol).Doc(userDoc.UID)
 		_, err := docRef.Create(application.Context, userDoc)
 		if err != nil {
