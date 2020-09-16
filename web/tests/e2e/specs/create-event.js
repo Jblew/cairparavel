@@ -1,5 +1,5 @@
 describe('Create event', () => {
-  beforeEach(() => cy.login())
+  beforeEach(() => cy.login() && cy.setCookie('e2e', '1'))
 
   it('Creates event with voting', () => {
     cy.visit('/#/create-event')

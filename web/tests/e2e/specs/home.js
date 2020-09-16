@@ -1,5 +1,5 @@
 describe('Home page', () => {
-  beforeEach(() => cy.login())
+  beforeEach(() => cy.login() && cy.setCookie('e2e', '1'))
 
   it('Shows home page', () => {
     cy.visit('/')

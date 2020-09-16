@@ -12,6 +12,5 @@ export function saveEvent(event: Event) {
   delete eventOwned['votes']
   delete eventOwned['signedMembers']
 
-  console.log(eventOwned)
   return firebase.firestore().collection(colPath).add(eventOwned)
 }
