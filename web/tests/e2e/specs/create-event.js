@@ -64,13 +64,17 @@ function fillVoting() {
 
 function fillDate() {
   cy.get('[data-test="panel-event-time-setup"]').should('be.visible')
-  cy.get('[data-test="input-time"]').type('2030-05-05 17:00')
+  cy.get('[data-test="input-start-time"] [data-test="input-date"]').type('2030-05-05')
+  cy.get('[data-test="input-start-time"] [data-test="input-time"]').type('17:00')
+  cy.get('[data-test="input-end-time"] [data-test="input-date"]').type('2030-05-05')
+  cy.get('[data-test="input-end-time"] [data-test="input-time"]').type('19:00')
   cy.get('[data-test="btn-next"]').click()
 }
 
 function setupSignup() {
   cy.get('[data-test="panel-signup-setup"]').should('be.visible')
-  cy.get('[data-test="input-signup-setup"]').type('2030-04-20 17:00')
+  cy.get('[data-test="input-signup-time"] [data-test="input-date"]').type('2030-04-20')
+  cy.get('[data-test="input-signup-time"] [data-test="input-time"]').type('17:00')
   cy.get('[data-test="btn-next"]').click()
 }
 
