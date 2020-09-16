@@ -22,7 +22,10 @@ type UserDoc struct {
 	JoinedAt time.Time `json:"JoinedAt"`
 }
 
-const usersCol = "users"
+const usersCols = []string{
+	"envs/prod/users",
+	"envs/test/users",
+}
 
 // FnOnUserCreated handles user created event
 func FnOnUserCreated(ctx context.Context, e AuthEvent) error {
@@ -41,9 +44,14 @@ func buildUserDoc(e AuthEvent) UserDoc {
 }
 
 func publishUserDoc(userDoc UserDoc) error {
-	docRef := application.Firestore.Collection(usersCol).Doc(userDoc.UID)
-	_, err := docRef.Create(application.Context, userDoc)
-	return err
+	for i, usersCol := range usersCols {
+		docRef := application.Firestore.Collection(usersCol).Doc(userDoc.UID)
+		_, err := docRef.Create(application.Context, userDoc)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func printDebug(e AuthEvent) {
