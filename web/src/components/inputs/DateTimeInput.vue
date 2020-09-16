@@ -1,7 +1,7 @@
 <template>
   <span>
-    <input type="date" v-model="dateIso" />
-    <input type="time" v-model="timeIso" />
+    <input type="date" v-model="dateIso" data-test="input-date" />
+    <input type="time" v-model="timeIso" data-test="input-time" />
   </span>
 </template>
 

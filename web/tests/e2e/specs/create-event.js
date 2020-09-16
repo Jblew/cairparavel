@@ -49,12 +49,16 @@ function chooseNoVoting() {
 function fillVoting() {
   cy.get('[data-test="panel-voting-setup"]').should('be.visible')
   cy.get('[data-test="input-can-suggest-time"]').click()
-  cy.get('[data-test="input-allowed-time-0"]').type('2030-05-05 17:00')
+  cy.get('[data-test="input-allowed-time-0"] [data-test="input-date"]').type('2030-05-05')
+  cy.get('[data-test="input-allowed-time-0"] [data-test="input-time"]').type('17:00')
   cy.get('[data-test="btn-add-allowed-time"]').click()
-  cy.get('[data-test="input-allowed-time-1"]').type('2030-05-04 1:00')
+  cy.get('[data-test="input-allowed-time-1"] [data-test="input-date"]').type('2030-05-04')
+  cy.get('[data-test="input-allowed-time-1"] [data-test="input-time"]').type('01:00')
   cy.get('[data-test="btn-add-allowed-time"]').click()
-  cy.get('[data-test="input-allowed-time-2"]').type('2030-05-06 17:00')
-  cy.get('[data-test="input-voting-time"]').type('2030-04-15 00:00')
+  cy.get('[data-test="input-allowed-time-2"] [data-test="input-date"]').type('2030-05-06')
+  cy.get('[data-test="input-allowed-time-2"] [data-test="input-time"]').type('17:00')
+  cy.get('[data-test="input-voting-time"] [data-test="input-date"]').type('2030-04-15')
+  cy.get('[data-test="input-voting-time"] [data-test="input-time"]').type('00:00')
   cy.get('[data-test="btn-next"]').click()
 }
 
