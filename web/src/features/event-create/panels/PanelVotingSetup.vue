@@ -53,7 +53,6 @@ export default class extends Vue {
   votingTime = Date.now()
 
   mounted() {
-    console.log(this.state.context.event)
     this.canSuggestTime = this.state.context.event.canSuggestTime
     this.allowedTimes = [
       ...this.state.context.event.allowedTimes,
