@@ -8,8 +8,8 @@
 
 // /* eslint-disable import/no-extraneous-dependencies, global-require */
 // const webpack = require('@cypress/webpack-preprocessor')
-const admin = require("firebase-admin");
-const cypressFirebasePlugin = require("cypress-firebase").plugin;
+const admin = require('firebase-admin')
+const cypressFirebasePlugin = require('cypress-firebase').plugin
 
 module.exports = (on, config) => {
   // on('file:preprocessor', webpack({
@@ -17,12 +17,12 @@ module.exports = (on, config) => {
   //  watchOptions: {}
   // }))
 
-  const extendedConfig = cypressFirebasePlugin(on, config, admin);
+  const extendedConfig = cypressFirebasePlugin(on, config, admin)
   return Object.assign({}, extendedConfig, {
-    fixturesFolder: "tests/e2e/fixtures",
-    integrationFolder: "tests/e2e/specs",
-    screenshotsFolder: "tests/e2e/screenshots",
-    videosFolder: "tests/e2e/videos",
-    supportFile: "tests/e2e/support/index.js"
-  });
-};
+    fixturesFolder: 'tests/e2e/fixtures',
+    integrationFolder: 'tests/e2e/specs',
+    screenshotsFolder: 'tests/e2e/screenshots',
+    videosFolder: 'tests/e2e/videos',
+    supportFile: 'tests/e2e/support/index.js',
+  })
+}

@@ -24,21 +24,21 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/database";
-import "firebase/firestore";
-import { attachCustomCommands } from "cypress-firebase";
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
+import 'firebase/firestore'
+import { attachCustomCommands } from 'cypress-firebase'
 
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAG3Q-B7U5rBgu5O5KJ5XeGlyHm-8m8Cis",
-  authDomain: "cairparavelapp.firebaseapp.com",
-  databaseURL: "https://cairparavelapp.firebaseio.com",
-  projectId: "cairparavelapp",
-  storageBucket: "cairparavelapp.appspot.com",
-  messagingSenderId: "486328450948",
-  appId: "1:486328450948:web:e78910b40a9d967f3e27d1"
-};
-firebase.initializeApp(FIREBASE_CONFIG);
+  apiKey: 'AIzaSyAG3Q-B7U5rBgu5O5KJ5XeGlyHm-8m8Cis',
+  authDomain: 'cairparavelapp.firebaseapp.com',
+  databaseURL: 'https://cairparavelapp.firebaseio.com',
+  projectId: 'cairparavelapp',
+  storageBucket: 'cairparavelapp.appspot.com',
+  messagingSenderId: '486328450948',
+  appId: '1:486328450948:web:e78910b40a9d967f3e27d1',
+}
+firebase.initializeApp(FIREBASE_CONFIG)
 
-attachCustomCommands({ Cypress, cy, firebase });
+attachCustomCommands({ Cypress, cy, firebase })
