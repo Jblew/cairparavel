@@ -24,6 +24,7 @@ export default class CreateForm extends Vue {
         console.log(state)
         this.state = state
       })
+      .onEvent(console.log)
       .start()
   }
 

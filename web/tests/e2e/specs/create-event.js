@@ -86,8 +86,8 @@ function testBackOnParticipants() {
 
 function fillParticinants() {
   cy.get('[data-test="panel-participant-limits"]').should('be.visible')
-  cy.get('[data-test="input-min-participants"]').type('5')
-  cy.get('[data-test="input-max-participants"]').type('10')
+  cy.get('[data-test="input-min-participants"]').clear().type('5')
+  cy.get('[data-test="input-max-participants"]').clear().type('10')
   cy.get('[data-test="btn-next"]').click()
 }
 
