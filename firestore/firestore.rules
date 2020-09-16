@@ -69,7 +69,6 @@ service cloud.firestore {
 
     function ensureOwnerUid() {
       return isAuthenticatedMember() && request.resource.data.ownerUid == request.auth.uid
-        && request.resource.data.ownerDisplayName == request.auth.token.name
     }
 
     function ensureEventCreateFields() {
