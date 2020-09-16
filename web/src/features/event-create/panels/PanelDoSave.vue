@@ -1,10 +1,6 @@
 <template>
-  <div data-test="panel-confirm">
-    <h2>Confirm</h2>
-
-    <p><button @click="save()" data-test="btn-next">Save</button></p>
-
-    <p><button @click="back()" data-test="btn-back">Back</button></p>
+  <div data-test="panel-do-save">
+    <h2>Saving...</h2>
   </div>
 </template>
 <script lang="ts">
@@ -18,14 +14,6 @@ export default class extends Vue {
 
   @Prop()
   state: CreateEventInterpreter['state']
-
-  save() {
-    this.machine.send('DO_SAVE')
-  }
-
-  back() {
-    this.machine.send('BACK')
-  }
 }
 </script>
 

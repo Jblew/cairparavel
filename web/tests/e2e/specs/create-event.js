@@ -95,5 +95,7 @@ function confirm() {
   cy.get('[data-test="panel-confirm"]').should('be.visible')
   cy.get('[data-test="btn-next"]').click()
 
+  cy.get('[data-test="panel-do-save"]').should('be.visible')
+
   cy.get('[data-test="panel-success"]').should('be.visible')
 }

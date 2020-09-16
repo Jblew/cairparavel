@@ -22,6 +22,9 @@
       <template #Confirm
         ><panel-confirm :machine="machine" :state="state"
       /></template>
+      <template #DoSave
+        ><panel-do-save :machine="machine" :state="state"
+      /></template>
       <template #Success
         ><panel-success :machine="machine" :state="state"
       /></template>
@@ -44,6 +47,7 @@ import PanelQuestionVoting from './PanelQuestionVoting.vue'
 import PanelSignupSetup from './PanelSignupSetup.vue'
 import PanelSuccess from './PanelSuccess.vue'
 import PanelVotingSetup from './PanelVotingSetup.vue'
+import PanelDoSave from './PanelDoSave.vue'
 
 @Component({
   components: {
@@ -57,6 +61,7 @@ import PanelVotingSetup from './PanelVotingSetup.vue'
     PanelSignupSetup,
     PanelSuccess,
     PanelVotingSetup,
+    PanelDoSave,
   },
 })
 export default class extends Vue {
