@@ -135,7 +135,7 @@ entries:
    - create-event
   comment: null
   start: 2020-09-15 18:06:53
-  stop: 2020-09-16 20:32:25
+  stop: 2020-09-15 20:32:25
  -
   subproject: frontend
   task: Implement create event ui
@@ -145,4 +145,43 @@ entries:
   comment: null
   start: 2020-09-16 00:03:40
   stop: 2020-09-16 00:22:56
+ -
+  subproject: frontend
+  task: Implement create event ui
+  tags:
+   - ui
+   - create-event
+  comment: null
+  start: 2020-09-16 00:58:41
+  stop: 2020-09-16 01:10:43
+ -
+  subproject: frontend
+  task: Implement create event ui
+  tags:
+   - ui
+   - create-event
+  comment: null
+  start: 2020-09-16 22:11:59
+  stop: 2020-09-16 23:31:56
+ -
+  subproject: frontend
+  task: Implement show event ui
+  tags:
+   - ui
+   - show events
+  comment: null
+  start: 2020-09-16 23:31:57
+  stop: 2020-09-16 23:50:29
+ -
+  subproject: env
+  task: Setup prod and test envs
+  tags:
+   - env
+   - ci
+   - config
+   - test
+   - e2e
+  comment: null
+  start: 2020-09-17 01:10:30
+  stop: 2020-09-17 01:32:32
 
