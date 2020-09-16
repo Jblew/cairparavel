@@ -175,7 +175,7 @@ export const createEventMachine = Machine<Context, Schema, Events>(
         evt.time.startTime < evt.time.endTime &&
         evt.time.startTime > Date.now(),
       isSignupTimeValid: (_, evt: any) =>
-        evt.time > Date.now() && evt.time < evt.time.startTime,
+        evt.time > Date.now(),
       isParticipantLimitsValid: (_, evt: any) =>
         evt.limits.minParticipants > 0 &&
         evt.limits.maxParticipants > evt.limits.minParticipants,
