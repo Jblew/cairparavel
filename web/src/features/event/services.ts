@@ -3,7 +3,7 @@ import firebase from 'firebase/app'
 import { EventMachineContext, Event, EventTimeVotes } from '@/businesslogic'
 
 export function syncEventActorFactory(eventId: string) {
-  return (ctx: EventMachineContext, _evt: any) => (
+  return (_ctx: EventMachineContext, _evt: any) => (
     send: any,
     _onReceive: any,
   ) => {
@@ -56,10 +56,10 @@ export async function timeUnvote(
   const currentVoteSnapshot = await docRef.get()
   const times: number[] = currentVoteSnapshot.exists
     ? [
-        ...currentVoteSnapshot
-          .data()!
-          .times.filter((time: any) => time != evt.time),
-      ]
+      ...currentVoteSnapshot
+        .data()!
+        .times.filter((time: any) => time != evt.time),
+    ]
     : []
   const votes: EventTimeVotes = {
     displayName,
