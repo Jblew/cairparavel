@@ -1,7 +1,5 @@
-
 import { assign, Interpreter, Machine, send } from 'xstate'
 import { Context, Events, Schema } from './types'
-
 
 const initialContext: Context = {
   event: {
@@ -19,15 +17,11 @@ const initialContext: Context = {
     name: '',
     description: '',
     allowedTimes: [],
-    canSuggestTime: true
-  }
+    canSuggestTime: true,
+  },
 }
 
-export const createEventMachine = Machine<
-  Context,
-  Schema,
-  Events
->(
+export const createEventMachine = Machine<Context, Schema, Events>(
   {
     id: 'createEvent',
     initial: 'DetailsSetup',
@@ -35,8 +29,12 @@ export const createEventMachine = Machine<
     states: {
       DetailsSetup: {
         on: {
-          SET_DETAILS: { target: 'QuestionVoting', cond: 'isDetailsValid', actions: 'assignDetails' },
-        }
+          SET_DETAILS: {
+            target: 'QuestionVoting',
+            cond: 'isDetailsValid',
+            actions: 'assignDetails',
+          },
+        },
       },
       QuestionVoting: {
         on: {
@@ -50,110 +48,141 @@ export const createEventMachine = Machine<
             on: {
               '': [
                 { target: 'Voting', cond: ctx => ctx.event!.votingTime != 0 },
-                { target: 'NoVoting' }
-              ]
-            }
+                { target: 'NoVoting' },
+              ],
+            },
           },
           Voting: {
             on: {
-              NEXT: { target: '#createEvent.VotingSetup', actions: 'enableVoting' }
-            }
+              NEXT: {
+                target: '#createEvent.VotingSetup',
+                actions: 'enableVoting',
+              },
+            },
           },
           NoVoting: {
             on: {
-              NEXT: { target: '#createEvent.EventTimeSetup', actions: 'disableVoting' }
-            }
-          }
-        }
+              NEXT: {
+                target: '#createEvent.EventTimeSetup',
+                actions: 'disableVoting',
+              },
+            },
+          },
+        },
       },
       VotingSetup: {
         on: {
-          SET_VOTING: { target: 'SignupSetup', cond: 'isVotingValid', actions: 'assignVoting' },
+          SET_VOTING: {
+            target: 'SignupSetup',
+            cond: 'isVotingValid',
+            actions: 'assignVoting',
+          },
           BACK: 'QuestionVoting',
-        }
+        },
       },
       EventTimeSetup: {
         on: {
-          SET_EVENT_TIME: { target: 'SignupSetup', cond: 'isEventTimeValid', actions: 'assignEventTime' },
+          SET_EVENT_TIME: {
+            target: 'SignupSetup',
+            cond: 'isEventTimeValid',
+            actions: 'assignEventTime',
+          },
           BACK: 'QuestionVoting',
-        }
+        },
       },
       SignupSetup: {
         on: {
-          SET_SIGNUP_TIME: { target: 'ParticipantLimits', cond: 'isSignupTimeValid', actions: 'assignSignupTime' },
+          SET_SIGNUP_TIME: {
+            target: 'ParticipantLimits',
+            cond: 'isSignupTimeValid',
+            actions: 'assignSignupTime',
+          },
           BACK: 'QuestionVoting',
-        }
+        },
       },
       ParticipantLimits: {
         on: {
-          SET_PARTICIPANT_LIMITS: { target: 'Confirm', cond: 'isParticipantLimitsValid', actions: 'assignParticipantLimits' },
+          SET_PARTICIPANT_LIMITS: {
+            target: 'Confirm',
+            cond: 'isParticipantLimitsValid',
+            actions: 'assignParticipantLimits',
+          },
           BACK: 'SignupSetup',
-        }
+        },
       },
       Confirm: {
         on: {
           DO_SAVE: 'DoSave',
           BACK: 'SignupSetup',
-        }
+        },
       },
       DoSave: {
         invoke: {
           src: 'saveEvent',
           onDone: 'Success',
-          onError: { target: 'Error', actions: 'logError' }
-        }
+          onError: { target: 'Error', actions: 'logError' },
+        },
       },
       Success: {
         on: {
-          BACK: 'Confirm'
-        }
+          BACK: 'Confirm',
+        },
       },
       Error: {
         on: {
-          BACK: 'Confirm'
-        }
-      }
+          BACK: 'Confirm',
+        },
+      },
     },
   },
   {
     actions: {
       logError: (_, { data }: any) => console.error(new Error(data)),
       assignDetails: assign({
-        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.details })
+        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.details }),
       }),
       enableVoting: assign({
-        event: (ctx) => ({ ...ctx.event, votingTime: Date.now() + 14 * 24 * 3600 })
+        event: ctx => ({
+          ...ctx.event,
+          votingTime: Date.now() + 14 * 24 * 3600,
+        }),
       }),
       disableVoting: assign({
-        event: (ctx) => ({ ...ctx.event, votingTime: -1 })
+        event: ctx => ({ ...ctx.event, votingTime: -1 }),
       }),
       assignVoting: assign({
-        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.voting })
+        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.voting }),
       }),
       assignEventTime: assign({
-        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.time })
+        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.time }),
       }),
       assignSignupTime: assign({
-        event: (ctx, evt: any) => ({ ...ctx.event, signupTime: evt.time })
+        event: (ctx, evt: any) => ({ ...ctx.event, signupTime: evt.time }),
       }),
       assignParticipantLimits: assign({
-        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.limits })
+        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.limits }),
       }),
     },
     guards: {
-      isDetailsValid: (_, evt: any) => evt.details.name.length > 5 && evt.details.description.length > 5,
-      isVotingValid: (_, evt: any) => evt.voting.votingTime > Date.now() && evt.voting.allowedTimes.every((time: number) => time > evt.voting.votingTime),
-      isEventTimeValid: (_, evt: any) => evt.time.startTime < evt.time.endTime && evt.time.startTime > Date.now(),
-      isSignupTimeValid: (_, evt: any) => evt.time > Date.now() && evt.time < evt.time.startTime,
-      isParticipantLimitsValid: (_, evt: any) => evt.limits.minParticipants > 0 && evt.limits.maxParticipants > evt.limits.minParticipants
-    }
-  }
+      isDetailsValid: (_, evt: any) =>
+        evt.details.name.length > 5 && evt.details.description.length > 5,
+      isVotingValid: (_, evt: any) =>
+        evt.voting.votingTime > Date.now() &&
+        evt.voting.allowedTimes.every(
+          (time: number) => time > evt.voting.votingTime,
+        ),
+      isEventTimeValid: (_, evt: any) =>
+        evt.time.startTime < evt.time.endTime &&
+        evt.time.startTime > Date.now(),
+      isSignupTimeValid: (_, evt: any) =>
+        evt.time > Date.now() && evt.time < evt.time.startTime,
+      isParticipantLimitsValid: (_, evt: any) =>
+        evt.limits.minParticipants > 0 &&
+        evt.limits.maxParticipants > evt.limits.minParticipants,
+    },
+  },
 )
 
-export type CreateEventInterpreter = Interpreter<
-  Context,
-  Schema,
-  Events
->
+export type CreateEventInterpreter = Interpreter<Context, Schema, Events>
 
 export type CreateEventContext = Context

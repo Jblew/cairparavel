@@ -1,8 +1,9 @@
-import firebase from 'firebase/app';
-import { projectConfig } from '@/config';
+import firebase from 'firebase/app'
+import { projectConfig } from '@/config'
 
 export async function fetchMembers(): Promise<UserDoc[]> {
-  const snapshot = await firebase.firestore()
+  const snapshot = await firebase
+    .firestore()
     .collection(projectConfig.users.firestoreCollection)
     .orderBy('JoinedAt', 'desc')
     .get()

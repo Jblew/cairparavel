@@ -1,8 +1,10 @@
-import firebase from 'firebase/app';
-import { projectConfig } from '@/config';
+import firebase from 'firebase/app'
+import { projectConfig } from '@/config'
 
 export async function revokeRole(uid: string, role: string) {
-  await firebase.firestore()
+  await firebase
+    .firestore()
     .collection(projectConfig.roles.firestoreCollection(role))
-    .doc(uid).delete()
+    .doc(uid)
+    .delete()
 }

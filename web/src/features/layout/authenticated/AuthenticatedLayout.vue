@@ -6,15 +6,13 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator'
 import AuthenticatedHeader from './AuthenticatedHeader.vue'
 
 @Component({
   components: {
     AuthenticatedHeader,
-  }
+  },
 })
-export default class AuthenticatedLayout extends Vue {
-}
+export default class AuthenticatedLayout extends Vue {}
 </script>
-

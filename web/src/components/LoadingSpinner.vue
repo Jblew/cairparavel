@@ -9,7 +9,7 @@
   </div>
 </template>
 <script lang="ts">
-export default {};
+export default {}
 </script>
 <style>
 .lds-ellipsis {

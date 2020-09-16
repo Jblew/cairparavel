@@ -10,8 +10,8 @@
   <grant-role-button v-else :role="role" :uid="uid" @granted="recheckRole" />
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { projectConfig } from '@/config';
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { projectConfig } from '@/config'
 import { checkHasRole } from './helpers'
 import GrantRoleButton from './GrantRoleButton.vue'
 import RevokeRoleButton from './RevokeRoleButton.vue'
@@ -20,7 +20,7 @@ import RevokeRoleButton from './RevokeRoleButton.vue'
   components: {
     RevokeRoleButton,
     GrantRoleButton,
-  }
+  },
 })
 export default class extends Vue {
   @Prop()
@@ -44,12 +44,14 @@ export default class extends Vue {
         this.hasRole = hasRole
         this.isLoading = false
         this.isError = false
-      }, err => {
+      },
+      err => {
         this.isError = true
         this.hasRole = false
         this.isLoading = false
         console.error(err)
-      })
+      },
+    )
   }
 }
 </script>

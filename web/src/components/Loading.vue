@@ -8,16 +8,15 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
-import LoadingSpinner from './LoadingSpinner.vue';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 @Component({
   components: {
     LoadingSpinner,
   },
 })
-export default class Loading extends Vue {
-}
+export default class Loading extends Vue {}
 </script>
 <style>
 .loading {

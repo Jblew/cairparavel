@@ -4,8 +4,8 @@
   </authenticated-layout>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
-import { AuthenticatedLayout } from '@/features/layout';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
+import { AuthenticatedLayout } from '@/features/layout'
 import CreateEventForm from './CreateEventForm.vue'
 
 @Component({
@@ -14,9 +14,7 @@ import CreateEventForm from './CreateEventForm.vue'
     CreateEventForm,
   },
 })
-export default class CreateEventPage extends Vue {
-}
+export default class CreateEventPage extends Vue {}
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -5,14 +5,14 @@
   </span>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
 import { UserDoc } from './fetchMembers'
 import { UserRoles } from './roles'
 
 @Component({
   components: {
     UserRoles,
-  }
+  },
 })
 export default class extends Vue {
   @Prop()

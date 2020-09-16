@@ -6,7 +6,7 @@
   <a v-else @click="grantRole" class="clickable">Grant {{ role }}</a>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { grantRole } from './helpers'
 
 @Component
@@ -27,11 +27,13 @@ export default class extends Vue {
         this.isLoading = false
         this.isError = false
         this.$emit('granted')
-      }, err => {
+      },
+      err => {
         this.isError = true
         this.isLoading = false
         console.error(err)
-      })
+      },
+    )
   }
 }
 </script>

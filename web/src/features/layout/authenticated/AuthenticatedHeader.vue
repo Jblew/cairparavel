@@ -12,7 +12,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
 import LogoutLink from './LogoutLink.vue'
 import MenuBar from './MenuBar.vue'
 
@@ -20,13 +20,13 @@ import MenuBar from './MenuBar.vue'
   components: {
     LogoutLink,
     MenuBar,
-  }
+  },
 })
 export default class AuthenticatedHeader extends Vue {
   @Inject()
-  public readonly firebase!: firebase.app.App;
+  public readonly firebase!: firebase.app.App
 
-  public user: firebase.User = this.firebase.auth().currentUser!;
+  public user: firebase.User = this.firebase.auth().currentUser!
 }
 </script>
 

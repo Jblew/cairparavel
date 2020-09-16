@@ -1,4 +1,3 @@
-
 export interface Event {
   ownerUid: Uid
   ownerDisplayName: UserDisplayName
@@ -6,7 +5,7 @@ export interface Event {
   startTime: number
   endTime: number
   timeConfirmed: boolean
-  signupTime: number,
+  signupTime: number
   votes: Record<Uid, EventTimeVotes>
   signedMembers: Record<Uid, { displayName: UserDisplayName }>
   minParticipants: number

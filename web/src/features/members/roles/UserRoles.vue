@@ -4,14 +4,14 @@
   </span>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
-import { projectConfig } from '@/config';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
+import { projectConfig } from '@/config'
 import UserRole from './UserRole.vue'
 
 @Component({
   components: {
     UserRole,
-  }
+  },
 })
 export default class extends Vue {
   @Prop()
@@ -23,5 +23,4 @@ export default class extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

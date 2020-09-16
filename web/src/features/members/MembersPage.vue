@@ -10,9 +10,9 @@
   </authenticated-layout>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
-import { AuthenticatedLayout } from '@/features/layout';
-import { StatefulResource, Resource } from 'vue-stateful-resource';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
+import { AuthenticatedLayout } from '@/features/layout'
+import { StatefulResource, Resource } from 'vue-stateful-resource'
 import { UserDoc, fetchMembers } from './fetchMembers'
 import MemberItem from './MemberItem.vue'
 
@@ -27,7 +27,11 @@ export default class MembersPage extends Vue {
   membersResource: Resource<UserDoc[]> = Resource.empty()
 
   mounted() {
-    Resource.fetchResource('members', fetchMembers, res => this.membersResource = res)
+    Resource.fetchResource(
+      'members',
+      fetchMembers,
+      res => (this.membersResource = res),
+    )
   }
 
   get members(): UserDoc[] {

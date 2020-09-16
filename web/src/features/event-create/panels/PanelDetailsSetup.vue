@@ -7,7 +7,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
 import { CreateEventInterpreter } from '../machine'
 
 @Component
@@ -29,11 +29,10 @@ export default class extends Vue {
   save() {
     this.machine.send({
       type: 'SET_DETAILS',
-      details: { name: this.name, description: this.description }
+      details: { name: this.name, description: this.description },
     })
   }
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

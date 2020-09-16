@@ -5,37 +5,35 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
-import firebase from 'firebase/app';
-import * as firebaseui from 'firebaseui';
-import 'firebaseui/dist/firebaseui.css';
-import { projectConfig } from '@/config';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
+import firebase from 'firebase/app'
+import * as firebaseui from 'firebaseui'
+import 'firebaseui/dist/firebaseui.css'
+import { projectConfig } from '@/config'
 
 @Component({
-  components: {
-  },
+  components: {},
 })
 export default class LoginPage extends Vue {
   @Inject()
-  public readonly firebase!: firebase.app.App;
+  public readonly firebase!: firebase.app.App
 
   public mounted() {
-    this.initializeFirebaseUI();
+    this.initializeFirebaseUI()
   }
 
   private initializeFirebaseUI() {
-    let ui = firebaseui.auth.AuthUI.getInstance();
+    let ui = firebaseui.auth.AuthUI.getInstance()
     if (!ui) {
-      ui = new firebaseui.auth.AuthUI(this.firebase.auth());
+      ui = new firebaseui.auth.AuthUI(this.firebase.auth())
     }
     const uiConfig = {
       signInSuccessUrl: '/',
       signInOptions: projectConfig.firebaseAuth.signInOptions,
-    };
-    ui.start('#firebaseui-auth-container', uiConfig);
+    }
+    ui.start('#firebaseui-auth-container', uiConfig)
   }
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

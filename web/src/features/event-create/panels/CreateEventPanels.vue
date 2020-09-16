@@ -32,7 +32,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator';
+import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
 import { CreateEventInterpreter } from '../machine'
 import { StateMatches } from '@/components'
 import PanelConfirm from './PanelConfirm.vue'
@@ -57,7 +57,7 @@ import PanelVotingSetup from './PanelVotingSetup.vue'
     PanelSignupSetup,
     PanelSuccess,
     PanelVotingSetup,
-  }
+  },
 })
 export default class extends Vue {
   @Prop()
@@ -68,5 +68,4 @@ export default class extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
