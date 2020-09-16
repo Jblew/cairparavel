@@ -23,20 +23,20 @@ interface Schema {
 
 type Events =
   | {
-      type: 'UPDATED'
-      data: Event
-    }
+    type: 'UPDATED'
+    data: Event
+  }
   | {
-      type: 'SYNC_ERROR'
-    }
+    type: 'SYNC_ERROR'
+  }
   | {
-      type: 'TIME_VOTE'
-      time: number
-    }
+    type: 'TIME_VOTE'
+    time: number
+  }
   | {
-      type: 'TIME_UNVOTE'
-      time: number
-    }
+    type: 'TIME_UNVOTE'
+    time: number
+  }
   | { type: 'CONFIRM_TIME'; startTime: number; endTime: string }
   | { type: 'SIGNUP_MEMBER' }
   | { type: 'SIGNOUT_MEMBER' }
@@ -157,22 +157,22 @@ export function eventMachineFactory({ now }: { now(): number }) {
                 target: 'SignupClosed',
                 cond: ctx =>
                   now() >= ctx.event!.signupTime &&
-                  Object.keys(ctx.event!.signedMembers).length >=
-                    ctx.event!.minParticipants,
+                  Object.keys(ctx.event!.signedMembers || {}).length >=
+                  ctx.event!.minParticipants,
               },
               {
                 target: 'Cancelled',
                 cond: ctx =>
                   now() >= ctx.event!.signupTime &&
-                  Object.keys(ctx.event!.signedMembers).length <
-                    ctx.event!.minParticipants,
+                  Object.keys(ctx.event!.signedMembers || {}).length <
+                  ctx.event!.minParticipants,
               },
             ],
             SIGNUP_MEMBER: {
               target: 'DoMemberSignup',
               cond: ctx =>
-                Object.keys(ctx.event!.signedMembers).length <
-                  ctx.event!.maxParticipants && now() < ctx.event!.signupTime,
+                Object.keys(ctx.event!.signedMembers || {}).length <
+                ctx.event!.maxParticipants && now() < ctx.event!.signupTime,
             },
             SIGNOUT_MEMBER: {
               target: 'DoMemberSignout',

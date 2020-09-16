@@ -6,8 +6,8 @@ export interface Event {
   endTime: number
   timeConfirmed: boolean
   signupTime: number
-  votes: Record<Uid, EventTimeVotes>
-  signedMembers: Record<Uid, { displayName: UserDisplayName }>
+  votes?: Record<Uid, EventTimeVotes>
+  signedMembers?: Record<Uid, { displayName: UserDisplayName }>
   minParticipants: number
   maxParticipants: number
   name: string
