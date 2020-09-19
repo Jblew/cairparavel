@@ -1,7 +1,8 @@
 {
   "firestore": {
     "rules": "firestore/firestore.rules",
-    "indexes": "firestore/indexes.json"
+    "indexes": "firestore/indexes.json",
+    "predeploy": ["firestore/build.sh"]
   },
   "hosting": {
     "site": "cairparavelapp",
