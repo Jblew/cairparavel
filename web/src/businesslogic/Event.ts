@@ -1,4 +1,5 @@
 export interface Event {
+  id?: string
   ownerUid: Uid
   ownerDisplayName: UserDisplayName
   votingTime: number
@@ -7,7 +8,7 @@ export interface Event {
   timeConfirmed: boolean
   signupTime: number
   votes?: Record<Uid, EventTimeVotes>
-  signedMembers?: Record<Uid, { displayName: UserDisplayName }>
+  signedMembers?: Record<Uid, EventSignup>
   minParticipants: number
   maxParticipants: number
   name: string
@@ -19,6 +20,10 @@ export interface Event {
 export interface EventTimeVotes {
   displayName: UserDisplayName
   times: number[]
+}
+
+export interface EventSignup {
+  displayName: UserDisplayName
 }
 
 type Uid = string

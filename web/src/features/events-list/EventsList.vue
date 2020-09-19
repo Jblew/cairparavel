@@ -1,6 +1,6 @@
 <template>
   <stateful-resource :resource="eventsResource">
-    <ul>
+    <ul data-test="events-list">
       <li v-for="event in events" :key="event.id">
         <event-item :event="event" />
       </li>

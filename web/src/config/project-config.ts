@@ -1,4 +1,4 @@
-import { isE2ETest } from '@/util'
+import { isE2ETest, toPrettySlug } from '@/util'
 import firebase from 'firebase/app'
 
 const env = isE2ETest() ? 'test' : 'prod'
@@ -21,5 +21,6 @@ export const projectConfig = {
       `${envCol}/events/${eventId}/votes/${uid}`,
     firestoreEventSignupDoc: (eventId: string, uid: string) =>
       `${envCol}/events/${eventId}/signedMembers/${uid}`,
+    eventUrl: ({ name, id }: { name: string, id?: string }) => `/event/${toPrettySlug(name)}/${id}`
   },
 }
