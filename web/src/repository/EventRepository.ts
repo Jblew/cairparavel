@@ -10,6 +10,28 @@ export class EventRepository {
     return unsubscribeFn
   }
 
+  async saveEvent(event: Event) {
+    const colRef = this.getEventColRef()
+    const eventOwned: Event = {
+      ...event,
+      ownerUid: firebase.auth().currentUser!.uid
+    }
+    delete eventOwned['votes']
+    delete eventOwned['signedMembers']
+
+    const result = await colRef.add(eventOwned)
+    return result.id
+  }
+
+  async fetchEvents(): Promise<Event[]> {
+    const snapshot = await this.getEventColRef()
+      .orderBy('startTime', 'asc')
+      .get()
+    if (snapshot.empty) return []
+    return snapshot.docs.map(doc => doc.data())
+  }
+
+
   async timeVote({ eventId, currentUid, time }: { eventId: string, currentUid: string, time: number }) {
     const docRef = this.getEventVoteDocRef({ eventId, currentUid })
     const displayName = firebase.auth().currentUser!.displayName || 'Unknown user'
@@ -76,11 +98,17 @@ export class EventRepository {
     } as Event)
   }
 
-  private getEventDocRef(eventId: string) {
-    const docPath = projectConfig.events.firestoreEventDoc(eventId)
+  private getEventColRef() {
+    const docPath = projectConfig.events.firestoreEventCol
     return firebase
       .firestore()
-      .doc(docPath)
+      .collection(docPath)
+      .withConverter(eventConverter)
+  }
+
+  private getEventDocRef(eventId: string) {
+    return this.getEventColRef()
+      .doc(eventId)
       .withConverter(eventConverter)
   }
 

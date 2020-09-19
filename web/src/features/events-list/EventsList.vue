@@ -10,7 +10,8 @@
 <script lang="ts">
 import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
 import { StatefulResource, Resource } from 'vue-stateful-resource'
-import { EventDoc, fetchEvents } from './fetchEvents'
+import { fetchEvents } from './fetchEvents'
+import { Event } from '@/businesslogic'
 import EventItem from './EventItem.vue'
 
 @Component({
@@ -20,7 +21,7 @@ import EventItem from './EventItem.vue'
   },
 })
 export default class EventsList extends Vue {
-  eventsResource: Resource<EventDoc[]> = Resource.empty()
+  eventsResource: Resource<Event[]> = Resource.empty()
 
   mounted() {
     Resource.fetchResource(
@@ -30,7 +31,7 @@ export default class EventsList extends Vue {
     )
   }
 
-  get events(): EventDoc[] {
+  get events(): Event[] {
     return this.eventsResource.result || []
   }
 }

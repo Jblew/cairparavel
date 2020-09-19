@@ -16,7 +16,7 @@ export const projectConfig = {
     firestoreCollection: (roleName: string) => `${envCol}/roles/${roleName}/uids`,
   },
   events: {
-    firestoreEventDoc: (eventId: string) => `${envCol}/events/${eventId}`,
+    firestoreEventCol: `${envCol}/events/`,
     firestoreEventVoteDoc: (eventId: string, uid: string) =>
       `${envCol}/events/${eventId}/votes/${uid}`,
     firestoreEventSignupDoc: (eventId: string, uid: string) =>
