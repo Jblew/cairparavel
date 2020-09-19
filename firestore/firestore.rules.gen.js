@@ -4,30 +4,30 @@ function getRules() {
   return `
 rules_version = '2';
 
-  service cloud.firestore {
-    match /databases/{database}/documents {
-      match /{document=**} {
-        allow write: if false;
-        allow read: if false;
-      }
-
-      ///////////////////////
-      // Utility functions //
-      ///////////////////////
-
-      function isAuthenticated() {
-          return request.auth != null;
-      }
-
-      function notUpdating(field) {
-        return !(field in request.resource.data)
-          || resource.data[field] == request.resource.data[field]
-      }
-
-      ${rulesForEnv('test')}
-      ${rulesForEnv('prod')}
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow write: if false;
+      allow read: if false;
     }
+
+    ///////////////////////
+    // Utility functions //
+    ///////////////////////
+
+    function isAuthenticated() {
+        return request.auth != null;
+    }
+
+    function notUpdating(field) {
+      return !(field in request.resource.data)
+        || resource.data[field] == request.resource.data[field]
+    }
+
+    ${rulesForEnv('test')}
+    ${rulesForEnv('prod')}
   }
+}
   `
 }
 
@@ -35,13 +35,27 @@ function rulesForEnv(envName) {
   const basePath = `/databases/$(database)/documents/envs/${envName}`
   return `
   match /envs/${envName} {
+    ${roles({ basePath })}
+
+
+    ${users()}
+
+
+    ${events()}
+  }
+  `
+}
+
+function roles(opts) {
+  if (!opts.basePath) throw new Error('Missing opts.basePath')
+  return `
     /////////////////
     // Role system //
     /////////////////
 
     function userHasRole(role, uid) {
         return isAuthenticated()
-            && exists(${basePath}/roles/$(role)/uids/$(uid));
+            && exists(${opts.basePath}/roles/$(role)/uids/$(uid));
     }
 
     match /roles/{roleName}/uids/{uid} {
@@ -58,9 +72,11 @@ function rulesForEnv(envName) {
     match /roles/member/uids/{uid} {
       allow write: if userHasRole("leader", request.auth.uid);
     }
+  `
+}
 
-
-
+function users() {
+  return `
     ///////////
     // Users //
     ///////////
@@ -73,7 +89,11 @@ function rulesForEnv(envName) {
     function isAuthenticatedMember() {
       return userHasRole("member", request.auth.uid);
     }
+  `
+}
 
+function events() {
+  return `
     ////////////
     // Events //
     ////////////
@@ -112,7 +132,6 @@ function rulesForEnv(envName) {
         allow create, update: if uid == request.auth.uid && inSignupPeriod();
       }
     }
-  }
   `
 }
 
