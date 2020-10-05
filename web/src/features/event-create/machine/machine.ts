@@ -148,7 +148,7 @@ export const createEventMachine = Machine<Context, Schema, Events>(
         }),
       }),
       disableVoting: assign({
-        event: ctx => ({ ...ctx.event, votingTime: -1 }),
+        event: ctx => ({ ...ctx.event, votingTime: -1, timeConfirmed: true }),
       }),
       assignVoting: assign({
         event: (ctx, evt: any) => ({ ...ctx.event, ...evt.voting }),

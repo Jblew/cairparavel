@@ -23,19 +23,13 @@
         />
       </template>
       <template #DoTimeConfirm>
-        <event-item-waiting-do-time-confirm
-          :interpreter="interpreter"
-          :state="state"
-        />
+        <event-item-do-time-confirm :interpreter="interpreter" :state="state" />
       </template>
       <template #Cancelled>
         <event-item-cancelled :interpreter="interpreter" :state="state" />
       </template>
       <template #MembersSignup>
-        <event-item-waiting-members-signup
-          :interpreter="interpreter"
-          :state="state"
-        />
+        <event-item-members-signup :interpreter="interpreter" :state="state" />
       </template>
       <template #DoMemberSignup>
         <event-item-do-member-signup
