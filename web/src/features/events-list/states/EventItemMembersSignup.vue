@@ -1,17 +1,37 @@
 <template>
   <span>
     <event-header :event="event" />
-    Signup time
+    <event-path>
+      <event-path-item-created :event="event" />
+      <event-path-separator />
+      <event-path-item :enabled="true" :checked="false" name="Signup">
+        TODO List of members
+      </event-path-item>
+      <event-path-separator />
+      <event-path-item :enabled="true" :checked="false" name="Meeting">
+        TODO meeting time
+      </event-path-item>
+    </event-path>
   </span>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
 import { Event, EventMachineInterpreter } from '@/businesslogic'
-import { EventHeader } from '../components'
+import {
+  EventHeader,
+  EventPath,
+  EventPathItem,
+  EventPathSeparator,
+  EventPathItemCreated,
+} from '../components'
 
 @Component({
   components: {
     EventHeader,
+    EventPath,
+    EventPathItem,
+    EventPathSeparator,
+    EventPathItemCreated,
   }
 })
 export default class extends Vue {
