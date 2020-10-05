@@ -25,7 +25,7 @@ export class EventRepository {
 
   async fetchEvents(): Promise<Event[]> {
     const snapshot = await this.getEventColRef()
-      .orderBy('startTime', 'asc')
+      .orderBy('startTime', 'desc')
       .get()
     if (snapshot.empty) return []
     return snapshot.docs.map(doc => doc.data())
