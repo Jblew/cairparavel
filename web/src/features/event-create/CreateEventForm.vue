@@ -22,10 +22,8 @@ export default class CreateForm extends Vue {
   beforeMount() {
     this.machine
       .onTransition(state => {
-        console.log(state)
         this.state = state
       })
-      .onEvent(console.log)
       .start()
   }
 

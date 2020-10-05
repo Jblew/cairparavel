@@ -107,7 +107,6 @@ export class EventRepositoryFirestore implements EventRepository {
   }
 
   private getEventDocRef(eventId: string) {
-    console.log(this.getEventColRef())
     return this.getEventColRef()
       .doc(eventId)
       .withConverter(eventConverter)
