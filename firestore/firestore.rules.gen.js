@@ -115,7 +115,7 @@ function events() {
     }
 
     match /events/{eventId} {
-      allow list: if isAuthenticatedMember();
+      allow read: if isAuthenticatedMember();
       allow create: if isAuthenticatedMember() && ensureOwnerUid() && ensureEventCreateFields();
       allow delete: if false;
       allow update: if ensureEventCreateFields() || resource.data.ownerUid == request.auth.uid;
