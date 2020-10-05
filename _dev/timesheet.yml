@@ -184,4 +184,13 @@ entries:
   comment: null
   start: 2020-09-17 01:10:30
   stop: 2020-09-17 01:32:32
+ -
+  subproject: frontend
+  task: Implement create event ui
+  tags:
+   - ui
+   - create-event
+  comment: null
+  start: 2020-10-05 22:10:11
+  stop:
 

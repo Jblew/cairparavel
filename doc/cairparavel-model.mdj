@@ -12432,6 +12432,35 @@
 							"headQualifiersCompartment": {
 								"$ref": "AAAAAAF0mNXXblXqLck="
 							}
+						},
+						{
+							"_type": "UMLNoteView",
+							"_id": "AAAAAAF0pgHxTqmpexY=",
+							"_parent": {
+								"$ref": "AAAAAAF0iI2yhKwggJ8="
+							},
+							"font": "Arial;11;0",
+							"left": 130,
+							"top": 740,
+							"width": 70,
+							"height": 45,
+							"text": "Event has pretty url and id"
+						},
+						{
+							"_type": "UMLNoteLinkView",
+							"_id": "AAAAAAF0pgIxSa2fFVg=",
+							"_parent": {
+								"$ref": "AAAAAAF0iI2yhKwggJ8="
+							},
+							"font": "Arial;11;0",
+							"head": {
+								"$ref": "AAAAAAF0mNWHuE8bpe0="
+							},
+							"tail": {
+								"$ref": "AAAAAAF0pgHxTqmpexY="
+							},
+							"lineStyle": 1,
+							"points": "200:767;319:782"
 						}
 					]
 				},
@@ -20196,9 +20225,9 @@
 											},
 											"font": "Arial;11;0",
 											"left": 487,
-											"top": 353,
+											"top": 359,
 											"width": 184.22314453125,
-											"height": 22,
+											"height": 11,
 											"alpha": -0.6779779437854496,
 											"distance": 35.4400902933387,
 											"hostEdge": {
