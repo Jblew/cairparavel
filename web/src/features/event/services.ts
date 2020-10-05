@@ -12,7 +12,10 @@ export function syncEventActorFactory(eventId: string) {
         console.error('Sync error', err)
       }
     })
-    return unsubscribeFn
+    return () => {
+      console.log('UNSUBSCRIBE')
+      unsubscribeFn()
+    }
   }
 }
 
