@@ -2,7 +2,7 @@ const { DateTime } = require('luxon');
 const { v4: uuid } = require('uuid');
 
 function getSampleEvent(modifiers) {
-  const startTime = DateTime.local().plus({ days: 20 })
+  const startTime = DateTime.local().plus({ years: 15 })
   const endTime = startTime.plus({ hours: 1 })
   const signupTime = startTime.minus({ days: 1 })
   const ownerUid = process.env.CYPRESS_TEST_UID
