@@ -6,8 +6,13 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Event } from '@/businesslogic'
+import EventLink from './EventLink.vue'
 
-@Component
+@Component({
+  components: {
+    EventLink,
+  }
+})
 export default class extends Vue {
   @Prop({ required: true })
   event!: Event

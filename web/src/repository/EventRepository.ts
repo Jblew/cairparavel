@@ -107,6 +107,7 @@ export class EventRepository {
   }
 
   private getEventDocRef(eventId: string) {
+    console.log(this.getEventColRef())
     return this.getEventColRef()
       .doc(eventId)
       .withConverter(eventConverter)

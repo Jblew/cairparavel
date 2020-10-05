@@ -2,7 +2,7 @@ import { EventMachineContext } from '@/businesslogic'
 import { eventRepository } from '@/repository'
 
 export function syncEventActorFactory(eventId: string) {
-  return (_ctx: EventMachineContext, _evt: any) => (
+  return (
     send: any,
     _onReceive: any,
   ) => {
@@ -13,7 +13,6 @@ export function syncEventActorFactory(eventId: string) {
       }
     })
     return () => {
-      console.log('UNSUBSCRIBE')
       unsubscribeFn()
     }
   }

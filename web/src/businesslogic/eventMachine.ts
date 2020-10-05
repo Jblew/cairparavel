@@ -1,4 +1,4 @@
-import { assign, Interpreter, Machine, send } from 'xstate'
+import { Actor, assign, Interpreter, InvokeCallback, Machine, send, spawn, Subscribable } from 'xstate'
 import { Event } from './Event'
 
 interface Schema {
@@ -47,20 +47,23 @@ interface Context {
   currentUid: string
   eventId: string
   event?: Event
+  syncActorRef?: Actor<any>
 }
 
-export function eventMachineFactory({ now }: { now(): number }) {
+export function eventMachineFactory({ now, syncActor }: { now(): number, syncActor: InvokeCallback }) {
   return Machine<Context, Schema, Events>(
     {
       id: 'event',
       initial: 'InitialFetch',
-      invoke: { src: 'syncEvent' },
       on: {
         UPDATED: { actions: assign({ event: (_, evt: any) => evt.event }) },
         SYNC_ERROR: 'Error',
       },
       states: {
         InitialFetch: {
+          entry: [assign<any, any>({
+            syncActorRef: () => spawn(syncActor)
+          })],
           on: {
             UPDATED: 'TimeVoting',
           },

@@ -2,11 +2,9 @@
   <span class="event">
     <state-matches :state="state">
       <template #InitialFetch>
-        INITIAL FETCH
         <event-item-initial-fetch :interpreter="interpreter" :state="state" />
       </template>
       <template #Error>
-        ERROR
         <event-item-error :interpreter="interpreter" :state="state" />
       </template>
       <template #TimeVoting>
@@ -116,8 +114,8 @@ export default class extends Vue {
   @Prop({ required: true })
   event!: Event
 
-  interpreter: EventMachineInterpreter
-  state: EventMachineInterpreter['state']
+  interpreter: EventMachineInterpreter = getEventInterpreter({ eventId: this.event.id!, event: this.event })
+  state: EventMachineInterpreter['state'] = this.interpreter.initialState
 
   created() {
     this.startEventMachine()
@@ -125,8 +123,6 @@ export default class extends Vue {
 
   startEventMachine() {
     if (!this.event.id) throw new Error('Event does not have an ID assigned')
-    this.interpreter = getEventInterpreter({ eventId: this.event.id!, event: this.event })
-    this.state = this.interpreter.initialState
     this.interpreter
       .onTransition(state => {
         this.state = state

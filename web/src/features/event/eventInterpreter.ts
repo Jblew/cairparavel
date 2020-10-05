@@ -17,7 +17,10 @@ import {
 import Vue from 'vue'
 
 export function getEventInterpreter({ eventId, event }: { eventId: string, event?: Event }): EventMachineInterpreter {
-  const eventMachine = eventMachineFactory({ now })
+  const eventMachine = eventMachineFactory({
+    now,
+    syncActor: syncEventActorFactory(eventId),
+  })
   const currentUid = firebase.auth().currentUser?.uid
   if (!currentUid)
     throw new Error(
@@ -28,7 +31,6 @@ export function getEventInterpreter({ eventId, event }: { eventId: string, event
   return interpret(
     eventMachine.withContext(context).withConfig({
       services: {
-        syncEvent: syncEventActorFactory(eventId),
         timeVote,
         timeUnvote,
         timeConfirm,
