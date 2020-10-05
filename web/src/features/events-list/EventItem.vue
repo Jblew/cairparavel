@@ -2,9 +2,11 @@
   <span class="event">
     <state-matches :state="state">
       <template #InitialFetch>
+        INITIAL FETCH
         <event-item-initial-fetch :interpreter="interpreter" :state="state" />
       </template>
       <template #Error>
+        ERROR
         <event-item-error :interpreter="interpreter" :state="state" />
       </template>
       <template #TimeVoting>
@@ -68,7 +70,7 @@
   </span>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Event, EventMachineInterpreter } from '@/businesslogic'
 import { getEventInterpreter } from '../event/eventInterpreter'
 import {
@@ -88,9 +90,11 @@ import {
   EventItemFinished,
   EventItemDoUpdateDetails,
 } from './states'
+import { StateMatches } from '@/components'
 
 @Component({
   components: {
+    StateMatches,
     EventItemInitialFetch,
     EventItemError,
     EventItemTimeVoting,
@@ -106,7 +110,7 @@ import {
     EventItemInProggress,
     EventItemFinished,
     EventItemDoUpdateDetails,
-  }
+  },
 })
 export default class extends Vue {
   @Prop({ required: true })
@@ -121,8 +125,18 @@ export default class extends Vue {
 
   startEventMachine() {
     if (!this.event.id) throw new Error('Event does not have an ID assigned')
-    this.interpreter = getEventInterpreter(this.event.id!)
-    this.interpreter.onTransition(state => this.state = state).onEvent(evt => this.onMachineEvent(evt)).start()
+    this.interpreter = getEventInterpreter({ eventId: this.event.id!, event: this.event })
+    this.state = this.interpreter.initialState
+    this.interpreter
+      .onTransition(state => {
+        this.state = state
+        console.log('STATE', state, state.toStrings())
+      })
+      .onEvent(evt => {
+        console.log('EVENT', evt)
+        this.onMachineEvent(evt)
+      })
+      .start()
   }
 
   beforeDestroy() {

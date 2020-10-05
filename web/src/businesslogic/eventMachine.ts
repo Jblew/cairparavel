@@ -72,7 +72,7 @@ export function eventMachineFactory({ now }: { now(): number }) {
               cond: ctx => now() >= ctx.event!.votingTime,
             },
             TIME_VOTE: 'DoTimeVote',
-            TIME_UNVOTE: 'DoTimeUnVote',
+            TIME_UNVOTE: 'DoTimeUnvote',
             UPDATE_DETAILS: {
               target: 'DoUpdateDetails',
               cond: ctx => ctx.currentUid === ctx.event!.ownerUid,

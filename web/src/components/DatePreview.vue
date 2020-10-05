@@ -6,8 +6,16 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
-import LoadingSpinner from './LoadingSpinner.vue'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+
+function formatDate(date: Date): string {
+  return date.toISOString()
+}
+
+function formatInvervalMs(intervalMs: number): string {
+  const hours = intervalMs / 1000 / 3600
+  return hours.toFixed(1) + 'h'
+}
 
 @Component({
   filters: {
@@ -25,15 +33,6 @@ export default class extends Vue {
   get intervalMs(): number {
     return (this.stop?.getTime() || 0) - this.start.getTime()
   }
-}
-
-function formatDate(date: Date): string {
-  return date.toISOString()
-}
-
-function formatInvervalMs(intervalMs: number): string {
-  const hours = intervalMs / 1000 / 3600
-  return hours.toFixed(1) + 'h'
 }
 </script>
 <style>
