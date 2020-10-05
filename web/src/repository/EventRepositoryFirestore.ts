@@ -1,8 +1,8 @@
 import { projectConfig } from '@/config'
 import firebase from 'firebase/app'
-import { Event, EventSignup, EventTimeVotes } from '@/businesslogic'
+import { Event, EventRepository, EventSignup, EventTimeVotes } from '@/businesslogic'
 
-export class EventRepository {
+export class EventRepositoryFirestore implements EventRepository {
   subscribeToEvent({ eventId, onUpdated, onError }: { eventId: string, onUpdated: (e: Event) => void, onError: (err: Error) => void }) {
     const unsubscribeFn =
       this.getEventDocRef(eventId)
@@ -173,4 +173,4 @@ const eventSignupConverter = {
 }
 
 
-export const eventRepository = new EventRepository()
+export const eventRepositoryFirestore = new EventRepositoryFirestore()

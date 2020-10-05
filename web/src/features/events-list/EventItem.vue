@@ -126,10 +126,8 @@ export default class extends Vue {
     this.interpreter
       .onTransition(state => {
         this.state = state
-        console.log('STATE', state, state.toStrings())
       })
       .onEvent(evt => {
-        console.log('EVENT', evt)
         this.onMachineEvent(evt)
       })
       .start()

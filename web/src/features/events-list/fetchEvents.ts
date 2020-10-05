@@ -1,5 +1,5 @@
-import { eventRepository } from '@/repository'
+import { eventRepositoryFirestore } from '@/repository'
 
 export async function fetchEvents() {
-  return eventRepository.fetchEvents()
+  return eventRepositoryFirestore.fetchEvents()
 }

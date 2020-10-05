@@ -1,7 +1,7 @@
 import { Event } from '@/businesslogic';
 
-import { eventRepository } from '@/repository';
+import { eventRepositoryFirestore } from '@/repository';
 
 export function saveEvent(event: Event) {
-  return eventRepository.saveEvent(event)
+  return eventRepositoryFirestore.saveEvent(event)
 }

@@ -1,12 +1,12 @@
 import { EventMachineContext } from '@/businesslogic'
-import { eventRepository } from '@/repository'
+import { eventRepositoryFirestore } from '@/repository'
 
 export function syncEventActorFactory(eventId: string) {
   return (
     send: any,
     _onReceive: any,
   ) => {
-    const unsubscribeFn = eventRepository.subscribeToEvent({
+    const unsubscribeFn = eventRepositoryFirestore.subscribeToEvent({
       eventId, onUpdated(event) { send({ type: 'UPDATED', event }) }, onError(err) {
         send({ type: 'SYNC_ERROR' })
         console.error('Sync error', err)
@@ -22,14 +22,14 @@ export async function timeVote(
   { eventId, currentUid }: EventMachineContext,
   { time }: { time: number } | any,
 ) {
-  return eventRepository.timeVote({ eventId, currentUid, time })
+  return eventRepositoryFirestore.timeVote({ eventId, currentUid, time })
 }
 
 export async function timeUnvote(
   { eventId, currentUid }: EventMachineContext,
   { time }: { time: number } | any,
 ) {
-  return eventRepository.timeUnvote({ eventId, currentUid, time })
+  return eventRepositoryFirestore.timeUnvote({ eventId, currentUid, time })
 }
 
 export async function timeConfirm(
@@ -37,20 +37,20 @@ export async function timeConfirm(
   { startTime, endTime }: { startTime: number; endTime: number } | any,
   evt: { startTime: number; endTime: number } | any,
 ) {
-  return eventRepository.timeConfirm({ eventId, startTime, endTime })
+  return eventRepositoryFirestore.timeConfirm({ eventId, startTime, endTime })
 }
 
 export async function memberSignup({ eventId, currentUid }: EventMachineContext) {
-  return eventRepository.memberSignup({ eventId, currentUid })
+  return eventRepositoryFirestore.memberSignup({ eventId, currentUid })
 }
 
 export async function memberSignout({ eventId, currentUid }: EventMachineContext) {
-  return eventRepository.memberSignout({ eventId, currentUid })
+  return eventRepositoryFirestore.memberSignout({ eventId, currentUid })
 }
 
 export async function updateDetails(
   { eventId }: EventMachineContext,
   { name, description }: { name: string; description: string } | any,
 ) {
-  return eventRepository.updateDetails({ eventId, description, name })
+  return eventRepositoryFirestore.updateDetails({ eventId, description, name })
 }

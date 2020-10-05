@@ -1,1 +1,1 @@
-export * from './EventRepository'
+export * from './EventRepositoryFirestore'
