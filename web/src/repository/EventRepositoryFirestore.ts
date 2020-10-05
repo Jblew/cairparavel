@@ -14,7 +14,8 @@ export class EventRepositoryFirestore implements EventRepository {
     const colRef = this.getEventColRef()
     const eventOwned: Event = {
       ...event,
-      ownerUid: firebase.auth().currentUser!.uid
+      ownerUid: firebase.auth().currentUser!.uid,
+      ownerDisplayName: firebase.auth().currentUser!.displayName || ''
     }
     delete eventOwned['votes']
     delete eventOwned['signedMembers']

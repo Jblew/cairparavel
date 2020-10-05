@@ -45,6 +45,7 @@ type Events =
 
 interface Context {
   currentUid: string
+  userDisplayName: string
   eventId: string
   event?: Event
   syncActorRef?: Actor<any>

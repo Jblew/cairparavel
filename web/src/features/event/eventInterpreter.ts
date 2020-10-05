@@ -26,7 +26,8 @@ export function getEventInterpreter({ eventId, event }: { eventId: string, event
     throw new Error(
       'Firebase currentUid must be populated before starting EventInterpreter',
     )
-  const context = Vue.observable({ currentUid, eventId, event })
+  const userDisplayName = firebase.auth().currentUser!.displayName || ''
+  const context = Vue.observable({ currentUid, userDisplayName, eventId, event, })
 
   return interpret(
     eventMachine.withContext(context).withConfig({
