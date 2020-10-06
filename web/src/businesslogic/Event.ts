@@ -18,11 +18,13 @@ export interface Event {
 }
 
 export interface EventTimeVotes {
+  uid?: string
   displayName: UserDisplayName
   times: number[]
 }
 
 export interface EventSignup {
+  uid?: string
   displayName: UserDisplayName
 }
 

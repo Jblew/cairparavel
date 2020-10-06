@@ -11,7 +11,13 @@ interface Schema {
     WaitingForTimeConfirm: {}
     DoTimeConfirm: {}
     Cancelled: {}
-    MembersSignup: {}
+    MembersSignup: {
+      states: {
+        Initial: {}
+        SignedUp: {}
+        SignedOut: {}
+      }
+    },
     DoMemberSignup: {}
     DoMemberSignout: {}
     SignupClosed: {}
@@ -57,7 +63,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
       id: 'event',
       initial: 'InitialFetch',
       on: {
-        UPDATED: { actions: assign({ event: (_, evt: any) => evt.event }) },
+        UPDATED: { actions: 'assignUpdatedEvent', },
         SYNC_ERROR: 'Error',
       },
       states: {
@@ -66,7 +72,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
             syncActorRef: () => spawn(syncActor)
           })],
           on: {
-            UPDATED: 'TimeVoting',
+            UPDATED: { target: 'TimeVoting', actions: 'assignUpdatedEvent' },
           },
         },
         TimeVoting: {
@@ -81,7 +87,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
               target: 'DoUpdateDetails',
               cond: ctx => ctx.currentUid === ctx.event!.ownerUid,
             },
-            UPDATED: '',
+            UPDATED: { actions: 'assignUpdatedEvent' },
           },
           after: { 1000: '' },
         },
@@ -137,7 +143,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
                 ctx.currentUid === ctx.event!.ownerUid &&
                 now() < ctx.event!.startTime,
             },
-            UPDATED: '',
+            UPDATED: { actions: 'assignUpdatedEvent' },
           },
           after: { 1000: '' },
         },
@@ -155,6 +161,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
           },
         },
         MembersSignup: {
+          initial: 'Initial',
           on: {
             '': [
               {
@@ -172,24 +179,40 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
                   ctx.event!.minParticipants,
               },
             ],
-            SIGNUP_MEMBER: {
-              target: 'DoMemberSignup',
-              cond: ctx =>
-                Object.keys(ctx.event!.signedMembers || {}).length <
-                ctx.event!.maxParticipants && now() < ctx.event!.signupTime,
-            },
-            SIGNOUT_MEMBER: {
-              target: 'DoMemberSignout',
-              cond: ctx => now() < ctx.event!.signupTime,
-            },
-            UPDATED: '',
+            UPDATED: { target: '.Initial', actions: 'assignUpdatedEvent' },
           },
-          after: { 1000: '' },
+          after: { 1000: '.Initial' },
+          states: {
+            Initial: {
+              on: {
+                '': [
+                  {
+                    target: 'SignedUp', cond: (ctx) => Object.keys(ctx.event!.signedMembers || {}).includes(ctx.currentUid)
+                  },
+                  { target: 'SignedOut' },
+                ]
+              }
+            },
+            SignedUp: {
+              on: {
+                SIGNOUT_MEMBER: {
+                  target: '#event.DoMemberSignout',
+                },
+              }
+            },
+            SignedOut: {
+              on: {
+                SIGNUP_MEMBER: {
+                  target: '#event.DoMemberSignup',
+                },
+              }
+            }
+          }
         },
         DoMemberSignup: {
           invoke: {
             src: 'memberSignup',
-            onDone: 'MembersSignup',
+            onDone: 'MembersSignup.SignedUp',
             onError: {
               target: 'MembersSignup',
               actions: [
@@ -202,7 +225,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
         DoMemberSignout: {
           invoke: {
             src: 'memberSignout',
-            onDone: 'MembersSignup',
+            onDone: 'MembersSignup.SignedOut',
             onError: {
               target: 'MembersSignup',
               actions: [
@@ -220,7 +243,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
                 cond: ctx => now() >= ctx.event!.startTime,
               },
             ],
-            UPDATED: '',
+            UPDATED: { actions: 'assignUpdatedEvent' },
           },
           after: { 1000: '' },
         },
@@ -229,7 +252,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
             '': [
               { target: 'Finished', cond: ctx => now() >= ctx.event!.endTime },
             ],
-            UPDATED: '',
+            UPDATED: { actions: 'assignUpdatedEvent' },
           },
           after: { 1000: '' },
         },
@@ -250,7 +273,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
         },
         Error: {
           on: {
-            UPDATED: 'TimeVoting',
+            UPDATED: { target: 'TimeVoting', actions: 'assignUpdatedEvent' },
           },
         },
       },
@@ -258,6 +281,7 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
     {
       actions: {
         logError: (_, { data }: any) => console.error(new Error(data)),
+        assignUpdatedEvent: assign({ event: (_, evt: any) => evt.event })
       },
     },
   )
