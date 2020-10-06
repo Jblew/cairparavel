@@ -2,10 +2,7 @@ package functions
 
 import (
 	"context"
-	"fmt"
 	"log"
-
-	"cloud.google.com/go/functions/metadata"
 )
 
 // PubSubMessage is the payload of a Pub/Sub event.
