@@ -2,6 +2,7 @@ package functions
 
 import "time"
 
+// FirestoreEvent is a type for firestore create/update/delete events
 type FirestoreEvent struct {
 	OldValue   FirestoreValue `json:"oldValue"`
 	Value      FirestoreValue `json:"value"`
