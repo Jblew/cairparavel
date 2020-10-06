@@ -112,3 +112,10 @@ gcloud functions deploy FnOnCronDispatchEventStateNotifications \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
   --memory "512MB"
+
+
+gcloud functions deploy FnMessengerWebhook \
+  --trigger-http --allow-unauthenticated \
+  --region "${GCP_PROJECT_REGION}" \
+  --runtime go113 \
+  --memory "1024MB"
