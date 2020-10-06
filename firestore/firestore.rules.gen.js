@@ -42,6 +42,12 @@ function rulesForEnv(envName) {
 
 
     ${events()}
+
+
+    ${comments()}
+
+
+    ${notifications()}
   }
   `
 }
@@ -107,11 +113,12 @@ function events() {
     }
 
     function inVotingModificationPeriod() {
-      return request.time < resource.data.votingTime
+      //
+      return request.time.toMillis() < resource.data.votingTime
     }
 
     function inSignupPeriod() {
-      return request.time > resource.data.votingTime && request.time < resource.data.signupTime
+      return request.time.toMillis() > 0 // resource.data.votingTime // && request.time.toMillis() < resource.data.signupTime
     }
 
     match /events/{eventId} {
@@ -131,6 +138,54 @@ function events() {
         allow delete: if uid == request.auth.uid && inSignupPeriod();
         allow create, update: if uid == request.auth.uid && inSignupPeriod();
       }
+    }
+
+    match /event_observers/{eventId}/uids/{uid} {
+      allow create: if uid == request.auth.uid;
+      allow delete: if uid == request.auth.uid;
+    }
+  `
+}
+
+function comments() {
+  return `
+    //////////////
+    // Comments //
+    //////////////
+
+    match /comments/{resId}/messages/{commentId} {
+      allow create: if request.resource.data.authorUid == request.auth.uid;
+      allow delete: if resource.data.authorUid == request.auth.uid;
+      allow update: if false;
+      allow read: if isAuthenticatedMember();
+    }
+  `
+}
+
+function notifications() {
+  return `
+    //////////////////
+    // Notifications //
+    //////////////////
+
+    match /notifications/{uid}/push/{notificationId} {
+      allow write: if false;
+      allow read: if isAuthenticatedMember() && uid == request.auth.uid;
+    }
+
+    match /notifications/{uid}/history/{notificationId} {
+      allow write: if false;
+      allow read: if isAuthenticatedMember() && uid == request.auth.uid;
+    }
+
+    match /notifications_allow/{type}/uids/{uid} {
+      allow create: if uid == request.auth.uid;
+      allow delete: if uid == request.auth.uid;
+    }
+
+    match /notification_playerids/{uid} {
+      allow create: if uid == request.auth.uid;
+      allow delete: if uid == request.auth.uid;
     }
   `
 }
