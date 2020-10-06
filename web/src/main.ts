@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { App } from './components'
-import { constructFirebaseApp } from './config'
+import { configureOneSignal, constructFirebaseApp } from './config'
 import { HomePage } from '@/features/home'
 import { MembersPage } from '@/features/members'
 import { CreateEventPage } from '@/features/event-create'
@@ -40,6 +40,9 @@ new Vue({
     return {
       firebase,
     }
+  },
+  beforeMount() {
+    configureOneSignal()
   },
   router,
   render: h => h(App),
