@@ -52,7 +52,7 @@ func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
 		return
 	}
 	// Find messages
-	//log.Printf("Message: %#v", message)
+	log.Printf("Message: %#v", message)
 	for _, entry := range message.Entry {
 		if len(entry.Messaging) == 0 {
 			log.Printf("No messages")
@@ -60,13 +60,18 @@ func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
 			resp.Write([]byte("An error occurred"))
 			return
 		}
-		event := entry.Messaging[0]
-		err = handleMessage(event.Sender.ID, event.Message.Text)
-		if err != nil {
-			log.Printf("Failed sending message: %s", err)
-			resp.WriteHeader(400)
-			resp.Write([]byte("An error occurred"))
-			return
+		for _, event := range entry.Messaging {
+			log.Printf("Event: %#v", event)
+			if len(event.Referral.Ref) > 0 {
+				log.Printf("REFERRAL FOUND: %s", event.Referral.Ref)
+			}
+			err = handleMessage(event.Sender.ID, event.Message.Text)
+			if err != nil {
+				log.Printf("Failed sending message: %s", err)
+				resp.WriteHeader(400)
+				resp.Write([]byte("An error occurred"))
+				return
+			}
 		}
 	}
 }

@@ -40,6 +40,11 @@ type InputMessage struct {
 					} `json:"detected_locales"`
 				} `json:"nlp"`
 			} `json:"message"`
+			Referral struct {
+				Ref    string `json:"ref"`
+				Source string `json:"source"`
+				Type   string `json:"type"`
+			} `json:"referral"`
 		} `json:"messaging"`
 	} `json:"entry"`
 }
