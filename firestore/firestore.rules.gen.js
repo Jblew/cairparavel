@@ -183,7 +183,7 @@ function notifications() {
       allow delete: if uid == request.auth.uid;
     }
 
-    match /notification_playerids/{uid} {
+    match /notification_messengerid/{uid} {
       allow create: if uid == request.auth.uid;
       allow delete: if uid == request.auth.uid;
     }
