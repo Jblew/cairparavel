@@ -1,4 +1,5 @@
 .DS_Store
+/secrets.config.sh
 
 # Logs
 logs
