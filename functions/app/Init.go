@@ -26,5 +26,6 @@ func Init(config Config) (*App, error) {
 		Firebase:  firebase,
 		Firestore: firestore,
 		Context:   ctx,
+		Config:    config,
 	}, nil
 }

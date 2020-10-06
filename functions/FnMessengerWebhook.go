@@ -1,24 +1,25 @@
 package functions
 
 import (
-	"encoding/json"
-	"fmt"
-	"html"
 	"net/http"
+	"net/url"
 )
 
 // FnMessengerWebhook is FB messenger webhook
-func FnMessengerWebhook(w http.ResponseWriter, r *http.Request) {
-	var d struct {
-		Name string `json:"name"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&d); err != nil {
-		fmt.Fprint(w, "Hello, World!")
+func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
+	verifyToken := application.Config.Messenger.VerifyToken
+
+	if request.Method == "GET" {
+		u, _ := url.Parse(request.RequestURI)
+		values, _ := url.ParseQuery(u.RawQuery)
+		token := values.Get("hub.verify_token")
+		if token == verifyToken {
+			resp.WriteHeader(200)
+			resp.Write([]byte(values.Get("hub.challenge")))
+			return
+		}
+		resp.WriteHeader(400)
+		resp.Write([]byte(`Bad token`))
 		return
 	}
-	if d.Name == "" {
-		fmt.Fprint(w, "Hello, World!")
-		return
-	}
-	fmt.Fprintf(w, "Hello, %s!", html.EscapeString(d.Name))
 }
