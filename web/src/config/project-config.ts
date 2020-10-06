@@ -15,6 +15,7 @@ export const projectConfig = {
     list: ['leader', 'member'],
     firestoreCollection: (roleName: string) => `${envCol}/roles/${roleName}/uids`,
   },
+  messengerChatUrl: (firebaseUid: string) => `https://m.me/103901188157799?ref=${firebaseUid}`,
   events: {
     firestoreEventCol: `${envCol}/events/`,
     firestoreEventVoteCol: (eventId: string) =>
