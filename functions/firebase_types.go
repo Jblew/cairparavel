@@ -21,3 +21,12 @@ type FirestoreValue struct {
 	Name       string      `json:"name"`
 	UpdateTime time.Time   `json:"updateTime"`
 }
+
+// AuthEvent is the payload of a Firestore Auth event.
+type AuthEvent struct {
+	Email    string `json:"email"`
+	Metadata struct {
+		CreatedAt time.Time `json:"createdAt"`
+	} `json:"metadata"`
+	UID string `json:"uid"`
+}
