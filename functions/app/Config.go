@@ -1,6 +1,6 @@
 package app
 
-import "github.com/Jblew/cairparavel/functions/app/messenger"
+import "github.com/Jblew/cairparavel/functions/app/lib/messenger"
 
 // Config is functions main config
 type Config struct {

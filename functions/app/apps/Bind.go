@@ -7,7 +7,7 @@ import (
 )
 
 // Bind to IoC
-func Bind(container *container.Container) {
+func Bind(container container.Container) {
 	usersapp.Bind(container)
 	notificationsapp.Bind(container)
 }

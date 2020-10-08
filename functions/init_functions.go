@@ -2,16 +2,17 @@ package functions
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
 
 	"github.com/Jblew/cairparavel/functions/app"
+	golobbyContainer "github.com/golobby/container"
+	golobbyContainerPkg "github.com/golobby/container/pkg/container"
 )
 
-var application *app.App
-var container *container.Container
+var container golobbyContainerPkg.Container = golobbyContainer.NewContainer()
 
 func init() {
 	container.Singleton(func() app.Config {
@@ -20,16 +21,18 @@ func init() {
 
 	firebaseApp, err := firebase.NewApp(context.Background(), &firebase.Config{})
 	if err != nil {
-		return nil, fmt.Errorf("firebase.NewApp: %v", err)
+		log.Fatalf("firebase.NewApp: %v", err)
+		return
 	}
 
 	container.Singleton(func() *firebase.App {
 		return firebaseApp
 	})
 
-	firestoreClient, err := firebase.Firestore(context.Background())
+	firestoreClient, err := firebaseApp.Firestore(context.Background())
 	if err != nil {
-		return nil, fmt.Errorf("app.Firestore: %v", err)
+		log.Fatalf("app.Firestore: %v", err)
+		return
 	}
 
 	container.Singleton(func() *firestore.Client {
