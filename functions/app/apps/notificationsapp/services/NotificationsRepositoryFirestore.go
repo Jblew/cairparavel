@@ -5,9 +5,9 @@ import 	(
 	"github.com/Jblew/cairparavel/functions/app/domain"
 )
 
+// NotificationsRepositoryFirestore implements NotificationsRepository
 type NotificationsRepositoryFirestore struct {
 	Firestore *firestore.Client
-	Context *context.Context
 }
 
 func (repo *NotificationsRepositoryFirestore) AddNotificationToQueue(notification domain.Notification) error {
