@@ -1,50 +1,57 @@
 package domain
 
-import "github.com/golobby/container/pkg/container"
+import (
+	"time"
 
+	"github.com/golobby/container/pkg/container"
+)
+
+// OnCommentAdded handler
 func OnCommentAdded(event Event, comment EventComment, container *container.Container) error {
-	var eventObserversNotifier *EventObserversNotifier
+	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
 	payload := make(map[string]interface{})
 	payload["event"] = event
 	payload["comment"] = comment
 
-	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	return eventObserversNotifier.NotifyEventObservers(event, Notification{
 		Template: "comment_added",
 		Payload:  payload,
 	})
 }
 
+// OnEventStateChanged handler
 func OnEventStateChanged(event Event, container *container.Container) error {
-	var eventObserversNotifier *EventObserversNotifier
+	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
 	payload := make(map[string]interface{})
 	payload["event"] = event
 
-	if event.State == EventState.TIME_VOTING {
-		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	eventState := GetEventStateAt(event, time.Now())
+	if eventState == EventStateTimeVoting {
+		return eventObserversNotifier.NotifyEventObservers(event, Notification{
 			Template: "event_voting_started",
 			Payload:  payload,
 		})
-	} else if event.State == EventState.MEMBERS_SIGNUP {
-		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	} else if eventState == EventStateMembersSignup {
+		return eventObserversNotifier.NotifyEventObservers(event, Notification{
 			Template: "event_members_signup_started",
 			Payload:  payload,
 		})
-	} else if event.State == EventState.SIGNUP_CLOSED {
-		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	} else if eventState == EventStateSignupClosed {
+		return eventObserversNotifier.NotifyEventObservers(event, Notification{
 			Template: "event_members_signup_closed",
 			Payload:  payload,
 		})
-	} else if event.State == EventState.IN_PROGGRESS {
-		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	} else if eventState == EventStateInProggress {
+		return eventObserversNotifier.NotifyEventObservers(event, Notification{
 			Template: "event_started",
 			Payload:  payload,
 		})
-	} else if event.State == EventState.CANCELLED {
-		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	} else if eventState == EventStateFinished {
+		return eventObserversNotifier.NotifyEventObservers(event, Notification{
 			Template: "event_cancelled",
 			Payload:  payload,
 		})
@@ -52,29 +59,31 @@ func OnEventStateChanged(event Event, container *container.Container) error {
 	return nil
 }
 
-func OnMessengerMessage(MessageText string, Recipient MessengerRecipient, container *container.Container) error {
-	var messengerNotifier *MessengerNotifier
-	container.Make(&MessengerNotifier)
+// OnMessengerMessage handler
+func OnMessengerMessage(messageText string, recipient MessengerRecipient, container *container.Container) error {
+	var messengerNotifier MessengerNotifier
+	container.Make(&messengerNotifier)
 
 	payload := make(map[string]interface{})
-	payload["messageText"] = props.MessageText
+	payload["messageText"] = messageText
 
-	return messengerNotifier.SendNotification(props.Recipient, &Notification{
+	return messengerNotifier.SendNotification(recipient, Notification{
 		Template: "messenger_respond",
 		Payload:  payload,
 	})
 }
 
-func OnMessengerReferral(ReferralCode string, MessengerRecipient MessengerRecipient, container *container.Container) error {
-	var messengerRecipientRepository *MessengerRecipientRepository
+// OnMessengerReferral handler
+func OnMessengerReferral(referralCode string, messengerRecipient MessengerRecipient, container *container.Container) error {
+	var messengerRecipientRepository MessengerRecipientRepository
 	container.Make(&messengerRecipientRepository)
-	var messengerNotifier *MessengerNotifier
+	var messengerNotifier MessengerNotifier
 	container.Make(&messengerNotifier)
-	var usersRepository *UsersRepository
+	var usersRepository UsersRepository
 	container.Make(&usersRepository)
 
-	userID := props.ReferralCode
-	err := messengerRecipientRepository.StoreMessengerUser(userID, props.MessengerRecipient)
+	userID := referralCode
+	err := messengerRecipientRepository.StoreMessengerRecipient(userID, messengerRecipient)
 	if err != nil {
 		return err
 	}
@@ -85,59 +94,63 @@ func OnMessengerReferral(ReferralCode string, MessengerRecipient MessengerRecipi
 
 	payload := make(map[string]interface{})
 	payload["user"] = user
-	return messengerNotifier.SendNotification(&Notification{
+	return messengerNotifier.SendNotification(messengerRecipient, Notification{
 		Template: "messenger_welcome",
 		Payload:  payload,
 	})
 }
 
-func OnEventMemberSignup(event Event, signup EventSignup, econtainer *container.Container) error {
-	var eventObserversNotifier *EventObserversNotifier
+// OnEventMemberSignup handler
+func OnEventMemberSignup(event Event, signup EventSignup, container *container.Container) error {
+	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
 	payload := make(map[string]interface{})
 	payload["event"] = event
 	payload["signup"] = signup
-	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	return eventObserversNotifier.NotifyEventObservers(event, Notification{
 		Template: "member_signed_in",
 		Payload:  payload,
 	})
 }
 
+// OnEventMemberSignout handler
 func OnEventMemberSignout(event Event, signup EventSignup, container *container.Container) error {
-	var eventObserversNotifier *EventObserversNotifier
+	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
 	payload := make(map[string]interface{})
 	payload["event"] = event
 	payload["signup"] = signup
-	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	return eventObserversNotifier.NotifyEventObservers(event, Notification{
 		Template: "member_signed_out",
 		Payload:  payload,
 	})
 }
 
+// OnEventVote handler
 func OnEventVote(event Event, votes EventTimeVotes, container *container.Container) error {
-	var eventObserversNotifier *EventObserversNotifier
+	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
 	payload := make(map[string]interface{})
 	payload["event"] = event
 	payload["votes"] = votes
-	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	return eventObserversNotifier.NotifyEventObservers(event, Notification{
 		Template: "event_voted",
 		Payload:  payload,
 	})
 }
 
+// OnEventVoteDeleted handler
 func OnEventVoteDeleted(event Event, votes EventTimeVotes, container *container.Container) error {
-	var eventObserversNotifier *EventObserversNotifier
+	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
 	payload := make(map[string]interface{})
 	payload["event"] = event
 	payload["votes"] = votes
-	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+	return eventObserversNotifier.NotifyEventObservers(event, Notification{
 		Template: "event_vote_deleted",
 		Payload:  payload,
 	})

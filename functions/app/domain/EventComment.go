@@ -1,5 +1,6 @@
 package domain
 
+// EventComment is a comment on an event
 type EventComment struct {
 	ID        string `json:"id"`
 	EventID   string `json:"eventId"`
