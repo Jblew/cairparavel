@@ -12,11 +12,11 @@ import (
 
 // SendMessage sends FB messenger message
 func (messenger *Messenger) SendMessage(recipient Recipient, text string) error {
-	accessToken := application.Config.Messenger.AccessToken
+	accessToken := messenger.Config.AccessToken
 
-	response := messenger.ResponseMessage{
+	response := ResponseMessage{
 		Recipient: recipient,
-		Message: messenger.Message{
+		Message: Message{
 			Text: text,
 		},
 	}
@@ -39,7 +39,7 @@ func (messenger *Messenger) SendMessage(recipient Recipient, text string) error 
 	}
 	req.Header.Add("Content-Type", "application/json")
 	client := http.Client{}
-	res, err := client.Do(req)
+	_, err = client.Do(req)
 	if err != nil {
 		return err
 	}
