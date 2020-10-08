@@ -7,7 +7,7 @@ import (
 )
 
 // OnCommentAdded handler
-func OnCommentAdded(event Event, comment EventComment, container *container.Container) error {
+func OnCommentAdded(event Event, comment EventComment, container container.Container) error {
 	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
@@ -22,7 +22,7 @@ func OnCommentAdded(event Event, comment EventComment, container *container.Cont
 }
 
 // OnEventStateChanged handler
-func OnEventStateChanged(event Event, container *container.Container) error {
+func OnEventStateChanged(event Event, container container.Container) error {
 	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
@@ -60,7 +60,7 @@ func OnEventStateChanged(event Event, container *container.Container) error {
 }
 
 // OnMessengerMessage handler
-func OnMessengerMessage(messageText string, recipient MessengerRecipient, container *container.Container) error {
+func OnMessengerMessage(messageText string, recipient MessengerRecipient, container container.Container) error {
 	var messengerNotifier MessengerNotifier
 	container.Make(&messengerNotifier)
 
@@ -74,7 +74,7 @@ func OnMessengerMessage(messageText string, recipient MessengerRecipient, contai
 }
 
 // OnMessengerReferral handler
-func OnMessengerReferral(referralCode string, messengerRecipient MessengerRecipient, container *container.Container) error {
+func OnMessengerReferral(referralCode string, messengerRecipient MessengerRecipient, container container.Container) error {
 	var messengerRecipientRepository MessengerRecipientRepository
 	container.Make(&messengerRecipientRepository)
 	var messengerNotifier MessengerNotifier
@@ -101,7 +101,7 @@ func OnMessengerReferral(referralCode string, messengerRecipient MessengerRecipi
 }
 
 // OnEventMemberSignup handler
-func OnEventMemberSignup(event Event, signup EventSignup, container *container.Container) error {
+func OnEventMemberSignup(event Event, signup EventSignup, container container.Container) error {
 	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
@@ -115,7 +115,7 @@ func OnEventMemberSignup(event Event, signup EventSignup, container *container.C
 }
 
 // OnEventMemberSignout handler
-func OnEventMemberSignout(event Event, signup EventSignup, container *container.Container) error {
+func OnEventMemberSignout(event Event, signup EventSignup, container container.Container) error {
 	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
@@ -129,7 +129,7 @@ func OnEventMemberSignout(event Event, signup EventSignup, container *container.
 }
 
 // OnEventVote handler
-func OnEventVote(event Event, votes EventTimeVotes, container *container.Container) error {
+func OnEventVote(event Event, votes EventTimeVotes, container container.Container) error {
 	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
@@ -143,7 +143,7 @@ func OnEventVote(event Event, votes EventTimeVotes, container *container.Contain
 }
 
 // OnEventVoteDeleted handler
-func OnEventVoteDeleted(event Event, votes EventTimeVotes, container *container.Container) error {
+func OnEventVoteDeleted(event Event, votes EventTimeVotes, container container.Container) error {
 	var eventObserversNotifier EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 

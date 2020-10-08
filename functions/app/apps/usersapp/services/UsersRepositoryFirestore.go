@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 
 	"cloud.google.com/go/firestore"
 	"github.com/Jblew/cairparavel/functions/app/domain"
@@ -37,6 +38,10 @@ func (repo *UsersRepositoryFirestore) GetUser(userID string) (domain.User, error
 	snapshot, err := docRef.Get(*repo.Context)
 	if err != nil {
 		return domain.User{}, err
+	}
+
+	if !snapshot.Exists() {
+		return domain.User{}, fmt.Errorf("No such user with ID=%s", userID)
 	}
 
 	var result domain.User
