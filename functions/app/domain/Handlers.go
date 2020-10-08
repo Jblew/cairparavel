@@ -6,12 +6,13 @@ func OnCommentAdded(event Event, comment EventComment, container *container.Cont
 	var eventObserversNotifier *EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
+	payload := make(map[string]interface{})
+	payload["event"] = event
+	payload["comment"] = comment
+
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
-			Template: "comment_added",
-			Payload: struct{
-				Event: event,
-				Comment: comment,
-			}
+		Template: "comment_added",
+		Payload:  payload,
 	})
 }
 
@@ -19,143 +20,125 @@ func OnEventStateChanged(event Event, container *container.Container) error {
 	var eventObserversNotifier *EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
+	payload := make(map[string]interface{})
+	payload["event"] = event
+
 	if event.State == EventState.TIME_VOTING {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_voting_started",
-			Payload: struct {
-				Event: event,
-			}
+			Payload:  payload,
 		})
-	}
-	else if event.State == EventState.MEMBERS_SIGNUP {
+	} else if event.State == EventState.MEMBERS_SIGNUP {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_members_signup_started",
-			Payload: struct {
-				Event: event,
-			}
+			Payload:  payload,
 		})
-	}
-	else if event.State == EventState.SIGNUP_CLOSED {
+	} else if event.State == EventState.SIGNUP_CLOSED {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_members_signup_closed",
-			Payload: struct {
-				Event: event,
-			}
+			Payload:  payload,
 		})
-	}
-	else if event.State == EventState.IN_PROGGRESS {
+	} else if event.State == EventState.IN_PROGGRESS {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_started",
-			Payload: struct {
-				Event: event,
-			}
+			Payload:  payload,
 		})
-	}
-	else if event.State == EventState.CANCELLED {
+	} else if event.State == EventState.CANCELLED {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_cancelled",
-			Payload: struct {
-				Event: event,
-			}
+			Payload:  payload,
 		})
 	}
 	return nil
 }
 
-type OnMessengerMessageProps struct {
-	MessageText string,
-	Recipient MessengerRecipient,
-	MessengerNotifier *MessengerNotifier,
-}
 func OnMessengerMessage(MessageText string, Recipient MessengerRecipient, container *container.Container) error {
-	var eventObserversNotifier *EventObserversNotifier
-	container.Make(&eventObserversNotifier)
+	var messengerNotifier *MessengerNotifier
+	container.Make(&MessengerNotifier)
 
-	return props.MessengerNotifier.SendNotification(props.Recipient, &Notification{
+	payload := make(map[string]interface{})
+	payload["messageText"] = props.MessageText
+
+	return messengerNotifier.SendNotification(props.Recipient, &Notification{
 		Template: "messenger_respond",
-		Payload: struct {
-			MessageText props.MessageText,
-		}
+		Payload:  payload,
 	})
 }
 
-type OnMessengerReferralProps struct {
-	ReferralCode string,
-	MessengerRecipient: MessengerRecipient,
-	MessengerNotifier *MessengerNotifier,
-	MessengerRecipientRepository *MessengerRecipientRepository,
-	UsersRepository *UsersRepository,
-}
-func OnMessengerReferral(props OnMessengerReferralProps) error {
-	var eventObserversNotifier *EventObserversNotifier
-	container.Make(&eventObserversNotifier)
+func OnMessengerReferral(ReferralCode string, MessengerRecipient MessengerRecipient, container *container.Container) error {
+	var messengerRecipientRepository *MessengerRecipientRepository
+	container.Make(&messengerRecipientRepository)
+	var messengerNotifier *MessengerNotifier
+	container.Make(&messengerNotifier)
+	var usersRepository *UsersRepository
+	container.Make(&usersRepository)
 
 	userID := props.ReferralCode
-	err := props.MessengerRecipientRepository.StoreMessengerUser(userID, props.MessengerRecipient)
+	err := messengerRecipientRepository.StoreMessengerUser(userID, props.MessengerRecipient)
 	if err != nil {
 		return err
 	}
-	user, err := props.UsersRepository.GetUser(userID)
+	user, err := usersRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
-	returnprops.MessengerNotifier.SendNotification(&Notification{
+	payload := make(map[string]interface{})
+	payload["user"] = user
+	return messengerNotifier.SendNotification(&Notification{
 		Template: "messenger_welcome",
-		Payload: struct {
-			User: user,
-		}
+		Payload:  payload,
 	})
 }
 
-func OnEventMemberSignup(event Event, signup EventSignup, eventObserversNotifier *EventObserversNotifier) error {
+func OnEventMemberSignup(event Event, signup EventSignup, econtainer *container.Container) error {
 	var eventObserversNotifier *EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
+	payload := make(map[string]interface{})
+	payload["event"] = event
+	payload["signup"] = signup
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 		Template: "member_signed_in",
-		Payload: struct {
-			Event: event,
-			Signup: signup,
-		}
+		Payload:  payload,
 	})
 }
 
-func OnEventMemberSignout(event Event, signup EventSignup, eventObserversNotifier *EventObserversNotifier) error {
+func OnEventMemberSignout(event Event, signup EventSignup, container *container.Container) error {
 	var eventObserversNotifier *EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
+	payload := make(map[string]interface{})
+	payload["event"] = event
+	payload["signup"] = signup
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 		Template: "member_signed_out",
-		Payload: struct {
-			Event: event,
-			Signup: signup,
-		}
+		Payload:  payload,
 	})
 }
 
-func OnEventVote(event Event, votes EventTimeVotes, eventObserversNotifier *EventObserversNotifier) error {
+func OnEventVote(event Event, votes EventTimeVotes, container *container.Container) error {
 	var eventObserversNotifier *EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
+	payload := make(map[string]interface{})
+	payload["event"] = event
+	payload["votes"] = votes
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 		Template: "event_voted",
-		Payload: struct {
-			Event: event,
-			Votes : votes,
-		}
+		Payload:  payload,
 	})
 }
 
-func OnEventVoteDeleted(event Event, votes EventTimeVotes, eventObserversNotifier *EventObserversNotifier) error {
+func OnEventVoteDeleted(event Event, votes EventTimeVotes, container *container.Container) error {
 	var eventObserversNotifier *EventObserversNotifier
 	container.Make(&eventObserversNotifier)
 
+	payload := make(map[string]interface{})
+	payload["event"] = event
+	payload["votes"] = votes
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 		Template: "event_vote_deleted",
-		Payload: struct {
-			Event: event,
-			Votes: votes,
-		}
+		Payload:  payload,
 	})
 }
