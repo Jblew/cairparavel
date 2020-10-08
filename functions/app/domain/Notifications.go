@@ -1,15 +1,13 @@
 package domain
 
 type Notification struct {
-	Template: string `json:"template"`,
-	Payload: map[string]interface{}
+	ID string `json:"id"`,
+	UID string `json:"uid"`,
+	Template string `json:"template"`,
+	Payload map[string]interface{} `json:"payload"`,
 }
 
 type EventObserversNotifier interface {
 	NotifyEventObservers(event Event, notification Notification) error
 }
 
-
-type NotificationTemplateEngine interface {
-	ParseNotification(notification Notification) (string, error)
-}

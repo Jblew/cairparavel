@@ -62,7 +62,7 @@ type OnMessengerMessageProps struct {
 	MessengerNotifier *MessengerNotifier,
 }
 func OnMessengerMessage(props OnMessengerMessageProps) error {
-	return props.MessengerNotifier.SendNotification(&Notification{
+	return props.MessengerNotifier.SendNotification(props.Recipient, &Notification{
 		Template: "messenger_respond",
 		Payload: {
 			MessageText props.MessageText,
