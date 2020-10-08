@@ -8,7 +8,7 @@ import (
 )
 
 // Bind to IoC container
-func Bind(container *container.Container) {
+func Bind(container container.Container) {
 	container.Singleton(func(firestore *firestore.Client) domain.UsersRepository {
 		return &services.UsersRepositoryFirestore{
 			Firestore: firestore,

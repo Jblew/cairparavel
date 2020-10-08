@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
+	"github.com/Jblew/cairparavel/functions/app/domain"
 )
 
 // UsersRepositoryFirestore implementation of domain.UsersService
@@ -12,18 +13,36 @@ type UsersRepositoryFirestore struct {
 	Context   *context.Context
 }
 
+var usersColProd = "envs/prod/users"
 var usersCols = []string{
-	"envs/prod/users",
+	usersColProd,
 	"envs/test/users",
 }
 
-func (UsersRepositoryFirestore *repo) StoreUser(user User) error {
+// StoreUser saves user data
+func (repo *UsersRepositoryFirestore) StoreUser(user domain.User) error {
 	for _, usersCol := range usersCols {
-		docRef := repo.Firestore.Collection(usersCol).Doc(userDoc.UID)
-		_, err := docRef.Create(repo.Context, userDoc)
+		docRef := repo.Firestore.Collection(usersCol).Doc(user.UID)
+		_, err := docRef.Create(*repo.Context, user)
 		if err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+// GetUser returns user by id
+func (repo *UsersRepositoryFirestore) GetUser(userID string) (domain.User, error) {
+	docRef := repo.Firestore.Collection(usersColProd).Doc(userID)
+	snapshot, err := docRef.Get(*repo.Context)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	var result domain.User
+	err = snapshot.DataTo(&result)
+	if err != nil {
+		return domain.User{}, err
+	}
+	return result, nil
 }

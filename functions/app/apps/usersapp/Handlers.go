@@ -7,7 +7,7 @@ import (
 
 // OnUserCreated Handles a case when user is created
 func OnUserCreated(user domain.User, container container.Container) error {
-	var usersRepository *domain.UsersRepository
+	var usersRepository domain.UsersRepository
 	container.Make(&usersRepository)
 
 	return usersRepository.StoreUser(user)
