@@ -1,11 +1,15 @@
-import 	(
-	"cloud.google.com/go/firestore"
+package services
+
+import (
 	"context"
+
+	"cloud.google.com/go/firestore"
 )
 
+// UsersRepositoryFirestore implementation of domain.UsersService
 type UsersRepositoryFirestore struct {
 	Firestore *firestore.Client
-	Context *context.Context
+	Context   *context.Context
 }
 
 var usersCols = []string{

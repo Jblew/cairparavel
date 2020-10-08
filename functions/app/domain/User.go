@@ -10,4 +10,5 @@ type User struct {
 
 type UsersRepository interface {
 	StoreUser(user User) error
+	GetUser(userID string) (User, error)
 }
