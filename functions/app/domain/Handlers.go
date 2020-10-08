@@ -1,22 +1,28 @@
 package domain
 
+import "github.com/golobby/container/pkg/container"
 
-func OnCommentAdded(event Event, comment EventComment, eventObserversNotifier *EventObserversNotifier) error {
-	notification := {
-		Template: "comment_added",
-		Payload: {
-			Event: event,
-			Comment: comment,
-		}
-	}
-	return eventObserversNotifier.NotifyEventObservers(event, notification)
+func OnCommentAdded(event Event, comment EventComment, container *container.Container) error {
+	var eventObserversNotifier *EventObserversNotifier
+	container.Make(&eventObserversNotifier)
+
+	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
+			Template: "comment_added",
+			Payload: struct{
+				Event: event,
+				Comment: comment,
+			}
+	})
 }
 
-func OnEventStateChanged(event Event, eventObserversNotifier *EventObserversNotifier) error {
+func OnEventStateChanged(event Event, container *container.Container) error {
+	var eventObserversNotifier *EventObserversNotifier
+	container.Make(&eventObserversNotifier)
+
 	if event.State == EventState.TIME_VOTING {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_voting_started",
-			Payload: {
+			Payload: struct {
 				Event: event,
 			}
 		})
@@ -24,7 +30,7 @@ func OnEventStateChanged(event Event, eventObserversNotifier *EventObserversNoti
 	else if event.State == EventState.MEMBERS_SIGNUP {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_members_signup_started",
-			Payload: {
+			Payload: struct {
 				Event: event,
 			}
 		})
@@ -32,7 +38,7 @@ func OnEventStateChanged(event Event, eventObserversNotifier *EventObserversNoti
 	else if event.State == EventState.SIGNUP_CLOSED {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_members_signup_closed",
-			Payload: {
+			Payload: struct {
 				Event: event,
 			}
 		})
@@ -40,7 +46,7 @@ func OnEventStateChanged(event Event, eventObserversNotifier *EventObserversNoti
 	else if event.State == EventState.IN_PROGGRESS {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_started",
-			Payload: {
+			Payload: struct {
 				Event: event,
 			}
 		})
@@ -48,7 +54,7 @@ func OnEventStateChanged(event Event, eventObserversNotifier *EventObserversNoti
 	else if event.State == EventState.CANCELLED {
 		return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 			Template: "event_cancelled",
-			Payload: {
+			Payload: struct {
 				Event: event,
 			}
 		})
@@ -61,10 +67,13 @@ type OnMessengerMessageProps struct {
 	Recipient MessengerRecipient,
 	MessengerNotifier *MessengerNotifier,
 }
-func OnMessengerMessage(props OnMessengerMessageProps) error {
+func OnMessengerMessage(MessageText string, Recipient MessengerRecipient, container *container.Container) error {
+	var eventObserversNotifier *EventObserversNotifier
+	container.Make(&eventObserversNotifier)
+
 	return props.MessengerNotifier.SendNotification(props.Recipient, &Notification{
 		Template: "messenger_respond",
-		Payload: {
+		Payload: struct {
 			MessageText props.MessageText,
 		}
 	})
@@ -73,26 +82,39 @@ func OnMessengerMessage(props OnMessengerMessageProps) error {
 type OnMessengerReferralProps struct {
 	ReferralCode string,
 	MessengerRecipient: MessengerRecipient,
-	MessengerNotifier *MessengerNotifier
-	MessengerIDsRepository *MessengerIDsRepository
+	MessengerNotifier *MessengerNotifier,
+	MessengerRecipientRepository *MessengerRecipientRepository,
+	UsersRepository *UsersRepository,
 }
 func OnMessengerReferral(props OnMessengerReferralProps) error {
-	user, err := MessengerIDsRepository.StoreMessengerUser(props.ReferralCode, props.MessengerRecipient)
+	var eventObserversNotifier *EventObserversNotifier
+	container.Make(&eventObserversNotifier)
+
+	userID := props.ReferralCode
+	err := props.MessengerRecipientRepository.StoreMessengerUser(userID, props.MessengerRecipient)
 	if err != nil {
 		return err
 	}
+	user, err := props.UsersRepository.GetUser(userID)
+	if err != nil {
+		return err
+	}
+
 	returnprops.MessengerNotifier.SendNotification(&Notification{
 		Template: "messenger_welcome",
-		Payload: {
+		Payload: struct {
 			User: user,
 		}
 	})
 }
 
 func OnEventMemberSignup(event Event, signup EventSignup, eventObserversNotifier *EventObserversNotifier) error {
+	var eventObserversNotifier *EventObserversNotifier
+	container.Make(&eventObserversNotifier)
+
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 		Template: "member_signed_in",
-		Payload: {
+		Payload: struct {
 			Event: event,
 			Signup: signup,
 		}
@@ -100,9 +122,12 @@ func OnEventMemberSignup(event Event, signup EventSignup, eventObserversNotifier
 }
 
 func OnEventMemberSignout(event Event, signup EventSignup, eventObserversNotifier *EventObserversNotifier) error {
+	var eventObserversNotifier *EventObserversNotifier
+	container.Make(&eventObserversNotifier)
+
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 		Template: "member_signed_out",
-		Payload: {
+		Payload: struct {
 			Event: event,
 			Signup: signup,
 		}
@@ -110,9 +135,12 @@ func OnEventMemberSignout(event Event, signup EventSignup, eventObserversNotifie
 }
 
 func OnEventVote(event Event, votes EventTimeVotes, eventObserversNotifier *EventObserversNotifier) error {
+	var eventObserversNotifier *EventObserversNotifier
+	container.Make(&eventObserversNotifier)
+
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 		Template: "event_voted",
-		Payload: {
+		Payload: struct {
 			Event: event,
 			Votes : votes,
 		}
@@ -120,9 +148,12 @@ func OnEventVote(event Event, votes EventTimeVotes, eventObserversNotifier *Even
 }
 
 func OnEventVoteDeleted(event Event, votes EventTimeVotes, eventObserversNotifier *EventObserversNotifier) error {
+	var eventObserversNotifier *EventObserversNotifier
+	container.Make(&eventObserversNotifier)
+
 	return eventObserversNotifier.NotifyEventObservers(event, &Notification{
 		Template: "event_vote_deleted",
-		Payload: {
+		Payload: struct {
 			Event: event,
 			Votes: votes,
 		}

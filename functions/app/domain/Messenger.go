@@ -13,6 +13,6 @@ type MessengerNotifier interface {
 }
 
 type MessengerRecipientRepository interface {
-	StoreMessengerRecipient(uid string, recipient MessengerRecipient) (User, error)
+	StoreMessengerRecipient(uid string, recipient MessengerRecipient) error
 	GetMessengerRecipient(uid string) (MessengerRecipient, error)
 }
