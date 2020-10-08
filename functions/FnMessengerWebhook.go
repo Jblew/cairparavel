@@ -3,27 +3,26 @@
 package functions
 
 import (
-	"bytes"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 
-	"github.com/Jblew/cairparavel/functions/app/messenger"
+	"github.com/Jblew/cairparavel/functions/app/apps/messengerapp"
+	"github.com/Jblew/cairparavel/functions/app/lib/messenger"
 )
 
 // FnMessengerWebhook is FB messenger webhook
 func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
-	verifyToken := application.Config.Messenger.VerifyToken
+	var messengerInstance *messenger.Messenger
+	container.Make(&messengerInstance)
 
 	if request.Method == "GET" {
 		u, _ := url.Parse(request.RequestURI)
 		values, _ := url.ParseQuery(u.RawQuery)
 		token := values.Get("hub.verify_token")
-		if token == verifyToken {
+		if messengerInstance.IsVerifyTokenCorrect(token) {
 			resp.WriteHeader(200)
 			resp.Write([]byte(values.Get("hub.challenge")))
 			return
@@ -51,70 +50,11 @@ func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
 		resp.Write([]byte("An error occurred"))
 		return
 	}
-	// Find messages
-	log.Printf("Message: %#v", message)
-	for _, entry := range message.Entry {
-		if len(entry.Messaging) == 0 {
-			log.Printf("No messages")
-			resp.WriteHeader(400)
-			resp.Write([]byte("An error occurred"))
-			return
-		}
-		for _, event := range entry.Messaging {
-			log.Printf("Event: %#v", event)
-			if len(event.Referral.Ref) > 0 {
-				log.Printf("REFERRAL FOUND: %s", event.Referral.Ref)
-			}
-			err = handleMessage(event.Sender.ID, event.Message.Text)
-			if err != nil {
-				log.Printf("Failed sending message: %s", err)
-				resp.WriteHeader(400)
-				resp.Write([]byte("An error occurred"))
-				return
-			}
-		}
-	}
-}
-
-// Handles messages
-func handleMessage(senderID, message string) error {
-	accessToken := application.Config.Messenger.AccessToken
-
-	if len(message) == 0 {
-		return errors.New("no message found")
-	}
-	response := messenger.ResponseMessage{
-		Recipient: messenger.Recipient{
-			ID: senderID,
-		},
-		Message: messenger.Message{
-			Text: "Hello",
-		},
-	}
-	data, err := json.Marshal(response)
+	err = messengerapp.OnMessengerInputMessage(message, container)
 	if err != nil {
-		log.Printf("Marshal error: %s", err)
-		return err
+		log.Printf("Failed unmarshalling message: %s", err)
+		resp.WriteHeader(400)
+		resp.Write([]byte("An error occurred"))
+		return
 	}
-	uri := "https://graph.facebook.com/v2.6/me/messages"
-	uri = fmt.Sprintf("%s?access_token=%s", uri, accessToken)
-	log.Printf("URI: %s", uri)
-	req, err := http.NewRequest(
-		"POST",
-		uri,
-		bytes.NewBuffer(data),
-	)
-	if err != nil {
-		log.Printf("Failed making request: %s", err)
-		return err
-	}
-	req.Header.Add("Content-Type", "application/json")
-	client := http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		log.Printf("Failed doing request: %s", err)
-		return err
-	}
-	log.Printf("MESSAGE SENT?\n%#v", res)
-	return nil
 }
