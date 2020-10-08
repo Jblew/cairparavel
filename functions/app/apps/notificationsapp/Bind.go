@@ -7,10 +7,18 @@ import (
 )
 
 // Bind to IoC container
-func Bind(container *container.Container) {
+func Bind(container container.Container) {
 	container.Singleton(func(firestore *firestore.Client) *NotificationsRepository {
 		return &services.NotificationsRepositoryFirestore{
 			Firestore: firestore,
 		}
+	})
+
+	container.Singleton(func() TemplatingService {
+		return &services.TemplatingServiceGolang{}
+	})
+
+	container.Singleton(func() NotificationTemplateRepository {
+		return &services.NotificationTemplateRepositoryStatic{}
 	})
 }
