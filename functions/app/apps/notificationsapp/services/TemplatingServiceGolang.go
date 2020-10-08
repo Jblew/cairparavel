@@ -9,6 +9,7 @@ import (
 type TemplatingServiceGolang struct {
 }
 
+// ResolveTemplate combines template with data into string
 func (service *TemplatingServiceGolang) ResolveTemplate(templateStr string, payload map[string]interface{}) (string, error) {
 	tmpl, err := template.New("TemplatingServiceGolangTemplate").Parse(templateStr)
 	if err != nil {

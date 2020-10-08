@@ -2,6 +2,8 @@ package services
 
 import (
 	"fmt"
+
+	"github.com/Jblew/cairparavel/functions/app/apps/notificationsapp/notificationsdomain"
 )
 
 var templates = map[string]string{
@@ -23,18 +25,13 @@ var templates = map[string]string{
 type NotificationTemplateRepositoryStatic struct {
 }
 
-func (repo *NotificationTemplateRepositoryStatic) GetTemplate(Name string) (NotificationTemplate, error) {
+// GetTemplate returns staticly stored template
+func (repo *NotificationTemplateRepositoryStatic) GetTemplate(Name string) (notificationsdomain.NotificationTemplate, error) {
 	if val, ok := templates[Name]; ok {
-		return NotificationTemplate{
+		return notificationsdomain.NotificationTemplate{
 			Name:     Name,
 			Template: val,
 		}, nil
 	}
-	return NotificationTemplate{}, fmt.Errorf("Template with name %s doesnt exist", Name)
-}
-
-// NotificationTemplate a template for notification
-type NotificationTemplate struct {
-	Name     string
-	Template string
+	return notificationsdomain.NotificationTemplate{}, fmt.Errorf("Template with name %s doesnt exist", Name)
 }

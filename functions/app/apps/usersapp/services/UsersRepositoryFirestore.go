@@ -11,7 +11,7 @@ import (
 // UsersRepositoryFirestore implementation of domain.UsersService
 type UsersRepositoryFirestore struct {
 	Firestore *firestore.Client
-	Context   *context.Context
+	Context   context.Context
 }
 
 var usersColProd = "envs/prod/users"
@@ -24,7 +24,7 @@ var usersCols = []string{
 func (repo *UsersRepositoryFirestore) StoreUser(user domain.User) error {
 	for _, usersCol := range usersCols {
 		docRef := repo.Firestore.Collection(usersCol).Doc(user.UID)
-		_, err := docRef.Create(*repo.Context, user)
+		_, err := docRef.Create(repo.Context, user)
 		if err != nil {
 			return err
 		}
@@ -35,7 +35,7 @@ func (repo *UsersRepositoryFirestore) StoreUser(user domain.User) error {
 // GetUser returns user by id
 func (repo *UsersRepositoryFirestore) GetUser(userID string) (domain.User, error) {
 	docRef := repo.Firestore.Collection(usersColProd).Doc(userID)
-	snapshot, err := docRef.Get(*repo.Context)
+	snapshot, err := docRef.Get(repo.Context)
 	if err != nil {
 		return domain.User{}, err
 	}

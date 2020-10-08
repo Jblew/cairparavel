@@ -1,19 +1,20 @@
 package notificationsapp
 
 import (
+	"github.com/Jblew/cairparavel/functions/app/apps/notificationsapp/notificationsdomain"
 	"github.com/Jblew/cairparavel/functions/app/domain"
 	"github.com/golobby/container/pkg/container"
 )
 
 // OnNotificationCreated Handles a case when notification is awaiting sending
 func OnNotificationCreated(notification domain.Notification, container *container.Container) error {
-	var templateRepository NotificationTemplateRepository
+	var templateRepository notificationsdomain.NotificationTemplateRepository
 	container.Make(&templateRepository)
 
-	var templatingService TemplatingService
+	var templatingService notificationsdomain.TemplatingService
 	container.Make(&templatingService)
 
-	var notificationsRepository NotificationsRepository
+	var notificationsRepository notificationsdomain.NotificationsRepository
 	container.Make(&notificationsRepository)
 
 	var messengerRecipientRepository domain.MessengerRecipientRepository
@@ -31,7 +32,7 @@ func OnNotificationCreated(notification domain.Notification, container *containe
 		return err
 	}
 
-	err = notificationsRepository.AddNotificationToHistory(PlainNotification{
+	err = notificationsRepository.AddNotificationToHistory(notificationsdomain.PlainNotification{
 		Contents: messageText,
 		UID:      notification.UID,
 	})
@@ -49,5 +50,5 @@ func OnNotificationCreated(notification domain.Notification, container *containe
 		return err
 	}
 
-	return notificationsRepository.DeleteNotificationFromQueue(notification.ID)
+	return notificationsRepository.DeleteNotificationFromQueue(notification.UID, notification.ID)
 }

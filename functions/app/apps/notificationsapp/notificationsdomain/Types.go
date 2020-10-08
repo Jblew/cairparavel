@@ -1,4 +1,4 @@
-package notificationsapp
+package notificationsdomain
 
 import "github.com/Jblew/cairparavel/functions/app/domain"
 
@@ -18,7 +18,7 @@ type NotificationTemplate struct {
 type NotificationsRepository interface {
 	AddNotificationToQueue(notification domain.Notification) error
 	AddNotificationToHistory(notification PlainNotification) error
-	DeleteNotificationFromQueue(notificationID string) error
+	DeleteNotificationFromQueue(userID string, notificationID string) error
 }
 
 // NotificationTemplateRepository is a repository of notification templates
