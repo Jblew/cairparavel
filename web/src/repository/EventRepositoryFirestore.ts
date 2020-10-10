@@ -1,6 +1,6 @@
 import { projectConfig } from '@/config'
 import firebase from 'firebase/app'
-import { Event, EventRepository, EventSignup, EventTimeVotes } from '@/businesslogic'
+import { Event, EventRepository, EventSignup, EventTimeVotes, validateEvent } from '@/businesslogic'
 
 export class EventRepositoryFirestore implements EventRepository {
   subscribeToEvent({ eventId, onUpdated, onError }: { eventId: string, onUpdated: (e: Event) => void, onError: (err: Error) => void }) {
@@ -70,6 +70,8 @@ export class EventRepositoryFirestore implements EventRepository {
       ownerUid: firebase.auth().currentUser!.uid,
       ownerDisplayName: firebase.auth().currentUser!.displayName || ''
     }
+    console.log(eventOwned)
+    validateEvent(eventOwned)
     delete eventOwned['votes']
     delete eventOwned['signedMembers']
 
