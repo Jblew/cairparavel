@@ -75,6 +75,13 @@ gcloud functions deploy FnOnEventVoteCreated \
   --runtime go113 \
   --memory "256MB"
 
+gcloud functions deploy FnOnEventVoteModified \
+  --trigger-event providers/cloud.firestore/eventTypes/document.update \
+  --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
+  --region "${GCP_PROJECT_REGION}" \
+  --runtime go113 \
+  --memory "256MB"
+
 gcloud functions deploy FnOnEventVoteDeleted \
   --trigger-event providers/cloud.firestore/eventTypes/document.delete \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
@@ -93,7 +100,7 @@ gcloud alpha scheduler jobs create pubsub "${CHECK_EVENTS_SCHEDULER_JOB}" \
   --topic "${CHECK_EVENTS_PUBSUB_TOPIC}" \
   --schedule "*/10 * * * *" \
   --message-body "SCHEDULE"
-gcloud functions deploy FnOnCronDispatchHandleEvent \
+gcloud functions deploy FnOnCronHandleEvents \
   --trigger-topic "${CHECK_EVENTS_PUBSUB_TOPIC}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \

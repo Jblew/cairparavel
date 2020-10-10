@@ -15,6 +15,11 @@ func (votes *EventTimeVotes) OnAdded(container container.Container) error {
 	return votes.sendNotification("event_voted", container)
 }
 
+// OnModified handles added vote
+func (votes *EventTimeVotes) OnModified(container container.Container) error {
+	return votes.sendNotification("event_vote_modified", container)
+}
+
 // OnDeleted handles added vote
 func (votes *EventTimeVotes) OnDeleted(container container.Container) error {
 	return votes.sendNotification("event_vote_deleted", container)

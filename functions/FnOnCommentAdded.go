@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"cloud.google.com/go/functions/metadata"
+	"github.com/Jblew/cairparavel/functions/app/domain"
 )
 
 // FnOnCommentAdded cloud function
@@ -17,5 +18,13 @@ func FnOnCommentAdded(ctx context.Context, e FirestoreEvent) error {
 	log.Printf("Function FnOnCommentAdded triggered by change to: %v", meta.Resource)
 	log.Printf("Old value: %+v", e.OldValue)
 	log.Printf("New value: %+v", e.Value)
-	return nil
+
+	comment := domain.EventComment{
+		ID:        e.Value.Fields.id.StringValue,
+		EventID:   e.Value.Fields.eventId.StringValue,
+		AuthorUID: e.Value.Fields.authorUid.StringValue,
+		Contents:  e.Value.Fields.contents.StringValue,
+		Time:      e.Value.Fields.time.NumberValue,
+	}
+	return comment.OnAdded(container)
 }

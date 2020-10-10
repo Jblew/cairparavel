@@ -4,7 +4,7 @@ import "github.com/golobby/container/pkg/container"
 
 // MessengerMessage is message send from messenger to our bot
 type MessengerMessage struct {
-	Text      string `"json":"text"`
+	Text      string `json:"text"`
 	Recipient MessengerRecipient
 }
 

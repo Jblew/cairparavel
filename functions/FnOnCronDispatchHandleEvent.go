@@ -2,16 +2,11 @@ package functions
 
 import (
 	"context"
-	"log"
+
+	"github.com/Jblew/cairparavel/functions/app/apps/eventsapp"
 )
 
-// PubSubMessage is the payload of a Pub/Sub event.
-type PubSubMessage struct {
-	Data []byte `json:"data"`
-}
-
-// FnOnCronDispatchHandleEvent cloud function
-func FnOnCronDispatchHandleEvent(ctx context.Context, e PubSubMessage) error {
-	log.Printf("Function FnOnCronDispatchHandleEvent triggered")
-	return nil
+// FnOnCronHandleEvents cloud function
+func FnOnCronHandleEvents(ctx context.Context, e PubSubMessage) error {
+	return eventsapp.OnPeriodicalHandleEvents(container)
 }

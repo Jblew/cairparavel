@@ -109,10 +109,9 @@ func (event *Event) OnCreated(container container.Container) error {
 }
 
 // OnModified handler
-func (event *Event) OnModified(previousEvent Event, container container.Container) error {
+func (event *Event) OnModified(container container.Container) error {
 	payload := make(map[string]interface{})
 	payload["event"] = event
-	payload["previousEvent"] = previousEvent
 
 	return event.NotifyObservers(Notification{
 		Template: "event_modified",
