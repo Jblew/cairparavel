@@ -135,13 +135,13 @@ gcloud functions deploy FnOnEventVoteDeleted \
   CHECK_EVENTS_PUBSUB_TOPIC="cron-check-events-state"
   CHECK_EVENTS_PUBSUB_SUBSCRIPTION="sub_check-events-state"
   CHECK_EVENTS_SCHEDULER_JOB="job_check-events-state"
-  gcloud pubsub topics create "${CHECK_EVENTS_PUBSUB_TOPIC}"
-  gcloud pubsub subscriptions create "${CHECK_EVENTS_PUBSUB_SUBSCRIPTION}" --topic "${CHECK_EVENTS_PUBSUB_TOPIC}"
+  gcloud pubsub topics create "${CHECK_EVENTS_PUBSUB_TOPIC}" || echo "Cannot create topic"
+  gcloud pubsub subscriptions create "${CHECK_EVENTS_PUBSUB_SUBSCRIPTION}" --topic "${CHECK_EVENTS_PUBSUB_TOPIC}" || echo "Cannot create subscription"
   gcloud alpha scheduler jobs delete "${CHECK_EVENTS_SCHEDULER_JOB}" || echo "Failed to delete scheduler job"
   gcloud alpha scheduler jobs create pubsub "${CHECK_EVENTS_SCHEDULER_JOB}" \
     --topic "${CHECK_EVENTS_PUBSUB_TOPIC}" \
     --schedule "*/10 * * * *" \
-    --message-body "SCHEDULE"
+    --message-body "SCHEDULE" || echo "Cannot recreate cron job"
   gcloud functions deploy FnOnCronHandleEvents \
     --trigger-topic "${CHECK_EVENTS_PUBSUB_TOPIC}" \
     --region "${GCP_PROJECT_REGION}" \
