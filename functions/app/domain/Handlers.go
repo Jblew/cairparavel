@@ -6,21 +6,6 @@ import (
 	"github.com/golobby/container/pkg/container"
 )
 
-// OnCommentAdded handler
-func OnCommentAdded(event Event, comment EventComment, container container.Container) error {
-	var eventObserversNotifier EventObserversNotifier
-	container.Make(&eventObserversNotifier)
-
-	payload := make(map[string]interface{})
-	payload["event"] = event
-	payload["comment"] = comment
-
-	return eventObserversNotifier.NotifyEventObservers(event, Notification{
-		Template: "comment_added",
-		Payload:  payload,
-	})
-}
-
 // OnEventStateChanged handler
 func OnEventStateChanged(event Event, container container.Container) error {
 	var eventObserversNotifier EventObserversNotifier
