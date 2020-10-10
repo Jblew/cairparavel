@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"cloud.google.com/go/functions/metadata"
-	"github.com/Jblew/cairparavel/functions/app/domain"
+	"github.com/Jblew/cairparavel/functions/eventinputtypes"
 )
 
 // FnOnEventMemberSignupDeleted cloud function
-func FnOnEventMemberSignupDeleted(ctx context.Context, e FirestoreEvent) error {
+func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEvent) error {
 	meta, err := metadata.FromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("metadata.FromContext: %v", err)
@@ -19,10 +20,21 @@ func FnOnEventMemberSignupDeleted(ctx context.Context, e FirestoreEvent) error {
 	log.Printf("Old value: %+v", e.OldValue)
 	log.Printf("New value: %+v", e.Value)
 
-	signup := domain.EventSignup{
-		UID:         e.Value.Fields.uid.StringValue,
-		EventID:     e.Value.Fields.eventId.StringValue,
-		DisplayName: e.Value.Fields.displayName.StringValue,
-	}
+	signup := e.Value.Fields.ToEventSignup()
 	return signup.OnDeleted(container)
+}
+
+type firestoreEvent struct {
+	OldValue   FirestoreValue `json:"oldValue"`
+	Value      FirestoreValue `json:"value"`
+	UpdateMask struct {
+		FieldPaths []string `json:"fieldPaths"`
+	} `json:"updateMask"`
+}
+
+type firestoreValue struct {
+	CreateTime time.Time                                 `json:"createTime"`
+	Fields     eventinputtypes.EventSignupFirestoreInput `json:"fields"`
+	Name       string                                    `json:"name"`
+	UpdateTime time.Time                                 `json:"updateTime"`
 }
