@@ -45,34 +45,6 @@ func OnMessengerReferral(referralCode string, messengerRecipient MessengerRecipi
 	})
 }
 
-// OnEventMemberSignup handler
-func OnEventMemberSignup(event Event, signup EventSignup, container container.Container) error {
-	var eventObserversNotifier EventObserversNotifier
-	container.Make(&eventObserversNotifier)
-
-	payload := make(map[string]interface{})
-	payload["event"] = event
-	payload["signup"] = signup
-	return eventObserversNotifier.NotifyEventObservers(event, Notification{
-		Template: "member_signed_in",
-		Payload:  payload,
-	})
-}
-
-// OnEventMemberSignout handler
-func OnEventMemberSignout(event Event, signup EventSignup, container container.Container) error {
-	var eventObserversNotifier EventObserversNotifier
-	container.Make(&eventObserversNotifier)
-
-	payload := make(map[string]interface{})
-	payload["event"] = event
-	payload["signup"] = signup
-	return eventObserversNotifier.NotifyEventObservers(event, Notification{
-		Template: "member_signed_out",
-		Payload:  payload,
-	})
-}
-
 // OnEventVote handler
 func OnEventVote(event Event, votes EventTimeVotes, container container.Container) error {
 	var eventObserversNotifier EventObserversNotifier
