@@ -21,6 +21,7 @@ func FnOnCommentAdded(ctx context.Context, e firestoreEvent) error {
 	log.Printf("New value: %+v", e.Value)
 
 	comment := e.Value.Fields.ToEventComment()
+	log.Printf("Parsed comment %+v", comment)
 	return comment.OnAdded(container)
 }
 

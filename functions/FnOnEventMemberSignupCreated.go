@@ -21,6 +21,7 @@ func FnOnEventMemberSignupCreated(ctx context.Context, e firestoreEvent) error {
 	log.Printf("New value: %+v", e.Value)
 
 	signup := e.Value.Fields.ToEventSignup()
+	log.Printf("Parsed signup %+v", signup)
 	return signup.OnAdded(container)
 }
 

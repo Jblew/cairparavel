@@ -26,6 +26,7 @@ func FnOnEventModified(ctx context.Context, e firestoreEvent) error {
 	}
 
 	event := e.Value.Fields.ToEvent()
+	log.Printf("Parsed event %+v", event)
 	return event.OnModified(container)
 }
 

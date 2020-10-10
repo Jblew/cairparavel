@@ -21,6 +21,7 @@ func FnOnEventCreated(ctx context.Context, e firestoreEvent) error {
 	log.Printf("New value: %+v", e.Value)
 
 	event := e.Value.Fields.ToEvent()
+	log.Printf("Parsed event %+v", event)
 	return event.OnCreated(container)
 }
 
