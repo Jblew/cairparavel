@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"cloud.google.com/go/functions/metadata"
-	"github.com/Jblew/cairparavel/functions/app/domain"
+	"github.com/Jblew/cairparavel/functions/eventinputtypes"
 )
 
 // FnOnCommentAdded cloud function
-func FnOnCommentAdded(ctx context.Context, e FirestoreEvent) error {
+func FnOnCommentAdded(ctx context.Context, e firestoreEvent) error {
 	meta, err := metadata.FromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("metadata.FromContext: %v", err)
@@ -19,12 +20,21 @@ func FnOnCommentAdded(ctx context.Context, e FirestoreEvent) error {
 	log.Printf("Old value: %+v", e.OldValue)
 	log.Printf("New value: %+v", e.Value)
 
-	comment := domain.EventComment{
-		ID:        e.Value.Fields.id.StringValue,
-		EventID:   e.Value.Fields.eventId.StringValue,
-		AuthorUID: e.Value.Fields.authorUid.StringValue,
-		Contents:  e.Value.Fields.contents.StringValue,
-		Time:      e.Value.Fields.time.NumberValue,
-	}
+	comment := e.Value.Fields.ToEventComment()
 	return comment.OnAdded(container)
+}
+
+type firestoreEvent struct {
+	OldValue   FirestoreValue `json:"oldValue"`
+	Value      FirestoreValue `json:"value"`
+	UpdateMask struct {
+		FieldPaths []string `json:"fieldPaths"`
+	} `json:"updateMask"`
+}
+
+type firestoreValue struct {
+	CreateTime time.Time                                  `json:"createTime"`
+	Fields     eventinputtypes.EventCommentFirestoreInput `json:"fields"`
+	Name       string                                     `json:"name"`
+	UpdateTime time.Time                                  `json:"updateTime"`
 }
