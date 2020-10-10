@@ -1,7 +1,7 @@
 <template>
   <div class="create-event-btn">
-    <a :href="messengerLink" target="_blank">
-      Enable messenger notifications
+    <a :href="messengerLink">
+      Enable messenger notifications (will open messenger window)
     </a>
   </div>
 </template>
