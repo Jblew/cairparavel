@@ -153,7 +153,7 @@ function comments() {
     // Comments //
     //////////////
 
-    match /comments/{resId}/messages/{commentId} {
+    match /event_comments/{eventId}/messages/{commentId} {
       allow create: if request.resource.data.authorUid == request.auth.uid;
       allow delete: if resource.data.authorUid == request.auth.uid;
       allow update: if false;
@@ -168,7 +168,7 @@ function notifications() {
     // Notifications //
     //////////////////
 
-    match /notifications/{uid}/push/{notificationId} {
+    match /notifications/{uid}/messenger_queue/{notificationId} {
       allow write: if false;
       allow read: if isAuthenticatedMember() && uid == request.auth.uid;
     }
@@ -183,7 +183,7 @@ function notifications() {
       allow delete: if uid == request.auth.uid;
     }
 
-    match /notification_messengerid/{uid} {
+    match /messenger_recipients/{uid} {
       allow create: if uid == request.auth.uid;
       allow delete: if uid == request.auth.uid;
     }
