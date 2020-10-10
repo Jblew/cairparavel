@@ -12,19 +12,19 @@ type EventTimeVotes struct {
 
 // OnAdded handles added vote
 func (votes *EventTimeVotes) OnAdded(container container.Container) error {
-	return signup.sendNotification("event_voted", container)
+	return votes.sendNotification("event_voted", container)
 }
 
 // OnDeleted handles added vote
 func (votes *EventTimeVotes) OnDeleted(container container.Container) error {
-	return signup.sendNotification("event_vote_deleted", container)
+	return votes.sendNotification("event_vote_deleted", container)
 }
 
-func (signup *EventSignup) sendNotification(templateName string, container container.Container) error {
+func (votes *EventTimeVotes) sendNotification(templateName string, container container.Container) error {
 	var eventRepository EventRepository
 	container.Make(&eventRepository)
 
-	event, err := eventRepository.GetEventByID(signup.EventID)
+	event, err := eventRepository.GetEventByID(votes.EventID)
 	if err != nil {
 		return err
 	}
@@ -34,8 +34,8 @@ func (signup *EventSignup) sendNotification(templateName string, container conta
 		Payload:  make(map[string]interface{}),
 	}
 
-	payload["event"] = event
-	payload["votes"] = votes
+	notification.Payload["event"] = event
+	notification.Payload["votes"] = votes
 
 	return event.NotifyObservers(notification, container)
 }
