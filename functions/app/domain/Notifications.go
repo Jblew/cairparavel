@@ -12,7 +12,3 @@ type Notification struct {
 type NotificationQueue interface {
 	ScheduleToSend(uid string, notification Notification) error
 }
-
-type EventObserversNotifier interface {
-	NotifyEventObservers(event Event, notification Notification) error
-}
