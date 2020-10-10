@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/Jblew/cairparavel/functions/app/apps/usersapp"
 	"github.com/Jblew/cairparavel/functions/app/domain"
 )
 
@@ -18,5 +17,5 @@ func FnOnUserCreated(ctx context.Context, e AuthEvent) error {
 		JoinedAt: e.Metadata.CreatedAt,
 	}
 
-	return usersapp.OnUserCreated(user, container)
+	return user.OnAccountCreated(container)
 }

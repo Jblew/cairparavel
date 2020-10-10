@@ -19,7 +19,7 @@ fi
 
 gcloud config set project "${GCP_PROJECT_ID}"
 
-gcloud functions deploy FnOnUserCreated \
+gcloud functions deploy FnOnFirebaseAccountCreated \
   --trigger-event providers/firebase.auth/eventTypes/user.create \
   --trigger-resource "${GCP_PROJECT_ID}" \
   --region "${GCP_PROJECT_REGION}" \
@@ -31,56 +31,56 @@ gcloud functions deploy FnOnNotificationQueued \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/notifications/{uid}/messenger_queue/{notificationId}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "512MB"
+  --memory "256MB"
 
 gcloud functions deploy FnOnCommentAdded \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/event_comments/{eventId}/messages/{commentId}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "512MB"
+  --memory "256MB"
 
 gcloud functions deploy FnOnEventCreated \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "512MB"
+  --memory "256MB"
 
 gcloud functions deploy FnOnEventModified \
   --trigger-event providers/cloud.firestore/eventTypes/document.update \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "512MB"
+  --memory "256MB"
 
 gcloud functions deploy FnOnEventMemberSignupCreated \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/signedMembers/{uid}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "512MB"
+  --memory "256MB"
 
 gcloud functions deploy FnOnEventMemberSignupDeleted \
   --trigger-event providers/cloud.firestore/eventTypes/document.delete \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/signedMembers/{uid}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "512MB"
+  --memory "256MB"
 
 gcloud functions deploy FnOnEventVoteCreated \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "512MB"
+  --memory "256MB"
 
 gcloud functions deploy FnOnEventVoteDeleted \
   --trigger-event providers/cloud.firestore/eventTypes/document.delete \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "512MB"
+  --memory "256MB"
 
 
 CHECK_EVENTS_PUBSUB_TOPIC="cron-check-events-state"
@@ -104,4 +104,4 @@ gcloud functions deploy FnMessengerWebhook \
   --trigger-http --allow-unauthenticated \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
-  --memory "1024MB"
+  --memory "512MB"

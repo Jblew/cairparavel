@@ -13,8 +13,8 @@ type User struct {
 	JoinedAt time.Time `json:"JoinedAt"`
 }
 
-// OnFirstLogin handles situation when user logs in and doesnt have an account stored
-func (user *User) OnFirstLogin(temporaryUser User, container container.Container) error {
+// OnAccountCreated handles situation when user logs in and doesnt have an account stored
+func (user *User) OnAccountCreated(temporaryUser User, container container.Container) error {
 	var usersRepository UsersRepository
 	container.Make(&usersRepository)
 
