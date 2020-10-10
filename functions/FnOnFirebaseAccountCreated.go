@@ -8,9 +8,9 @@ import (
 	"github.com/Jblew/cairparavel/functions/app/domain"
 )
 
-// FnOnUserCreated handles user created event
-func FnOnUserCreated(ctx context.Context, e AuthEvent) error {
-	log.Printf("FnOnUserCreated: %v", e)
+// FnOnFirebaseAccountCreated handles user created event
+func FnOnFirebaseAccountCreated(ctx context.Context, e AuthEvent) error {
+	log.Printf("FnOnFirebaseAccountCreated: %v", e)
 
 	user := domain.User{
 		Email:    e.Email,
