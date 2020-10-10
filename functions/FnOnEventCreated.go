@@ -11,7 +11,7 @@ import (
 )
 
 // FnOnEventCreated cloud function
-func FnOnEventCreated(ctx context.Context, e firestoreEvent) error {
+func FnOnEventCreated(ctx context.Context, e firestoreEventFnOnEventCreated) error {
 	meta, err := metadata.FromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("metadata.FromContext: %v", err)
@@ -25,16 +25,16 @@ func FnOnEventCreated(ctx context.Context, e firestoreEvent) error {
 	return event.OnCreated(container)
 }
 
-type firestoreEvent struct {
-	OldValue   firestoreValue `json:"oldValue"`
-	Value      firestoreValue `json:"value"`
+type firestoreEventFnOnEventCreated struct {
+	OldValue   firestoreValueFnOnEventCreated `json:"oldValue"`
+	Value      firestoreValueFnOnEventCreated `json:"value"`
 	UpdateMask struct {
 		FieldPaths []string `json:"fieldPaths"`
 	} `json:"updateMask"`
 }
 
 // firestoreValue holds Firestore fields.
-type firestoreValue struct {
+type firestoreValueFnOnEventCreated struct {
 	CreateTime time.Time                           `json:"createTime"`
 	Fields     eventinputtypes.EventFirestoreInput `json:"fields"`
 	Name       string                              `json:"name"`

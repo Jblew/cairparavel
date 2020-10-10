@@ -10,3 +10,8 @@ import (
 func FnOnCronHandleEvents(ctx context.Context, e PubSubMessage) error {
 	return eventsapp.OnPeriodicalHandleEvents(container)
 }
+
+// PubSubMessage is the payload of a Pub/Sub event.
+type PubSubMessage struct {
+	Data []byte `json:"data"`
+}

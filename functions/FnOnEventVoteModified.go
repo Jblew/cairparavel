@@ -11,7 +11,7 @@ import (
 )
 
 // FnOnEventVoteModified cloud function
-func FnOnEventVoteModified(ctx context.Context, e firestoreEvent) error {
+func FnOnEventVoteModified(ctx context.Context, e firestoreEventFnOnEventVoteModified) error {
 	meta, err := metadata.FromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("metadata.FromContext: %v", err)
@@ -22,19 +22,19 @@ func FnOnEventVoteModified(ctx context.Context, e firestoreEvent) error {
 
 	votes := e.Value.Fields.ToEventTimeVotes()
 	log.Printf("Parsed votes %+v", votes)
-	return votes.OnCreated(container)
+	return votes.OnModified(container)
 }
 
-type firestoreEvent struct {
-	OldValue   firestoreValue `json:"oldValue"`
-	Value      firestoreValue `json:"value"`
+type firestoreEventFnOnEventVoteModified struct {
+	OldValue   firestoreValueFnOnEventVoteModified `json:"oldValue"`
+	Value      firestoreValueFnOnEventVoteModified `json:"value"`
 	UpdateMask struct {
 		FieldPaths []string `json:"fieldPaths"`
 	} `json:"updateMask"`
 }
 
 // firestoreValue holds Firestore fields.
-type firestoreValue struct {
+type firestoreValueFnOnEventVoteModified struct {
 	CreateTime time.Time                                    `json:"createTime"`
 	Fields     eventinputtypes.EventTimeVotesFirestoreInput `json:"fields"`
 	Name       string                                       `json:"name"`

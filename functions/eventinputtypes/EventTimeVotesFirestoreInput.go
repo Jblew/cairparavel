@@ -10,6 +10,9 @@ type EventTimeVotesFirestoreInput struct {
 	EventID struct {
 		StringValue string `json:"stringValue"`
 	} `json:"eventId"`
+	DisplayName struct {
+		StringValue string `json:"displayName"`
+	} `json:"eventId"`
 	Times struct {
 		ArrayValue struct {
 			Values []struct {
@@ -20,16 +23,16 @@ type EventTimeVotesFirestoreInput struct {
 }
 
 // ToEventTimeVotes converter
-func (input *EventTimeVotesCommentFirestoreInput) ToEventTimeVotes() domain.EventTimeVotes {
-	times := make([]int64)
+func (input *EventTimeVotesFirestoreInput) ToEventTimeVotes() domain.EventTimeVotes {
+	times := make([]int64, 0)
 	for _, time := range input.Times.ArrayValue.Values {
-		append(times, time.NumberValue)
+		times = append(times, time.NumberValue)
 	}
 
 	return domain.EventTimeVotes{
-		UID:          input.UID.StringValue,
-		EventID:      input.EventID.StringValue,
-		DisplayName:  input.DisplayName.StringValue,
-		AllowedTimes: times,
+		UID:         input.UID.StringValue,
+		EventID:     input.EventID.StringValue,
+		DisplayName: input.DisplayName.StringValue,
+		Times:       times,
 	}
 }

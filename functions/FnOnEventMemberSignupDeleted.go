@@ -11,7 +11,7 @@ import (
 )
 
 // FnOnEventMemberSignupDeleted cloud function
-func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEvent) error {
+func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEventFnOnEventMemberSignupDeleted) error {
 	meta, err := metadata.FromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("metadata.FromContext: %v", err)
@@ -25,15 +25,15 @@ func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEvent) error {
 	return signup.OnDeleted(container)
 }
 
-type firestoreEvent struct {
-	OldValue   FirestoreValue `json:"oldValue"`
-	Value      FirestoreValue `json:"value"`
+type firestoreEventFnOnEventMemberSignupDeleted struct {
+	OldValue   firestoreValueFnOnEventMemberSignupDeleted `json:"oldValue"`
+	Value      firestoreValueFnOnEventMemberSignupDeleted `json:"value"`
 	UpdateMask struct {
 		FieldPaths []string `json:"fieldPaths"`
 	} `json:"updateMask"`
 }
 
-type firestoreValue struct {
+type firestoreValueFnOnEventMemberSignupDeleted struct {
 	CreateTime time.Time                                 `json:"createTime"`
 	Fields     eventinputtypes.EventSignupFirestoreInput `json:"fields"`
 	Name       string                                    `json:"name"`

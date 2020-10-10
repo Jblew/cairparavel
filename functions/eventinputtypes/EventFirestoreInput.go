@@ -53,10 +53,11 @@ type EventFirestoreInput struct {
 }
 
 // ToEvent converter
-func (input *EventCommentFirestoreInput) ToEvent() domain.Event {
-	allowedTimes := make([]int64)
+func (input *EventFirestoreInput) ToEvent() domain.Event {
+	allowedTimes := make([]int64, 0)
+
 	for _, allowedTime := range input.AllowedTimes.ArrayValue.Values {
-		append(allowedTimes, allowedTime.NumberValue)
+		allowedTimes = append(allowedTimes, allowedTime.NumberValue)
 	}
 
 	return domain.Event{

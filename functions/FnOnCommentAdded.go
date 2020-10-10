@@ -11,7 +11,7 @@ import (
 )
 
 // FnOnCommentAdded cloud function
-func FnOnCommentAdded(ctx context.Context, e firestoreEvent) error {
+func FnOnCommentAdded(ctx context.Context, e firestoreEventFnOnCommentAdded) error {
 	meta, err := metadata.FromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("metadata.FromContext: %v", err)
@@ -25,15 +25,15 @@ func FnOnCommentAdded(ctx context.Context, e firestoreEvent) error {
 	return comment.OnAdded(container)
 }
 
-type firestoreEvent struct {
-	OldValue   FirestoreValue `json:"oldValue"`
-	Value      FirestoreValue `json:"value"`
+type firestoreEventFnOnCommentAdded struct {
+	OldValue   firestoreValueFnOnCommentAdded `json:"oldValue"`
+	Value      firestoreValueFnOnCommentAdded `json:"value"`
 	UpdateMask struct {
 		FieldPaths []string `json:"fieldPaths"`
 	} `json:"updateMask"`
 }
 
-type firestoreValue struct {
+type firestoreValueFnOnCommentAdded struct {
 	CreateTime time.Time                                  `json:"createTime"`
 	Fields     eventinputtypes.EventCommentFirestoreInput `json:"fields"`
 	Name       string                                     `json:"name"`
