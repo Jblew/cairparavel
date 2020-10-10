@@ -97,6 +97,29 @@ func (event *Event) OnStateChanged(previousState EventState, container container
 	return nil
 }
 
+// OnCreated handler
+func (event *Event) OnCreated(container container.Container) error {
+	payload := make(map[string]interface{})
+	payload["event"] = event
+
+	return event.NotifyObservers(Notification{
+		Template: "event_created",
+		Payload:  payload,
+	}, container)
+}
+
+// OnModified handler
+func (event *Event) OnModified(previousEvent Event, container container.Container) error {
+	payload := make(map[string]interface{})
+	payload["event"] = event
+	payload["previousEvent"] = previousEvent
+
+	return event.NotifyObservers(Notification{
+		Template: "event_modified",
+		Payload:  payload,
+	}, container)
+}
+
 // NotifyObservers notifies people observing the event
 func (event *Event) NotifyObservers(notification Notification, container container.Container) error {
 	var observersRepo EventObserverRepository
@@ -112,7 +135,7 @@ func (event *Event) NotifyObservers(notification Notification, container contain
 
 	var lastErr error
 	for _, observer := range observers {
-		err := notificationQueue.ScheduleToSend(observer.UID, notification)
+		err := notificationQueue.Add(observer.UID, notification)
 		if err != nil {
 			log.Printf("Error while sending notification %v", err)
 			lastErr = err
