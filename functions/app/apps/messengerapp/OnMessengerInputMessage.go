@@ -53,17 +53,26 @@ func onMessagingEntry(entry messenger.MessagingEntry, container container.Contai
 	return lastErr
 }
 
-func onReferral(entry messenger.MessagingEntry, referral *messenger.MessagingEntryReferral, container container.Container) error {
-	if len(referral.Ref) == 0 {
+func onReferral(entry messenger.MessagingEntry, messagingReferral *messenger.MessagingEntryReferral, container container.Container) error {
+	if len(messagingReferral.Ref) == 0 {
 		return fmt.Errorf("Empty referral code")
 	}
-	return domain.OnMessengerReferral(referral.Ref, domain.MessengerRecipient{
-		ID: entry.Sender.ID,
-	}, container)
+	referral := domain.MessengerReferral{
+		Code: messagingReferral.Ref,
+		Recipient: domain.MessengerRecipient{
+			ID: entry.Sender.ID,
+		},
+	}
+
+	return referral.OnNew(container)
 }
 
-func onMessage(entry messenger.MessagingEntry, message *messenger.MessagingEntryMessage, container container.Container) error {
-	return domain.OnMessengerMessage(message.Text, domain.MessengerRecipient{
-		ID: entry.Sender.ID,
-	}, container)
+func onMessage(entry messenger.MessagingEntry, messengerMessage *messenger.MessagingEntryMessage, container container.Container) error {
+	message := domain.MessengerMessage{
+		Text: messengerMessage.Text,
+		Recipient: domain.MessengerRecipient{
+			ID: entry.Sender.ID,
+		},
+	}
+	return message.OnNew(container)
 }
