@@ -27,25 +27,34 @@ type Event struct {
 }
 
 // GetStateAt retrives state of an event at any given time
-func (event *Event) GetStateAt(atTime time.Time) EventState {
+func (event *Event) GetStateAt(atTime time.Time, container container.Container) (EventState, error) {
+	var signupRepo EventSignupRepository
+	container.Make(&signupRepo)
+
 	timeMs := atTime.UnixNano() / int64(time.Millisecond)
 	if timeMs < event.VotingTime {
-		return EventStateTimeVoting
+		return EventStateTimeVoting, nil
 	} else if event.TimeConfirmed == false {
 		if timeMs < event.StartTime {
-			return EventStateWaitingForTimeConfirm
+			return EventStateWaitingForTimeConfirm, nil
 		}
-		return EventStateCancelled
+		return EventStateCancelled, nil
 	} else if timeMs < event.SignupTime {
-		return EventStateMembersSignup
-	} else if len(event.SignedMembers) < event.MinParticipants {
-		return EventStateCancelled
-	} else if timeMs < event.StartTime {
-		return EventStateSignupClosed
-	} else if timeMs < event.EndTime {
-		return EventStateInProggress
+		return EventStateMembersSignup, nil
 	}
-	return EventStateFinished
+
+	signupCount, err := signupRepo.GetCount(event.ID)
+	if err != nil {
+		return EventStateCancelled, err
+	}
+	if signupCount < event.MinParticipants {
+		return EventStateCancelled, nil
+	} else if timeMs < event.StartTime {
+		return EventStateSignupClosed, nil
+	} else if timeMs < event.EndTime {
+		return EventStateInProggress, nil
+	}
+	return EventStateFinished, nil
 }
 
 // OnStateChanged handler
@@ -54,38 +63,42 @@ func (event *Event) OnStateChanged(previousState EventState, container container
 	payload["event"] = event
 	payload["previousState"] = previousState
 
-	eventState := GetEventStateAt(event, time.Now())
+	eventState, err := event.GetStateAt(time.Now(), container)
+	if err != nil {
+		return err
+	}
+
 	if eventState == EventStateTimeVoting {
 		return event.NotifyObservers(Notification{
 			Template: "event_voting_started",
 			Payload:  payload,
-		})
+		}, container)
 	} else if eventState == EventStateMembersSignup {
 		return event.NotifyObservers(Notification{
 			Template: "event_members_signup_started",
 			Payload:  payload,
-		})
+		}, container)
 	} else if eventState == EventStateSignupClosed {
 		return event.NotifyObservers(Notification{
 			Template: "event_members_signup_closed",
 			Payload:  payload,
-		})
+		}, container)
 	} else if eventState == EventStateInProggress {
 		return event.NotifyObservers(Notification{
 			Template: "event_started",
 			Payload:  payload,
-		})
+		}, container)
 	} else if eventState == EventStateFinished {
 		return event.NotifyObservers(Notification{
 			Template: "event_cancelled",
 			Payload:  payload,
-		})
+		}, container)
 	}
 	return nil
 }
 
 // NotifyObservers notifies people observing the event
-func (event *Event) NotifyObservers(notification Notification, container container.Container) {
+func (event *Event) NotifyObservers(notification Notification, container container.Container) error {
 	var observersRepo EventObserverRepository
 	container.Make(&observersRepo)
 

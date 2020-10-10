@@ -17,6 +17,9 @@ func (comment *EventComment) OnAdded(container container.Container) error {
 	container.Make(&eventRepository)
 
 	event, err := eventRepository.GetEventByID(comment.EventID)
+	if err != nil {
+		return err
+	}
 
 	notification := Notification{
 		Template: "comment_added",

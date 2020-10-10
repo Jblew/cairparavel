@@ -6,3 +6,8 @@ type EventSignup struct {
 	EventID     string `json:"eventId"`
 	DisplayName string `json:"displayName"`
 }
+
+// EventSignupRepository manages signups
+type EventSignupRepository interface {
+	GetCount(eventID string) (int, error)
+}
