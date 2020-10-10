@@ -1,48 +1,8 @@
 package domain
 
 import (
-	"time"
-
 	"github.com/golobby/container/pkg/container"
 )
-
-// OnEventStateChanged handler
-func OnEventStateChanged(event Event, container container.Container) error {
-	var eventObserversNotifier EventObserversNotifier
-	container.Make(&eventObserversNotifier)
-
-	payload := make(map[string]interface{})
-	payload["event"] = event
-
-	eventState := GetEventStateAt(event, time.Now())
-	if eventState == EventStateTimeVoting {
-		return eventObserversNotifier.NotifyEventObservers(event, Notification{
-			Template: "event_voting_started",
-			Payload:  payload,
-		})
-	} else if eventState == EventStateMembersSignup {
-		return eventObserversNotifier.NotifyEventObservers(event, Notification{
-			Template: "event_members_signup_started",
-			Payload:  payload,
-		})
-	} else if eventState == EventStateSignupClosed {
-		return eventObserversNotifier.NotifyEventObservers(event, Notification{
-			Template: "event_members_signup_closed",
-			Payload:  payload,
-		})
-	} else if eventState == EventStateInProggress {
-		return eventObserversNotifier.NotifyEventObservers(event, Notification{
-			Template: "event_started",
-			Payload:  payload,
-		})
-	} else if eventState == EventStateFinished {
-		return eventObserversNotifier.NotifyEventObservers(event, Notification{
-			Template: "event_cancelled",
-			Payload:  payload,
-		})
-	}
-	return nil
-}
 
 // OnMessengerMessage handler
 func OnMessengerMessage(messageText string, recipient MessengerRecipient, container container.Container) error {

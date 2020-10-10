@@ -48,6 +48,42 @@ func (event *Event) GetStateAt(atTime time.Time) EventState {
 	return EventStateFinished
 }
 
+// OnStateChanged handler
+func (event *Event) OnStateChanged(previousState EventState, container container.Container) error {
+	payload := make(map[string]interface{})
+	payload["event"] = event
+	payload["previousState"] = previousState
+
+	eventState := GetEventStateAt(event, time.Now())
+	if eventState == EventStateTimeVoting {
+		return event.NotifyObservers(Notification{
+			Template: "event_voting_started",
+			Payload:  payload,
+		})
+	} else if eventState == EventStateMembersSignup {
+		return event.NotifyObservers(Notification{
+			Template: "event_members_signup_started",
+			Payload:  payload,
+		})
+	} else if eventState == EventStateSignupClosed {
+		return event.NotifyObservers(Notification{
+			Template: "event_members_signup_closed",
+			Payload:  payload,
+		})
+	} else if eventState == EventStateInProggress {
+		return event.NotifyObservers(Notification{
+			Template: "event_started",
+			Payload:  payload,
+		})
+	} else if eventState == EventStateFinished {
+		return event.NotifyObservers(Notification{
+			Template: "event_cancelled",
+			Payload:  payload,
+		})
+	}
+	return nil
+}
+
 // NotifyObservers notifies people observing the event
 func (event *Event) NotifyObservers(notification Notification, container container.Container) {
 	var observersRepo EventObserverRepository
@@ -72,25 +108,25 @@ func (event *Event) NotifyObservers(notification Notification, container contain
 	return lastErr
 }
 
+// EventState = state of the event
+type EventState string
+
 const (
 	// EventStateTimeVoting — voting
-	EventStateTimeVoting = iota
+	EventStateTimeVoting EventState = "EventStateTimeVoting"
 	// EventStateWaitingForTimeConfirm waiting for confirmation of time by event owner
-	EventStateWaitingForTimeConfirm
+	EventStateWaitingForTimeConfirm = "EventStateWaitingForTimeConfirm"
 	// EventStateCancelled cancelled
-	EventStateCancelled
+	EventStateCancelled = "EventStateCancelled"
 	// EventStateMembersSignup signing up
-	EventStateMembersSignup
+	EventStateMembersSignup = "EventStateMembersSignup"
 	// EventStateSignupClosed closed, waiting for the event to start
-	EventStateSignupClosed
+	EventStateSignupClosed = "EventStateSignupClosed"
 	// EventStateInProggress in proggress
-	EventStateInProggress
+	EventStateInProggress = "EventStateInProggress"
 	//EventStateFinished finished
-	EventStateFinished
+	EventStateFinished = "EventStateFinished"
 )
-
-// EventState = state of the event
-type EventState int
 
 // EventRepository is a repository for events
 type EventRepository interface {
