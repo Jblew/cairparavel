@@ -1,6 +1,8 @@
 package eventinputtypes
 
-import "github.com/Jblew/cairparavel/functions/app/domain"
+import (
+	"github.com/Jblew/cairparavel/functions/app/domain"
+)
 
 // EventTimeVotesFirestoreInput — firestore event input for EventTimeVotes
 type EventTimeVotesFirestoreInput struct {
@@ -16,7 +18,7 @@ type EventTimeVotesFirestoreInput struct {
 	Times struct {
 		ArrayValue struct {
 			Values []struct {
-				NumberValue int64 `json:"integerValue"`
+				NumberValue string `json:"integerValue"`
 			} `json:"values"`
 		} `json:"arrayValue"`
 	} `json:"allowedTimes"`
@@ -26,7 +28,7 @@ type EventTimeVotesFirestoreInput struct {
 func (input *EventTimeVotesFirestoreInput) ToEventTimeVotes() domain.EventTimeVotes {
 	times := make([]int64, 0)
 	for _, time := range input.Times.ArrayValue.Values {
-		times = append(times, time.NumberValue)
+		times = append(times, parseIntOrZero(time.NumberValue, 10, 64))
 	}
 
 	return domain.EventTimeVotes{

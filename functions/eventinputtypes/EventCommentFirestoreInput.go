@@ -1,6 +1,8 @@
 package eventinputtypes
 
-import "github.com/Jblew/cairparavel/functions/app/domain"
+import (
+	"github.com/Jblew/cairparavel/functions/app/domain"
+)
 
 // EventCommentFirestoreInput — firestore event input for EventComment
 type EventCommentFirestoreInput struct {
@@ -17,7 +19,7 @@ type EventCommentFirestoreInput struct {
 		StringValue string `json:"stringValue"`
 	} `json:"contents"`
 	Time struct {
-		NumberValue int64 `json:"integerValue"`
+		NumberValue string `json:"integerValue"`
 	} `json:"time"`
 }
 
@@ -28,6 +30,6 @@ func (input *EventCommentFirestoreInput) ToEventComment() domain.EventComment {
 		EventID:   input.EventID.StringValue,
 		AuthorUID: input.AuthorUID.StringValue,
 		Contents:  input.Contents.StringValue,
-		Time:      input.Time.NumberValue,
+		Time:      parseIntOrZero(input.Time.NumberValue, 10, 64),
 	}
 }
