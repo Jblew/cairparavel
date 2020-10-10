@@ -26,70 +26,56 @@ gcloud functions deploy FnOnUserCreated \
   --runtime go113 \
   --memory "1024MB"
 
-gcloud functions deploy FnOnNotificationCreatedPushNotification \
+gcloud functions deploy FnOnNotificationQueued \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
-  --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/notifications/{uid}/push/{notificationId}" \
+  --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/notifications/{uid}/messenger_queue/{notificationId}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
   --memory "512MB"
 
-gcloud functions deploy FnOnNotificationsEnabledSendWelcome \
+gcloud functions deploy FnOnCommentAdded \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
-  --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/notification_playerids/{uid}" \
+  --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/event_comments/{eventId}/messages/{commentId}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
   --memory "512MB"
 
-gcloud functions deploy FnOnCommentAddedNotifyObservers \
-  --trigger-event providers/cloud.firestore/eventTypes/document.create \
-  --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/comments/{resId}/messages/{commentId}" \
-  --region "${GCP_PROJECT_REGION}" \
-  --runtime go113 \
-  --memory "512MB"
-
-gcloud functions deploy FnOnEventCreatedNotify \
+gcloud functions deploy FnOnEventCreated \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
   --memory "512MB"
 
-gcloud functions deploy FnOnEventModifiedNotifyObservers \
+gcloud functions deploy FnOnEventModified \
   --trigger-event providers/cloud.firestore/eventTypes/document.update \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
   --memory "512MB"
 
-gcloud functions deploy FnOnEventMemberSignedUpNotifyObservers \
+gcloud functions deploy FnOnEventMemberSignupCreated \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/signedMembers/{uid}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
   --memory "512MB"
 
-gcloud functions deploy FnOnEventMemberSignedOutNotifyObservers \
+gcloud functions deploy FnOnEventMemberSignupDeleted \
   --trigger-event providers/cloud.firestore/eventTypes/document.delete \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/signedMembers/{uid}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
   --memory "512MB"
 
-gcloud functions deploy FnOnEventVotedNotifyObservers \
+gcloud functions deploy FnOnEventVoteCreated \
   --trigger-event providers/cloud.firestore/eventTypes/document.create \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \
   --memory "512MB"
 
-gcloud functions deploy FnOnEventVoteDeletedNotifyObservers \
-  --trigger-event providers/cloud.firestore/eventTypes/document.delete \
-  --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
-  --region "${GCP_PROJECT_REGION}" \
-  --runtime go113 \
-  --memory "512MB"
-
-gcloud functions deploy FnOnEventVoteDeletedNotifyObservers \
+gcloud functions deploy FnOnEventVoteDeleted \
   --trigger-event providers/cloud.firestore/eventTypes/document.delete \
   --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
   --region "${GCP_PROJECT_REGION}" \
@@ -107,7 +93,7 @@ gcloud alpha scheduler jobs create pubsub "${CHECK_EVENTS_SCHEDULER_JOB}" \
   --topic "${CHECK_EVENTS_PUBSUB_TOPIC}" \
   --schedule "*/10 * * * *" \
   --message-body "SCHEDULE"
-gcloud functions deploy FnOnCronDispatchEventStateNotifications \
+gcloud functions deploy FnOnCronDispatchHandleEvent \
   --trigger-topic "${CHECK_EVENTS_PUBSUB_TOPIC}" \
   --region "${GCP_PROJECT_REGION}" \
   --runtime go113 \

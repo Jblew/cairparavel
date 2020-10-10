@@ -8,13 +8,13 @@ import (
 	"cloud.google.com/go/functions/metadata"
 )
 
-// FnOnEventModifiedNotifyObservers cloud function
-func FnOnEventModifiedNotifyObservers(ctx context.Context, e FirestoreEvent) error {
+// FnOnEventVoteDeleted cloud function
+func FnOnEventVoteDeleted(ctx context.Context, e FirestoreEvent) error {
 	meta, err := metadata.FromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("metadata.FromContext: %v", err)
 	}
-	log.Printf("Function FnOnEventModifiedNotifyObservers triggered by change to: %v", meta.Resource)
+	log.Printf("Function FnOnEventVoteDeleted triggered by change to: %v", meta.Resource)
 	log.Printf("Old value: %+v", e.OldValue)
 	log.Printf("New value: %+v", e.Value)
 	return nil
