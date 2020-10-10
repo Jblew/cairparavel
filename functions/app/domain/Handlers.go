@@ -44,31 +44,3 @@ func OnMessengerReferral(referralCode string, messengerRecipient MessengerRecipi
 		Payload:  payload,
 	})
 }
-
-// OnEventVote handler
-func OnEventVote(event Event, votes EventTimeVotes, container container.Container) error {
-	var eventObserversNotifier EventObserversNotifier
-	container.Make(&eventObserversNotifier)
-
-	payload := make(map[string]interface{})
-	payload["event"] = event
-	payload["votes"] = votes
-	return eventObserversNotifier.NotifyEventObservers(event, Notification{
-		Template: "event_voted",
-		Payload:  payload,
-	})
-}
-
-// OnEventVoteDeleted handler
-func OnEventVoteDeleted(event Event, votes EventTimeVotes, container container.Container) error {
-	var eventObserversNotifier EventObserversNotifier
-	container.Make(&eventObserversNotifier)
-
-	payload := make(map[string]interface{})
-	payload["event"] = event
-	payload["votes"] = votes
-	return eventObserversNotifier.NotifyEventObservers(event, Notification{
-		Template: "event_vote_deleted",
-		Payload:  payload,
-	})
-}
