@@ -14,11 +14,11 @@ type User struct {
 }
 
 // OnAccountCreated handles situation when user logs in and doesnt have an account stored
-func (user *User) OnAccountCreated(temporaryUser User, container container.Container) error {
+func (temporaryUser *User) OnAccountCreated(container container.Container) error {
 	var usersRepository UsersRepository
 	container.Make(&usersRepository)
 
-	return usersRepository.StoreUser(*user)
+	return usersRepository.StoreUser(*temporaryUser)
 }
 
 // UsersRepository repository for users
