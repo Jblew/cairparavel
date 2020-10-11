@@ -14,10 +14,9 @@ import (
 // FnOnEventCreated cloud function
 func FnOnEventCreated(ctx context.Context, e firestoreEventFnOnEventCreated) error {
 	opts := util.FunctionHandlerOpts{
-		Name:       "FnOnEventCreated",
-		LogErrorFn: log.Printf,
-		LogPanicFn: log.Printf,
-		LogDoneFn:  log.Printf,
+		Name:   "FnOnEventCreated",
+		Log:    log.Printf,
+		LogErr: log.Printf,
 	}
 	return util.FunctionHandler(opts, func() error {
 		meta, err := metadata.FromContext(ctx)

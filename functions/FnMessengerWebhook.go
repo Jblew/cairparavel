@@ -27,12 +27,11 @@ func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) error {
 	}
 
 	opts := util.FunctionHandlerOpts{
-		Name:       "FnMessengerWebhook",
-		LogErrorFn: logWithCode(400),
-		LogPanicFn: logWithCode(200),
-		LogDoneFn:  logWithCode(200),
+		Name:   "FnMessengerWebhook",
+		LogErr: logWithCode(400),
+		Log:    logWithCode(200),
 	}
-	return util.FunctionHandler(opts, func() error {
+	err := util.FunctionHandler(opts, func() error {
 		var messengerInstance *messenger.Messenger
 		container.Make(&messengerInstance)
 
@@ -64,4 +63,9 @@ func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) error {
 		}
 		return messengerapp.OnMessengerInputMessage(message, container)
 	})
+	if err != nil {
+		logWithCode(400)("Finished with error: %v", err)
+		return err
+	}
+	return nil
 }

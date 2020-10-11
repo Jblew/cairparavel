@@ -12,10 +12,9 @@ import (
 // FnOnFirebaseAccountCreated handles user created event
 func FnOnFirebaseAccountCreated(ctx context.Context, e AuthEvent) error {
 	opts := util.FunctionHandlerOpts{
-		Name:       "FnOnFirebaseAccountCreated",
-		LogErrorFn: log.Printf,
-		LogPanicFn: log.Printf,
-		LogDoneFn:  log.Printf,
+		Name:   "FnOnFirebaseAccountCreated",
+		Log:    log.Printf,
+		LogErr: log.Printf,
 	}
 	return util.FunctionHandler(opts, func() error {
 		log.Printf("FnOnFirebaseAccountCreated: %v", e)

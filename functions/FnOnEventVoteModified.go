@@ -14,10 +14,9 @@ import (
 // FnOnEventVoteModified cloud function
 func FnOnEventVoteModified(ctx context.Context, e firestoreEventFnOnEventVoteModified) error {
 	opts := util.FunctionHandlerOpts{
-		Name:       "FnOnEventVoteModified",
-		LogErrorFn: log.Printf,
-		LogPanicFn: log.Printf,
-		LogDoneFn:  log.Printf,
+		Name:   "FnOnEventVoteModified",
+		Log:    log.Printf,
+		LogErr: log.Printf,
 	}
 	return util.FunctionHandler(opts, func() error {
 		meta, err := metadata.FromContext(ctx)

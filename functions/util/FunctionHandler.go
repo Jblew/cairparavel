@@ -1,31 +1,50 @@
 package util
 
 import (
+	"fmt"
 	"time"
 )
 
 // FunctionHandlerOpts opts for FunctionHandler
 type FunctionHandlerOpts struct {
-	Name       string
-	LogErrorFn func(format string, v ...interface{})
-	LogPanicFn func(format string, v ...interface{})
-	LogDoneFn  func(format string, v ...interface{})
+	Name   string
+	Log    func(format string, v ...interface{})
+	LogErr func(format string, v ...interface{})
 }
 
 // FunctionHandler safely executes cloud function
 func FunctionHandler(opts FunctionHandlerOpts, g func() error) error {
+	var panicErr error
+	err := functionHandlerNotifyPanic(
+		opts,
+		func(newPanicErr error) {
+			panicErr = newPanicErr
+		},
+		g,
+	)
+	if err != nil {
+		return err
+	}
+	if panicErr != nil {
+		return panicErr
+	}
+	return nil
+}
+
+func functionHandlerNotifyPanic(opts FunctionHandlerOpts, notifyPanic func(err error), g func() error) error {
 	sTime := time.Now()
 	defer func() {
 		if x := recover(); x != nil {
-			opts.LogPanicFn("Function %s finished in %v with panic: %v", opts.Name, getDuration(sTime), x)
+			opts.LogErr("Function %s finished in %v with panic: %v", opts.Name, getDuration(sTime), x)
+			notifyPanic(fmt.Errorf("Panic %v", x))
 		}
 	}()
 	err := g()
 	if err != nil {
-		opts.LogErrorFn("Function %s finished in %v with error: %v", opts.Name, getDuration(sTime), err)
+		opts.LogErr("Function %s finished in %v with error: %v", opts.Name, getDuration(sTime), err)
 		return err
 	}
-	opts.LogDoneFn("Function %s finished in %v with success", opts.Name, getDuration(sTime))
+	opts.Log("Function %s finished in %v with success", opts.Name, getDuration(sTime))
 	return nil
 }
 

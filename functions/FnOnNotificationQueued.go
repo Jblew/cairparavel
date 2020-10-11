@@ -14,10 +14,9 @@ import (
 // FnOnNotificationQueued cloud function
 func FnOnNotificationQueued(ctx context.Context, e firestoreEventFnOnNotificationQueued) error {
 	opts := util.FunctionHandlerOpts{
-		Name:       "FnOnNotificationQueued",
-		LogErrorFn: log.Printf,
-		LogPanicFn: log.Printf,
-		LogDoneFn:  log.Printf,
+		Name:   "FnOnNotificationQueued",
+		Log:    log.Printf,
+		LogErr: log.Printf,
 	}
 	return util.FunctionHandler(opts, func() error {
 		meta, err := metadata.FromContext(ctx)
