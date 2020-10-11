@@ -17,4 +17,11 @@ func Bind(container container.Container) {
 			Context:   context.Background(),
 		}
 	})
+
+	container.Singleton(func(firestore *firestore.Client) domain.EventObserverRepository {
+		return &services.EventObserverRepositoryFirestore{
+			Firestore: firestore,
+			Context:   context.Background(),
+		}
+	})
 }

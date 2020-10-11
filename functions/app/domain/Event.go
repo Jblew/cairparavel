@@ -144,7 +144,7 @@ func (event *Event) NotifyObservers(notification Notification, container contain
 	var notificationQueue NotificationQueue
 	container.Make(&notificationQueue)
 
-	observers, err := observersRepo.GetEventObservers(event.ID)
+	observers, err := observersRepo.GetAllForEvent(event.ID)
 	if err != nil {
 		return err
 	}
@@ -165,7 +165,7 @@ func (event *Event) Observe(userID string, container container.Container) error 
 	var observersRepo EventObserverRepository
 	container.Make(&observersRepo)
 
-	return observersRepo.AddEventObserver(EventObserver{
+	return observersRepo.Add(EventObserver{
 		EventID: event.ID,
 		UID:     userID,
 	})
