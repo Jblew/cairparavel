@@ -8,21 +8,30 @@ import (
 
 	"cloud.google.com/go/functions/metadata"
 	"github.com/Jblew/cairparavel/functions/eventinputtypes"
+	"github.com/Jblew/cairparavel/functions/util"
 )
 
 // FnOnEventCreated cloud function
-func FnOnEventCreated(ctx context.Context, e firestoreEventFnOnEventCreated) error {
-	meta, err := metadata.FromContext(ctx)
-	if err != nil {
-		return fmt.Errorf("metadata.FromContext: %v", err)
+func FnOnEventCreated(ctx context.Context, e firestoreEventFnOnEventCreated) {
+	opts := util.FunctionHandlerOpts{
+		Name:       "FnOnEventCreated",
+		LogErrorFn: log.Printf,
+		LogPanicFn: log.Printf,
+		LogDoneFn:  log.Printf,
 	}
-	log.Printf("Function FnOnEventCreated triggered by change to: %v", meta.Resource)
-	log.Printf("Old value: %+v", e.OldValue)
-	log.Printf("New value: %+v", e.Value)
+	util.FunctionHandler(opts, func() error {
+		meta, err := metadata.FromContext(ctx)
+		if err != nil {
+			return fmt.Errorf("metadata.FromContext: %v", err)
+		}
+		log.Printf("Function FnOnEventCreated triggered by change to: %v", meta.Resource)
+		log.Printf("Old value: %+v", e.OldValue)
+		log.Printf("New value: %+v", e.Value)
 
-	event := e.Value.Fields.ToEvent()
-	log.Printf("Parsed event %+v", event)
-	return event.OnCreated(container)
+		event := e.Value.Fields.ToEvent()
+		log.Printf("Parsed event %+v", event)
+		return event.OnCreated(container)
+	})
 }
 
 type firestoreEventFnOnEventCreated struct {

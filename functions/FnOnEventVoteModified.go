@@ -8,21 +8,30 @@ import (
 
 	"cloud.google.com/go/functions/metadata"
 	"github.com/Jblew/cairparavel/functions/eventinputtypes"
+	"github.com/Jblew/cairparavel/functions/util"
 )
 
 // FnOnEventVoteModified cloud function
-func FnOnEventVoteModified(ctx context.Context, e firestoreEventFnOnEventVoteModified) error {
-	meta, err := metadata.FromContext(ctx)
-	if err != nil {
-		return fmt.Errorf("metadata.FromContext: %v", err)
+func FnOnEventVoteModified(ctx context.Context, e firestoreEventFnOnEventVoteModified) {
+	opts := util.FunctionHandlerOpts{
+		Name:       "FnOnEventVoteModified",
+		LogErrorFn: log.Printf,
+		LogPanicFn: log.Printf,
+		LogDoneFn:  log.Printf,
 	}
-	log.Printf("Function FnOnEventVoteModified triggered by change to: %v", meta.Resource)
-	log.Printf("Old value: %+v", e.OldValue)
-	log.Printf("New value: %+v", e.Value)
+	util.FunctionHandler(opts, func() error {
+		meta, err := metadata.FromContext(ctx)
+		if err != nil {
+			return fmt.Errorf("metadata.FromContext: %v", err)
+		}
+		log.Printf("Function FnOnEventVoteModified triggered by change to: %v", meta.Resource)
+		log.Printf("Old value: %+v", e.OldValue)
+		log.Printf("New value: %+v", e.Value)
 
-	votes := e.Value.Fields.ToEventTimeVotes()
-	log.Printf("Parsed votes %+v", votes)
-	return votes.OnModified(container)
+		votes := e.Value.Fields.ToEventTimeVotes()
+		log.Printf("Parsed votes %+v", votes)
+		return votes.OnModified(container)
+	})
 }
 
 type firestoreEventFnOnEventVoteModified struct {

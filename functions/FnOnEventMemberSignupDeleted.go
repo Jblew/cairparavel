@@ -8,21 +8,30 @@ import (
 
 	"cloud.google.com/go/functions/metadata"
 	"github.com/Jblew/cairparavel/functions/eventinputtypes"
+	"github.com/Jblew/cairparavel/functions/util"
 )
 
 // FnOnEventMemberSignupDeleted cloud function
-func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEventFnOnEventMemberSignupDeleted) error {
-	meta, err := metadata.FromContext(ctx)
-	if err != nil {
-		return fmt.Errorf("metadata.FromContext: %v", err)
+func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEventFnOnEventMemberSignupDeleted) {
+	opts := util.FunctionHandlerOpts{
+		Name:       "FnOnEventMemberSignupDeleted",
+		LogErrorFn: log.Printf,
+		LogPanicFn: log.Printf,
+		LogDoneFn:  log.Printf,
 	}
-	log.Printf("Function FnOnEventMemberSignupDeleted triggered by change to: %v", meta.Resource)
-	log.Printf("Old value: %+v", e.OldValue)
-	log.Printf("New value: %+v", e.Value)
+	util.FunctionHandler(opts, func() error {
+		meta, err := metadata.FromContext(ctx)
+		if err != nil {
+			return fmt.Errorf("metadata.FromContext: %v", err)
+		}
+		log.Printf("Function FnOnEventMemberSignupDeleted triggered by change to: %v", meta.Resource)
+		log.Printf("Old value: %+v", e.OldValue)
+		log.Printf("New value: %+v", e.Value)
 
-	signup := e.Value.Fields.ToEventSignup()
-	log.Printf("Parsed signup %+v", signup)
-	return signup.OnDeleted(container)
+		signup := e.Value.Fields.ToEventSignup()
+		log.Printf("Parsed signup %+v", signup)
+		return signup.OnDeleted(container)
+	})
 }
 
 type firestoreEventFnOnEventMemberSignupDeleted struct {

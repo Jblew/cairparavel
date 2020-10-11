@@ -4,6 +4,7 @@ package functions
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,50 +12,56 @@ import (
 
 	"github.com/Jblew/cairparavel/functions/app/apps/messengerapp"
 	"github.com/Jblew/cairparavel/functions/app/lib/messenger"
+	"github.com/Jblew/cairparavel/functions/util"
 )
 
 // FnMessengerWebhook is FB messenger webhook
 func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
-	var messengerInstance *messenger.Messenger
-	container.Make(&messengerInstance)
-
-	if request.Method == "GET" {
-		u, _ := url.Parse(request.RequestURI)
-		values, _ := url.ParseQuery(u.RawQuery)
-		token := values.Get("hub.verify_token")
-		if messengerInstance.IsVerifyTokenCorrect(token) {
-			resp.WriteHeader(200)
-			resp.Write([]byte(values.Get("hub.challenge")))
-			return
+	logWithCode := func(code int) func(format string, v ...interface{}) {
+		return func(format string, v ...interface{}) {
+			str := fmt.Sprintf(format, v...)
+			log.Printf(str)
+			resp.WriteHeader(code)
+			resp.Write([]byte(str))
 		}
-		resp.WriteHeader(400)
-		resp.Write([]byte(`Bad token`))
-		return
 	}
 
-	// Anything that reaches here is POST.
-	body, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		log.Printf("Failed parsing body: %s", err)
-		resp.WriteHeader(400)
-		resp.Write([]byte("An error occurred"))
-		return
+	opts := util.FunctionHandlerOpts{
+		Name:       "FnMessengerWebhook",
+		LogErrorFn: logWithCode(400),
+		LogPanicFn: logWithCode(200),
+		LogDoneFn:  logWithCode(200),
 	}
+	util.FunctionHandler(opts, func() error {
+		var messengerInstance *messenger.Messenger
+		container.Make(&messengerInstance)
 
-	// Parse message into the Message struct
-	var message messenger.InputMessage
-	err = json.Unmarshal(body, &message)
-	if err != nil {
-		log.Printf("Failed unmarshalling message: %s", err)
-		resp.WriteHeader(400)
-		resp.Write([]byte("An error occurred"))
-		return
-	}
-	err = messengerapp.OnMessengerInputMessage(message, container)
-	if err != nil {
-		log.Printf("Failed unmarshalling message: %s", err)
-		resp.WriteHeader(400)
-		resp.Write([]byte("An error occurred"))
-		return
-	}
+		if request.Method == "GET" {
+			u, _ := url.Parse(request.RequestURI)
+			values, _ := url.ParseQuery(u.RawQuery)
+			token := values.Get("hub.verify_token")
+			if messengerInstance.IsVerifyTokenCorrect(token) {
+				resp.WriteHeader(200)
+				resp.Write([]byte(values.Get("hub.challenge")))
+				return nil
+			}
+			resp.WriteHeader(400)
+			resp.Write([]byte(`Bad token`))
+			return nil
+		}
+
+		// Anything that reaches here is POST.
+		body, err := ioutil.ReadAll(request.Body)
+		if err != nil {
+			return err
+		}
+
+		// Parse message into the Message struct
+		var message messenger.InputMessage
+		err = json.Unmarshal(body, &message)
+		if err != nil {
+			return err
+		}
+		return messengerapp.OnMessengerInputMessage(message, container)
+	})
 }

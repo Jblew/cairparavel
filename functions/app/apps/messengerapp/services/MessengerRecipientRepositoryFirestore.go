@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/firestore"
+	"github.com/Jblew/cairparavel/functions/app/config"
 	"github.com/Jblew/cairparavel/functions/app/domain"
 )
 
@@ -14,18 +15,16 @@ type MessengerRecipientRepositoryFirestore struct {
 	Context   context.Context
 }
 
-var colPath string = "notification_messengerid"
-
 // StoreForUser saves messenger recipient id
 func (repo *MessengerRecipientRepositoryFirestore) StoreForUser(uid string, recipient domain.MessengerRecipient) error {
-	docRef := repo.Firestore.Collection(colPath).Doc(uid)
+	docRef := repo.Firestore.Doc(config.FirestorePaths.MessengerRecipientForUserDoc(uid))
 	_, err := docRef.Set(repo.Context, recipient)
 	return err
 }
 
 // GetForUser retrives messenger recipient id
 func (repo *MessengerRecipientRepositoryFirestore) GetForUser(uid string) (domain.MessengerRecipient, error) {
-	docRef := repo.Firestore.Collection(colPath).Doc(uid)
+	docRef := repo.Firestore.Doc(config.FirestorePaths.MessengerRecipientForUserDoc(uid))
 	snapshot, err := docRef.Get(repo.Context)
 	if err != nil {
 		return domain.MessengerRecipient{}, err

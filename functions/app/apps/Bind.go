@@ -1,6 +1,7 @@
 package apps
 
 import (
+	"github.com/Jblew/cairparavel/functions/app/apps/eventsapp"
 	"github.com/Jblew/cairparavel/functions/app/apps/notificationsapp"
 	"github.com/Jblew/cairparavel/functions/app/apps/usersapp"
 	"github.com/golobby/container/pkg/container"
@@ -10,4 +11,5 @@ import (
 func Bind(container container.Container) {
 	usersapp.Bind(container)
 	notificationsapp.Bind(container)
+	eventsapp.Bind(container)
 }

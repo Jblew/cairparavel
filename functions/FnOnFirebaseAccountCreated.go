@@ -6,19 +6,28 @@ import (
 	"time"
 
 	"github.com/Jblew/cairparavel/functions/app/domain"
+	"github.com/Jblew/cairparavel/functions/util"
 )
 
 // FnOnFirebaseAccountCreated handles user created event
-func FnOnFirebaseAccountCreated(ctx context.Context, e AuthEvent) error {
-	log.Printf("FnOnFirebaseAccountCreated: %v", e)
-
-	user := domain.User{
-		Email:    e.Email,
-		UID:      e.UID,
-		JoinedAt: e.Metadata.CreatedAt,
+func FnOnFirebaseAccountCreated(ctx context.Context, e AuthEvent) {
+	opts := util.FunctionHandlerOpts{
+		Name:       "FnOnFirebaseAccountCreated",
+		LogErrorFn: log.Printf,
+		LogPanicFn: log.Printf,
+		LogDoneFn:  log.Printf,
 	}
+	util.FunctionHandler(opts, func() error {
+		log.Printf("FnOnFirebaseAccountCreated: %v", e)
 
-	return user.OnAccountCreated(container)
+		user := domain.User{
+			Email:    e.Email,
+			UID:      e.UID,
+			JoinedAt: e.Metadata.CreatedAt,
+		}
+
+		return user.OnAccountCreated(container)
+	})
 }
 
 // AuthEvent is the payload of a Firestore Auth event.
