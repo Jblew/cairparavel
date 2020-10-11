@@ -21,6 +21,11 @@ func (comment *EventComment) OnAdded(container container.Container) error {
 		return err
 	}
 
+	err = event.Observe(event.OwnerUID, container)
+	if err != nil {
+		return err
+	}
+
 	notification := Notification{
 		Template: "comment_added",
 		Payload:  make(map[string]interface{}),

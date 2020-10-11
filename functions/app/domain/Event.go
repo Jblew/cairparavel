@@ -99,6 +99,11 @@ func (event *Event) OnStateChanged(previousState EventState, container container
 
 // OnCreated handler
 func (event *Event) OnCreated(container container.Container) error {
+	err := event.Observe(event.OwnerUID, container)
+	if err != nil {
+		return err
+	}
+
 	payload := make(map[string]interface{})
 	payload["event"] = event
 
@@ -117,6 +122,18 @@ func (event *Event) OnModified(container container.Container) error {
 		Template: "event_modified",
 		Payload:  payload,
 	}, container)
+}
+
+// NotifyOwner notifies owner of the event
+func (event *Event) NotifyOwner(notification Notification, container container.Container) error {
+	var notificationQueue NotificationQueue
+	container.Make(&notificationQueue)
+
+	err := notificationQueue.Add(event.OwnerUID, notification)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // NotifyObservers notifies people observing the event
@@ -141,6 +158,17 @@ func (event *Event) NotifyObservers(notification Notification, container contain
 		}
 	}
 	return lastErr
+}
+
+// Observe observes an event
+func (event *Event) Observe(userID string, container container.Container) error {
+	var observersRepo EventObserverRepository
+	container.Make(&observersRepo)
+
+	return observersRepo.AddEventObserver(EventObserver{
+		EventID: event.ID,
+		UID:     userID,
+	})
 }
 
 // EventState = state of the event

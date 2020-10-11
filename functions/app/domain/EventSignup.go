@@ -11,19 +11,24 @@ type EventSignup struct {
 
 // OnAdded handles added signup
 func (signup *EventSignup) OnAdded(container container.Container) error {
-	return signup.sendNotification("member_signed_in", container)
+	return signup.sendNotificationAndObserve("member_signed_in", container)
 }
 
 // OnDeleted handles added signup
 func (signup *EventSignup) OnDeleted(container container.Container) error {
-	return signup.sendNotification("member_signed_out", container)
+	return signup.sendNotificationAndObserve("member_signed_out", container)
 }
 
-func (signup *EventSignup) sendNotification(templateName string, container container.Container) error {
+func (signup *EventSignup) sendNotificationAndObserve(templateName string, container container.Container) error {
 	var eventRepository EventRepository
 	container.Make(&eventRepository)
 
 	event, err := eventRepository.GetEventByID(signup.EventID)
+	if err != nil {
+		return err
+	}
+
+	err = event.Observe(event.OwnerUID, container)
 	if err != nil {
 		return err
 	}

@@ -9,4 +9,5 @@ type EventObserver struct {
 // EventObserverRepository is a repository of event observers
 type EventObserverRepository interface {
 	GetEventObservers(eventID string) ([]EventObserver, error)
+	AddEventObserver(observer EventObserver) error
 }
