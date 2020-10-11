@@ -14,15 +14,10 @@ type EventObserverRepositoryFirestore struct {
 	Context   context.Context
 }
 
-type EventObserverRepository interface {
-	GetAllForEvent(eventID string) ([]EventObserver, error)
-	Add(observer EventObserver) error
-}
-
 // GetAllForEvent retrives observers of an event
 func (repo *EventObserverRepositoryFirestore) GetAllForEvent(eventID string) ([]domain.EventObserver, error) {
 	collectionRef := repo.Firestore.Collection(config.FirestorePaths.ObserversForEventCol(eventID))
-	snapshots, err := collectionRef.GetAll(repo.Context)
+	snapshots, err := collectionRef.Documents(repo.Context).GetAll()
 	if err != nil {
 		return []domain.EventObserver{}, err
 	}
@@ -33,7 +28,7 @@ func (repo *EventObserverRepositoryFirestore) GetAllForEvent(eventID string) ([]
 		var observer domain.EventObserver
 		err = snapshot.DataTo(&observer)
 		if err != nil {
-			return []domain.EventObserver, err
+			return []domain.EventObserver{}, err
 		}
 		results = append(results, observer)
 	}
@@ -41,7 +36,7 @@ func (repo *EventObserverRepositoryFirestore) GetAllForEvent(eventID string) ([]
 }
 
 // Add saves event observer
-func (repo *UsersRepositoryFirestore) Add(observer EventObserver) error {
+func (repo *EventObserverRepositoryFirestore) Add(observer domain.EventObserver) error {
 	docRef := repo.Firestore.Doc(config.FirestorePaths.ObserversForEventForUserDoc(observer.EventID, observer.UID))
 	_, err := docRef.Create(repo.Context, observer)
 	return err
