@@ -13,7 +13,7 @@ type FunctionHandlerOpts struct {
 }
 
 // FunctionHandler safely executes cloud function
-func FunctionHandler(opts FunctionHandlerOpts, g func() error) {
+func FunctionHandler(opts FunctionHandlerOpts, g func() error) error {
 	sTime := time.Now()
 	defer func() {
 		if x := recover(); x != nil {
@@ -23,9 +23,10 @@ func FunctionHandler(opts FunctionHandlerOpts, g func() error) {
 	err := g()
 	if err != nil {
 		opts.LogErrorFn("Function %s finished in %v with error: %v", opts.Name, getDuration(sTime), err)
-		return
+		return err
 	}
 	opts.LogDoneFn("Function %s finished in %v with success", opts.Name, getDuration(sTime))
+	return nil
 }
 
 func getDuration(sTime time.Time) time.Duration {

@@ -16,7 +16,7 @@ import (
 )
 
 // FnMessengerWebhook is FB messenger webhook
-func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
+func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) error {
 	logWithCode := func(code int) func(format string, v ...interface{}) {
 		return func(format string, v ...interface{}) {
 			str := fmt.Sprintf(format, v...)
@@ -32,7 +32,7 @@ func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
 		LogPanicFn: logWithCode(200),
 		LogDoneFn:  logWithCode(200),
 	}
-	util.FunctionHandler(opts, func() error {
+	return util.FunctionHandler(opts, func() error {
 		var messengerInstance *messenger.Messenger
 		container.Make(&messengerInstance)
 

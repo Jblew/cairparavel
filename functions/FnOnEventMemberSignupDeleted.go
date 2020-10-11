@@ -12,14 +12,14 @@ import (
 )
 
 // FnOnEventMemberSignupDeleted cloud function
-func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEventFnOnEventMemberSignupDeleted) {
+func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEventFnOnEventMemberSignupDeleted) error {
 	opts := util.FunctionHandlerOpts{
 		Name:       "FnOnEventMemberSignupDeleted",
 		LogErrorFn: log.Printf,
 		LogPanicFn: log.Printf,
 		LogDoneFn:  log.Printf,
 	}
-	util.FunctionHandler(opts, func() error {
+	return util.FunctionHandler(opts, func() error {
 		meta, err := metadata.FromContext(ctx)
 		if err != nil {
 			return fmt.Errorf("metadata.FromContext: %v", err)

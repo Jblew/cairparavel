@@ -12,14 +12,14 @@ import (
 )
 
 // FnOnCommentAdded cloud function
-func FnOnCommentAdded(ctx context.Context, e firestoreEventFnOnCommentAdded) {
+func FnOnCommentAdded(ctx context.Context, e firestoreEventFnOnCommentAdded) error {
 	opts := util.FunctionHandlerOpts{
 		Name:       "FnOnCommentAdded",
 		LogErrorFn: log.Printf,
 		LogPanicFn: log.Printf,
 		LogDoneFn:  log.Printf,
 	}
-	util.FunctionHandler(opts, func() error {
+	return util.FunctionHandler(opts, func() error {
 		meta, err := metadata.FromContext(ctx)
 		if err != nil {
 			return fmt.Errorf("metadata.FromContext: %v", err)

@@ -10,14 +10,14 @@ import (
 )
 
 // FnOnFirebaseAccountCreated handles user created event
-func FnOnFirebaseAccountCreated(ctx context.Context, e AuthEvent) {
+func FnOnFirebaseAccountCreated(ctx context.Context, e AuthEvent) error {
 	opts := util.FunctionHandlerOpts{
 		Name:       "FnOnFirebaseAccountCreated",
 		LogErrorFn: log.Printf,
 		LogPanicFn: log.Printf,
 		LogDoneFn:  log.Printf,
 	}
-	util.FunctionHandler(opts, func() error {
+	return util.FunctionHandler(opts, func() error {
 		log.Printf("FnOnFirebaseAccountCreated: %v", e)
 
 		user := domain.User{
