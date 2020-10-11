@@ -156,6 +156,7 @@ gcloud functions deploy FnOnEventVoteDeleted \
     --trigger-http --allow-unauthenticated \
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
+    --quiet \
     --memory "512MB"
 ) &
 
