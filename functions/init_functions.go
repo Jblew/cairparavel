@@ -21,6 +21,10 @@ func init() {
 		return appConfig
 	})
 
+	container.Singleton(func() messenger.Config {
+		return appConfig.Messenger
+	})
+
 	firebaseApp, err := firebase.NewApp(context.Background(), &firebase.Config{})
 	if err != nil {
 		log.Fatalf("firebase.NewApp: %v", err)
@@ -39,10 +43,6 @@ func init() {
 
 	container.Singleton(func() *firestore.Client {
 		return firestoreClient
-	})
-
-	container.Singleton(func() *messenger.Messenger {
-		return messenger.Init(appConfig.Messenger)
 	})
 
 	app.Bind(container)

@@ -1,62 +1,83 @@
 package config
 
-// FirestorePaths is a list of paths or path returners for firestore
-type FirestorePaths struct {
+// FirestorePathsStruct is a list of paths or path returners for firestore
+type FirestorePathsStruct struct {
 }
 
-func (paths *FirestorePaths) UsersCol() string {
+// ProdUsersCol path
+func (paths *FirestorePathsStruct) ProdUsersCol() string {
 	return "envs/prod/users"
 }
 
-func (paths *FirestorePaths) UserDoc(userID string) string {
+// ProdUserDoc path
+func (paths *FirestorePathsStruct) ProdUserDoc(userID string) string {
 	return "envs/prod/users/" + userID
 }
 
-func (paths *FirestorePaths) UserDoc(userID string) string {
-	return "envs/prod/users/" + userID
+// TestUsersCol path
+func (paths *FirestorePathsStruct) TestUsersCol() string {
+	return "envs/test/users"
 }
 
-func (paths *FirestorePaths) MessengerNotificationsForUserCol(uid string) string {
+// TestUserDoc path
+func (paths *FirestorePathsStruct) TestUserDoc(userID string) string {
+	return "envs/test/users/" + userID
+}
+
+// MessengerNotificationsForUserCol path
+func (paths *FirestorePathsStruct) MessengerNotificationsForUserCol(uid string) string {
 	return "envs/prod/notifications/" + uid + "/messenger_queue"
 }
 
-func (paths *FirestorePaths) NotificationsHistoryForUserCol(uid string) string {
+// NotificationsHistoryForUserCol path
+func (paths *FirestorePathsStruct) NotificationsHistoryForUserCol(uid string) string {
 	return "envs/prod/notifications/" + uid + "/history"
 }
 
-func (paths *FirestorePaths) CommentsForEventCol(eventID string) string {
+// CommentsForEventCol path
+func (paths *FirestorePathsStruct) CommentsForEventCol(eventID string) string {
 	return "envs/prod/event_comments/" + eventID + "/messages"
 }
 
-func (paths *FirestorePaths) EventsCol() string {
+// EventsCol path
+func (paths *FirestorePathsStruct) EventsCol() string {
 	return "envs/prod/events"
 }
 
-func (paths *FirestorePaths) SignupsForEventCol(eventID string) string {
+// SignupsForEventCol path
+func (paths *FirestorePathsStruct) SignupsForEventCol(eventID string) string {
 	return "envs/prod/events/" + eventID + "/signedMembers"
 }
 
-func (paths *FirestorePaths) SignupsForEventForUserDoc(eventID string, userID string) string {
+// SignupsForEventForUserDoc path
+func (paths *FirestorePathsStruct) SignupsForEventForUserDoc(eventID string, userID string) string {
 	return "envs/prod/events/" + eventID + "/signedMembers/" + userID
 }
 
-func (paths *FirestorePaths) VotesForEventCol(eventID string) string {
+// VotesForEventCol path
+func (paths *FirestorePathsStruct) VotesForEventCol(eventID string) string {
 	return "envs/prod/events/" + eventID + "/votes"
 }
 
-func (paths *FirestorePaths) VotesForEventForUserDoc(eventID string, userID) string {
+// VotesForEventForUserDoc path
+func (paths *FirestorePathsStruct) VotesForEventForUserDoc(eventID string, userID string) string {
 	return "envs/prod/events/" + eventID + "/votes/" + userID
 }
 
-func (paths *FirestorePaths) ObserversForEventCol(eventID string) string {
+// ObserversForEventCol path
+func (paths *FirestorePathsStruct) ObserversForEventCol(eventID string) string {
 	return "envs/prod/event_observers/" + eventID + "/uids"
 }
 
-func (paths *FirestorePaths) ObserversForEventForUserDoc(eventID string, userID string) string {
+// ObserversForEventForUserDoc path
+func (paths *FirestorePathsStruct) ObserversForEventForUserDoc(eventID string, userID string) string {
 	return "envs/prod/event_observers/" + eventID + "/uids/" + userID
 }
 
-
-func (paths *FirestorePaths) MessengerRecipientForUserDoc(userID string) string {
+// MessengerRecipientForUserDoc path
+func (paths *FirestorePathsStruct) MessengerRecipientForUserDoc(userID string) string {
 	return "envs/prod/messenger_recipients/" + userID
 }
+
+// FirestorePaths paths to firestore documents
+var FirestorePaths FirestorePathsStruct = FirestorePathsStruct{}

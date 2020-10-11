@@ -16,15 +16,15 @@ type MessengerRecipientRepositoryFirestore struct {
 
 var colPath string = "notification_messengerid"
 
-// StoreMessengerRecipient saves messenger recipient id
-func (repo *MessengerRecipientRepositoryFirestore) StoreMessengerRecipient(uid string, recipient domain.MessengerRecipient) error {
+// StoreForUser saves messenger recipient id
+func (repo *MessengerRecipientRepositoryFirestore) StoreForUser(uid string, recipient domain.MessengerRecipient) error {
 	docRef := repo.Firestore.Collection(colPath).Doc(uid)
 	_, err := docRef.Set(repo.Context, recipient)
 	return err
 }
 
-// GetMessengerRecipient retrives messenger recipient id
-func (repo *MessengerRecipientRepositoryFirestore) GetMessengerRecipient(uid string) (domain.MessengerRecipient, error) {
+// GetForUser retrives messenger recipient id
+func (repo *MessengerRecipientRepositoryFirestore) GetForUser(uid string) (domain.MessengerRecipient, error) {
 	docRef := repo.Firestore.Collection(colPath).Doc(uid)
 	snapshot, err := docRef.Get(repo.Context)
 	if err != nil {

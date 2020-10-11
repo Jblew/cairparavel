@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/firestore"
+	"github.com/Jblew/cairparavel/functions/app/config"
 	"github.com/Jblew/cairparavel/functions/app/domain"
 )
 
@@ -14,10 +15,9 @@ type UsersRepositoryFirestore struct {
 	Context   context.Context
 }
 
-var usersColProd = "envs/prod/users"
 var usersCols = []string{
-	usersColProd,
-	"envs/test/users",
+	config.FirestorePaths.ProdUsersCol(),
+	config.FirestorePaths.TestUsersCol(),
 }
 
 // StoreUser saves user data
@@ -34,7 +34,7 @@ func (repo *UsersRepositoryFirestore) StoreUser(user domain.User) error {
 
 // GetUser returns user by id
 func (repo *UsersRepositoryFirestore) GetUser(userID string) (domain.User, error) {
-	docRef := repo.Firestore.Collection(usersColProd).Doc(userID)
+	docRef := repo.Firestore.Doc(config.FirestorePaths.ProdUserDoc(userID))
 	snapshot, err := docRef.Get(repo.Context)
 	if err != nil {
 		return domain.User{}, err

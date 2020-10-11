@@ -9,7 +9,7 @@ type MessengerRecipient struct {
 
 // Notify sends notification to messenger user
 func (recipient *MessengerRecipient) Notify(notification Notification, container container.Container) error {
-	var service MessengerService
+	var service MessengerNotificationService
 	container.Make(&service)
 
 	return service.SendNotification(recipient.ID, notification)
@@ -21,7 +21,7 @@ type MessengerRecipientRepository interface {
 	GetForUser(uid string) (MessengerRecipient, error)
 }
 
-// MessengerService sends notification to messenger user
-type MessengerService interface {
+// MessengerNotificationService sends notification to messenger user
+type MessengerNotificationService interface {
 	SendNotification(recipientID string, notification Notification) error
 }
