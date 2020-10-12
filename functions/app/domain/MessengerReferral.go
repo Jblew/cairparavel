@@ -18,13 +18,18 @@ func (referral MessengerReferral) Validate() error {
 
 // OnNew handles new referral
 func (referral *MessengerReferral) OnNew(container *ioccontainer.Container) error {
+	err := referral.Validate()
+	if err != nil {
+		return err
+	}
+
 	var messengerRecipientRepository MessengerRecipientRepository
 	container.Make(&messengerRecipientRepository)
 	var usersRepository UsersRepository
 	container.Make(&usersRepository)
 
 	userID := referral.Code
-	err := messengerRecipientRepository.StoreForUser(userID, referral.Recipient)
+	err = messengerRecipientRepository.StoreForUser(userID, referral.Recipient)
 	if err != nil {
 		return err
 	}

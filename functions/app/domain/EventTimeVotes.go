@@ -34,6 +34,11 @@ func (votes *EventTimeVotes) OnDeleted(container *ioccontainer.Container) error 
 }
 
 func (votes *EventTimeVotes) sendNotificationAndObserve(templateName string, container *ioccontainer.Container) error {
+	err := votes.Validate()
+	if err != nil {
+		return err
+	}
+
 	var eventRepository EventRepository
 	container.Make(&eventRepository)
 

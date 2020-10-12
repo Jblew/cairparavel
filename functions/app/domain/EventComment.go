@@ -26,6 +26,11 @@ func (comment EventComment) Validate(requireID bool) error {
 
 // OnAdded handles comment added to event
 func (comment *EventComment) OnAdded(container *ioccontainer.Container) error {
+	err := comment.Validate(true)
+	if err != nil {
+		return err
+	}
+
 	var eventRepository EventRepository
 	container.Make(&eventRepository)
 

@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"log"
 
 	"cloud.google.com/go/firestore"
 	"github.com/Jblew/cairparavel/functions/app/config"
@@ -25,10 +26,9 @@ func (repo *EventObserverRepositoryFirestore) GetAllForEvent(eventID string) ([]
 	results := make([]domain.EventObserver, len(snapshots))
 
 	for _, snapshot := range snapshots {
-		var observer domain.EventObserver
-		err = snapshot.DataTo(&observer)
+		observer, err := observerFromSnapshot(snapshot)
 		if err != nil {
-			return []domain.EventObserver{}, err
+			log.Printf("Invalid event observer fetched: %v", err)
 		}
 		results = append(results, observer)
 	}
@@ -37,7 +37,22 @@ func (repo *EventObserverRepositoryFirestore) GetAllForEvent(eventID string) ([]
 
 // Add saves event observer
 func (repo *EventObserverRepositoryFirestore) Add(observer domain.EventObserver) error {
+	if err := observer.Validate(); err != nil {
+		return err
+	}
 	docRef := repo.Firestore.Doc(config.FirestorePaths.ObserversForEventForUserDoc(observer.EventID, observer.UID))
 	_, err := docRef.Create(repo.Context, observer)
 	return err
+}
+
+func observerFromSnapshot(snapshot *firestore.DocumentSnapshot) (domain.EventObserver, error) {
+	var observer domain.EventObserver
+	err := snapshot.DataTo(&observer)
+	if err != nil {
+		return domain.EventObserver{}, err
+	}
+	if err = observer.Validate(); err != nil {
+		return domain.EventObserver{}, err
+	}
+	return observer, nil
 }

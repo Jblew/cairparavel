@@ -17,6 +17,11 @@ func (recipient MessengerRecipient) Validate() error {
 
 // Notify sends notification to messenger user
 func (recipient *MessengerRecipient) Notify(notification Notification, container *ioccontainer.Container) error {
+	err := recipient.Validate()
+	if err != nil {
+		return err
+	}
+
 	var service MessengerNotificationService
 	container.Make(&service)
 

@@ -22,6 +22,10 @@ var usersCols = []string{
 
 // StoreUser saves user data
 func (repo *UsersRepositoryFirestore) StoreUser(user domain.User) error {
+	if err := user.Validate(); err != nil {
+		return err
+	}
+
 	for _, usersCol := range usersCols {
 		docRef := repo.Firestore.Collection(usersCol).Doc(user.UID)
 		_, err := docRef.Create(repo.Context, user)
@@ -47,6 +51,9 @@ func (repo *UsersRepositoryFirestore) GetUser(userID string) (domain.User, error
 	var result domain.User
 	err = snapshot.DataTo(&result)
 	if err != nil {
+		return domain.User{}, err
+	}
+	if err := result.Validate(); err != nil {
 		return domain.User{}, err
 	}
 	return result, nil

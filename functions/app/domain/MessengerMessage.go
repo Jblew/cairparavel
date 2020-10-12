@@ -18,6 +18,11 @@ func (message MessengerMessage) Validate() error {
 
 // OnNew handles new message
 func (message *MessengerMessage) OnNew(container *ioccontainer.Container) error {
+	err := message.Validate()
+	if err != nil {
+		return err
+	}
+
 	notification := Notification{
 		Template: "messenger_respond",
 		Payload:  make(map[string]interface{}),

@@ -28,6 +28,11 @@ func (signup *EventSignup) OnDeleted(container *ioccontainer.Container) error {
 }
 
 func (signup *EventSignup) sendNotificationAndObserve(templateName string, container *ioccontainer.Container) error {
+	err := signup.Validate()
+	if err != nil {
+		return err
+	}
+
 	var eventRepository EventRepository
 	container.Make(&eventRepository)
 

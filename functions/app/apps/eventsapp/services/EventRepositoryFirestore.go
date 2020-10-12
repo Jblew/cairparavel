@@ -28,8 +28,7 @@ func (repo *EventRepositoryFirestore) GetEventByID(ID string) (domain.Event, err
 		return domain.Event{}, fmt.Errorf("No Event stored with ID=%s", ID)
 	}
 
-	var result domain.Event
-	err = snapshot.DataTo(&result)
+	result, err := eventFromSnapshot(snapshot, false)
 	if err != nil {
 		return domain.Event{}, err
 	}
@@ -48,12 +47,24 @@ func (repo *EventRepositoryFirestore) GetAllNonFinishedAt(atTime time.Time) ([]d
 	results := make([]domain.Event, len(snapshots))
 
 	for _, snapshot := range snapshots {
-		var event domain.Event
-		err = snapshot.DataTo(&event)
+		event, err := eventFromSnapshot(snapshot, false)
 		if err != nil {
 			return []domain.Event{}, err
 		}
+		event.ID = snapshot.Ref.ID
 		results = append(results, event)
 	}
 	return results, nil
+}
+
+func eventFromSnapshot(snapshot *firestore.DocumentSnapshot, requireID bool) (domain.Event, error) {
+	var event domain.Event
+	err := snapshot.DataTo(&event)
+	if err != nil {
+		return domain.Event{}, err
+	}
+	if err = event.Validate(requireID); err != nil {
+		return domain.Event{}, err
+	}
+	return event, nil
 }

@@ -25,6 +25,11 @@ func (notification Notification) Validate(requireID bool) error {
 
 // OnQueued handles new notification in queue
 func (notification *Notification) OnQueued(container *ioccontainer.Container) error {
+	err := notification.Validate(true)
+	if err != nil {
+		return err
+	}
+
 	var queue NotificationQueue
 	container.Make(&queue)
 

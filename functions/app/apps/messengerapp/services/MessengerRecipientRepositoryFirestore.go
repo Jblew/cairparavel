@@ -17,6 +17,9 @@ type MessengerRecipientRepositoryFirestore struct {
 
 // StoreForUser saves messenger recipient id
 func (repo *MessengerRecipientRepositoryFirestore) StoreForUser(uid string, recipient domain.MessengerRecipient) error {
+	if err := recipient.Validate(); err != nil {
+		return err
+	}
 	docRef := repo.Firestore.Doc(config.FirestorePaths.MessengerRecipientForUserDoc(uid))
 	_, err := docRef.Set(repo.Context, recipient)
 	return err
@@ -37,6 +40,9 @@ func (repo *MessengerRecipientRepositoryFirestore) GetForUser(uid string) (domai
 	var result domain.MessengerRecipient
 	err = snapshot.DataTo(&result)
 	if err != nil {
+		return domain.MessengerRecipient{}, err
+	}
+	if err := result.Validate(); err != nil {
 		return domain.MessengerRecipient{}, err
 	}
 	return result, nil
