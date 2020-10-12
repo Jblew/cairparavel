@@ -79,5 +79,10 @@ func (paths *FirestorePathsStruct) MessengerRecipientForUserDoc(userID string) s
 	return "envs/prod/messenger_recipients/" + userID
 }
 
+// EventLastStateDoc path
+func (paths *FirestorePathsStruct) EventLastStateDoc(eventID string) string {
+	return "envs/prod/event_laststate/" + eventID
+}
+
 // FirestorePaths paths to firestore documents
 var FirestorePaths FirestorePathsStruct = FirestorePathsStruct{}

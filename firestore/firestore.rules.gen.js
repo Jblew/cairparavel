@@ -144,6 +144,11 @@ function events() {
       allow create: if uid == request.auth.uid;
       allow delete: if uid == request.auth.uid;
     }
+
+    match /event_laststate/{eventId} {
+      allow read: if false;
+      allow write: if false;
+    }
   `
 }
 
