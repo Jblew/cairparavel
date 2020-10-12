@@ -175,8 +175,10 @@ func (event *Event) Observe(userID string, container container.Container) error 
 type EventState string
 
 const (
+	// EventStateNonexistent — nonexistent, means event didn't exist before
+	EventStateNonexistent EventState = "EventStateNonexistent"
 	// EventStateTimeVoting — voting
-	EventStateTimeVoting EventState = "EventStateTimeVoting"
+	EventStateTimeVoting = "EventStateTimeVoting"
 	// EventStateWaitingForTimeConfirm waiting for confirmation of time by event owner
 	EventStateWaitingForTimeConfirm = "EventStateWaitingForTimeConfirm"
 	// EventStateCancelled cancelled
@@ -194,4 +196,5 @@ const (
 // EventRepository is a repository for events
 type EventRepository interface {
 	GetEventByID(ID string) (Event, error)
+	GetAllNonFinishedAt(time time.Time) ([]Event, error)
 }

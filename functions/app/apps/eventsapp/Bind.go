@@ -24,4 +24,18 @@ func Bind(container container.Container) {
 			Context:   context.Background(),
 		}
 	})
+
+	container.Singleton(func(firestore *firestore.Client) domain.EventSignupRepository {
+		return &services.EventSignupRepositoryFirestore{
+			Firestore: firestore,
+			Context:   context.Background(),
+		}
+	})
+
+	container.Singleton(func(firestore *firestore.Client) EventStateChangedRepository {
+		return &services.EventStateChangedRepositoryFirestore{
+			Firestore: firestore,
+			Context:   context.Background(),
+		}
+	})
 }

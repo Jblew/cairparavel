@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/Jblew/cairparavel/functions/app/config"
@@ -32,5 +33,27 @@ func (repo *EventRepositoryFirestore) GetEventByID(ID string) (domain.Event, err
 	if err != nil {
 		return domain.Event{}, err
 	}
+	result.ID = snapshot.Ref.ID
 	return result, nil
+}
+
+// GetAllNonFinishedAt retrives events that are not yet finished
+func (repo *EventRepositoryFirestore) GetAllNonFinishedAt(atTime time.Time) ([]domain.Event, error) {
+	colRef := repo.Firestore.Collection(config.FirestorePaths.EventsCol())
+	nowMillis := atTime.UnixNano() / int64(time.Millisecond)
+	snapshots, err := colRef.Where("endTime", "<", nowMillis).Documents(repo.Context).GetAll()
+	if err != nil {
+		return []domain.Event{}, err
+	}
+	results := make([]domain.Event, len(snapshots))
+
+	for _, snapshot := range snapshots {
+		var event domain.Event
+		err = snapshot.DataTo(&event)
+		if err != nil {
+			return []domain.Event{}, err
+		}
+		results = append(results, event)
+	}
+	return results, nil
 }
