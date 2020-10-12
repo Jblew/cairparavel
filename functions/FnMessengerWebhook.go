@@ -16,7 +16,7 @@ import (
 )
 
 // FnMessengerWebhook is FB messenger webhook
-func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) error {
+func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
 	logWithCode := func(code int) func(format string, v ...interface{}) {
 		return func(format string, v ...interface{}) {
 			str := fmt.Sprintf(format, v...)
@@ -65,7 +65,5 @@ func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) error {
 	})
 	if err != nil {
 		logWithCode(400)("Finished with error: %v", err)
-		return err
 	}
-	return nil
 }
