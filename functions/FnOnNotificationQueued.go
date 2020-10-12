@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/functions/metadata"
@@ -28,6 +29,7 @@ func FnOnNotificationQueued(ctx context.Context, e firestoreEventFnOnNotificatio
 		log.Printf("New value: %+v", e.Value)
 
 		notification, err := e.Value.Fields.ToNotification()
+		notification.ID = filepath.Base(e.Value.Name)
 		if err != nil {
 			return err
 		}

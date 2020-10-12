@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/functions/metadata"
@@ -28,6 +29,7 @@ func FnOnEventCreated(ctx context.Context, e firestoreEventFnOnEventCreated) err
 		log.Printf("New value: %+v", e.Value)
 
 		event := e.Value.Fields.ToEvent()
+		event.ID = filepath.Base(e.Value.Name)
 		log.Printf("Parsed event %+v", event)
 		return event.OnCreated(container)
 	})

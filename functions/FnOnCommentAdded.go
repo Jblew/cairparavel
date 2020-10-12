@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/functions/metadata"
@@ -28,6 +29,7 @@ func FnOnCommentAdded(ctx context.Context, e firestoreEventFnOnCommentAdded) err
 		log.Printf("New value: %+v", e.Value)
 
 		comment := e.Value.Fields.ToEventComment()
+		comment.ID = filepath.Base(e.Value.Name)
 		log.Printf("Parsed comment %+v", comment)
 		return comment.OnAdded(container)
 	})
