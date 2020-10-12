@@ -47,5 +47,4 @@ func OnPeriodicalHandleEvents(container *ioccontainer.Container) error {
 		}
 	}
 	return lastErr
-	return nil
 }
