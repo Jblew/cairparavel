@@ -21,7 +21,7 @@ func (message MessengerMessage) Validate() error {
 // OnNew handles new message
 func (message *MessengerMessage) OnNew(container *ioccontainer.Container) error {
 	log.Printf("MessengerMessage.OnNew: %+v", message)
-	err := message.Validate()
+	/*err := message.Validate()
 	if err != nil {
 		return err
 	}
@@ -32,5 +32,7 @@ func (message *MessengerMessage) OnNew(container *ioccontainer.Container) error 
 	}
 	notification.Payload["messageText"] = message.Text
 
-	return message.Recipient.Notify(notification, container)
+	return message.Recipient.Notify(notification, container)*/
+	// Remember that we get notified about our messages too. There is a possibility to generate a message loop
+	return nil
 }
