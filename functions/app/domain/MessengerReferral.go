@@ -1,11 +1,19 @@
 package domain
 
-import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
+import (
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
+	"gopkg.in/validator.v2"
+)
 
 // MessengerReferral is a referral sent using messenger link to our app
 type MessengerReferral struct {
-	Code      string             `json:"code"`
-	Recipient MessengerRecipient `json:"recipient"`
+	Code      string             `json:"code" validate:"nonzero"`
+	Recipient MessengerRecipient `json:"recipient" validate:"nonzero"`
+}
+
+// Validate validates
+func (referral MessengerReferral) Validate() error {
+	return validator.Validate(referral)
 }
 
 // OnNew handles new referral

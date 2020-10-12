@@ -1,13 +1,21 @@
 package domain
 
-import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
+import (
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
+	"gopkg.in/validator.v2"
+)
 
 // EventTimeVotes votes for organising event at some specific time
 type EventTimeVotes struct {
-	UID         string  `json:"uid"`
-	EventID     string  `json:"eventId"`
-	DisplayName string  `json:"displayName"`
+	UID         string  `json:"uid" validate:"nonzero"`
+	EventID     string  `json:"eventId" validate:"nonzero"`
+	DisplayName string  `json:"displayName" validate:"nonzero"`
 	Times       []int64 `json:"times"`
+}
+
+// Validate validates
+func (votes EventTimeVotes) Validate() error {
+	return validator.Validate(votes)
 }
 
 // OnAdded handles added vote

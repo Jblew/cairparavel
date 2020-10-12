@@ -1,10 +1,18 @@
 package domain
 
-import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
+import (
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
+	"gopkg.in/validator.v2"
+)
 
 // MessengerRecipient message recipient or sender in FB messenger
 type MessengerRecipient struct {
-	ID string `json:"id"`
+	ID string `json:"id" validate:"nonzero"`
+}
+
+// Validate validates
+func (recipient MessengerRecipient) Validate() error {
+	return validator.Validate(recipient)
 }
 
 // Notify sends notification to messenger user

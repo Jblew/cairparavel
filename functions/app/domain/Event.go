@@ -1,18 +1,20 @@
 package domain
 
 import (
+	"fmt"
 	"time"
 
 	"log"
 
 	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
+	"gopkg.in/validator.v2"
 )
 
 // Event an event organised at some time
 type Event struct {
 	ID               string  `json:"id"`
-	OwnerUID         string  `json:"ownerUid"`
-	OwnerDisplayName string  `json:"ownerDisplayName"`
+	OwnerUID         string  `json:"ownerUid" validate:"nonzero"`
+	OwnerDisplayName string  `json:"ownerDisplayName" validate:"nonzero"`
 	VotingTime       int64   `json:"votingTime"`
 	StartTime        int64   `json:"startTime"`
 	EndTime          int64   `json:"endTime"`
@@ -20,10 +22,18 @@ type Event struct {
 	SignupTime       int64   `json:"signupTime"`
 	MinParticipants  int     `json:"minParticipants"`
 	MaxParticipants  int     `json:"maxParticipants"`
-	Name             string  `json:"name"`
-	Description      string  `json:"description"`
+	Name             string  `json:"name" validate:"nonzero"`
+	Description      string  `json:"description" validate:"nonzero"`
 	AllowedTimes     []int64 `json:"allowedTimes"`
 	CanSuggestTime   bool    `json:"canSuggestTime"`
+}
+
+// Validate validates
+func (event Event) Validate(requireID bool) error {
+	if requireID && len(event.ID) == 0 {
+		return fmt.Errorf("ID is required on Event")
+	}
+	return validator.Validate(event)
 }
 
 // GetStateAt retrives state of an event at any given time

@@ -1,14 +1,27 @@
 package domain
 
-import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
+import (
+	"fmt"
+
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
+	"gopkg.in/validator.v2"
+)
 
 // EventComment is a comment on an event
 type EventComment struct {
 	ID        string `json:"id"`
-	EventID   string `json:"eventId"`
-	AuthorUID string `json:"authorUid"`
-	Contents  string `json:"contents"`
+	EventID   string `json:"eventId" validate:"nonzero"`
+	AuthorUID string `json:"authorUid" validate:"nonzero"`
+	Contents  string `json:"contents" validate:"nonzero"`
 	Time      int64  `json:"time"`
+}
+
+// Validate validates
+func (comment EventComment) Validate(requireID bool) error {
+	if requireID && len(comment.ID) == 0 {
+		return fmt.Errorf("ID is required on EventComment")
+	}
+	return validator.Validate(comment)
 }
 
 // OnAdded handles comment added to event

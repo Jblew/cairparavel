@@ -1,19 +1,26 @@
 package domain
 
-import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
+import (
+	"fmt"
+
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
+	"gopkg.in/validator.v2"
+)
 
 // Notification is a notification to be sent to an user
 type Notification struct {
 	ID       string                 `json:"id"`
-	UID      string                 `json:"uid"`
-	Template string                 `json:"template"`
-	Payload  map[string]interface{} `json:"payload"`
+	UID      string                 `json:"uid" validate:"nonzero"`
+	Template string                 `json:"template" validate:"nonzero"`
+	Payload  map[string]interface{} `json:"payload" validate:"nonzero"`
 }
 
-// PlainNotification is notification resolved with template — used for history
-type PlainNotification struct {
-	Contents string
-	UID      string
+// Validate validates
+func (notification Notification) Validate(requireID bool) error {
+	if requireID && len(notification.ID) == 0 {
+		return fmt.Errorf("ID is required on Notification")
+	}
+	return validator.Validate(notification)
 }
 
 // OnQueued handles new notification in queue
