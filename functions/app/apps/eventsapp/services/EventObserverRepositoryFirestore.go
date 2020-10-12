@@ -23,14 +23,15 @@ func (repo *EventObserverRepositoryFirestore) GetAllForEvent(eventID string) ([]
 		return []domain.EventObserver{}, err
 	}
 
-	results := make([]domain.EventObserver, len(snapshots))
+	results := make([]domain.EventObserver, 0, len(snapshots))
 
 	for _, snapshot := range snapshots {
 		observer, err := observerFromSnapshot(snapshot)
 		if err != nil {
 			log.Printf("Invalid event observer fetched: %v", err)
+		} else {
+			results = append(results, observer)
 		}
-		results = append(results, observer)
 	}
 	return results, nil
 }

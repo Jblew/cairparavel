@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"log"
-
 	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 	"gopkg.in/validator.v2"
 )
@@ -38,6 +36,11 @@ func (event Event) Validate(requireID bool) error {
 
 // GetStateAt retrives state of an event at any given time
 func (event *Event) GetStateAt(atTime time.Time, container *ioccontainer.Container) (EventState, error) {
+	err := event.Validate(true)
+	if err != nil {
+		return EventStateNonexistent, err
+	}
+
 	var signupRepo EventSignupRepository
 	container.Make(&signupRepo)
 
@@ -69,6 +72,11 @@ func (event *Event) GetStateAt(atTime time.Time, container *ioccontainer.Contain
 
 // OnStateChanged handler
 func (event *Event) OnStateChanged(previousState EventState, container *ioccontainer.Container) error {
+	err := event.Validate(true)
+	if err != nil {
+		return err
+	}
+
 	payload := make(map[string]interface{})
 	payload["event"] = event
 	payload["previousState"] = previousState
@@ -109,7 +117,12 @@ func (event *Event) OnStateChanged(previousState EventState, container *iocconta
 
 // OnCreated handler
 func (event *Event) OnCreated(container *ioccontainer.Container) error {
-	err := event.Observe(event.OwnerUID, container)
+	err := event.Validate(true)
+	if err != nil {
+		return err
+	}
+
+	err = event.Observe(event.OwnerUID, container)
 	if err != nil {
 		return err
 	}
@@ -125,6 +138,11 @@ func (event *Event) OnCreated(container *ioccontainer.Container) error {
 
 // OnModified handler
 func (event *Event) OnModified(container *ioccontainer.Container) error {
+	err := event.Validate(true)
+	if err != nil {
+		return err
+	}
+
 	payload := make(map[string]interface{})
 	payload["event"] = event
 
@@ -150,7 +168,6 @@ func (event *Event) NotifyOwner(notification Notification, container *ioccontain
 func (event *Event) NotifyObservers(notification Notification, container *ioccontainer.Container) error {
 	var observersRepo EventObserverRepository
 	container.Make(&observersRepo)
-
 	var notificationQueue NotificationQueue
 	container.Make(&notificationQueue)
 
@@ -163,7 +180,6 @@ func (event *Event) NotifyObservers(notification Notification, container *ioccon
 	for _, observer := range observers {
 		err := notificationQueue.Add(observer.UID, notification)
 		if err != nil {
-			log.Printf("Error while sending notification %v", err)
 			lastErr = err
 		}
 	}

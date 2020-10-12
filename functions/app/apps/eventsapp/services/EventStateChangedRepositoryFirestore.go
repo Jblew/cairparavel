@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"log"
 
 	"cloud.google.com/go/firestore"
 	"github.com/Jblew/cairparavel/functions/app/config"

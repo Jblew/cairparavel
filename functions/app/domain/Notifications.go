@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 	"gopkg.in/validator.v2"
@@ -36,15 +37,18 @@ func (notification *Notification) OnQueued(container *ioccontainer.Container) er
 	var messengerRecipientRepository MessengerRecipientRepository
 	container.Make(&messengerRecipientRepository)
 
+	log.Print("Loaded dependencies. Loading recipient...")
 	recipient, err := messengerRecipientRepository.GetForUser(notification.UID)
 	if err != nil {
 		return err
 	}
+	log.Printf("Loaded recipient: %+v. Notifying...", recipient)
 
 	err = recipient.Notify(*notification, container)
 	if err != nil {
 		return err
 	}
+	log.Printf("Notified recipient. Deleting...")
 
 	return queue.Delete(notification.UID, notification.ID)
 }

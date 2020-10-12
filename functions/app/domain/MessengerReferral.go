@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"log"
+
 	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 	"gopkg.in/validator.v2"
 )
@@ -18,6 +20,7 @@ func (referral MessengerReferral) Validate() error {
 
 // OnNew handles new referral
 func (referral *MessengerReferral) OnNew(container *ioccontainer.Container) error {
+	log.Printf("MessengerReferral.OnNew: %+v", referral)
 	err := referral.Validate()
 	if err != nil {
 		return err

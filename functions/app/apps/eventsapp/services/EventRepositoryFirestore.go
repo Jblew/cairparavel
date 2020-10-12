@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -40,19 +41,20 @@ func (repo *EventRepositoryFirestore) GetEventByID(ID string) (domain.Event, err
 func (repo *EventRepositoryFirestore) GetAllNonFinishedAt(atTime time.Time) ([]domain.Event, error) {
 	colRef := repo.Firestore.Collection(config.FirestorePaths.EventsCol())
 	nowMillis := atTime.UnixNano() / int64(time.Millisecond)
-	snapshots, err := colRef.Where("endTime", "<", nowMillis).Documents(repo.Context).GetAll()
+	snapshots, err := colRef.Where("endTime", ">", nowMillis).Documents(repo.Context).GetAll()
 	if err != nil {
 		return []domain.Event{}, err
 	}
-	results := make([]domain.Event, len(snapshots))
+	results := make([]domain.Event, 0, len(snapshots))
 
 	for _, snapshot := range snapshots {
 		event, err := eventFromSnapshot(snapshot, false)
 		if err != nil {
-			return []domain.Event{}, err
+			log.Printf("Invalid event fetched: %v", err)
+		} else {
+			event.ID = snapshot.Ref.ID
+			results = append(results, event)
 		}
-		event.ID = snapshot.Ref.ID
-		results = append(results, event)
 	}
 	return results, nil
 }

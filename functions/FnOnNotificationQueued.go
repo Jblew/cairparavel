@@ -29,10 +29,10 @@ func FnOnNotificationQueued(ctx context.Context, e firestoreEventFnOnNotificatio
 		log.Printf("New value: %+v", e.Value)
 
 		notification, err := e.Value.Fields.ToNotification()
-		notification.ID = filepath.Base(e.Value.Name)
 		if err != nil {
-			return err
+			return fmt.Errorf("Error while parsing notification input (function input): %v", err)
 		}
+		notification.ID = filepath.Base(e.Value.Name)
 		log.Printf("Parsed notification %+v", notification)
 		return notification.OnQueued(container)
 	})

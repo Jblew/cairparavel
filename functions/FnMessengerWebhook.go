@@ -32,7 +32,7 @@ func FnMessengerWebhook(resp http.ResponseWriter, request *http.Request) {
 		Log:    logWithCode(200),
 	}
 	err := util.FunctionHandler(opts, func() error {
-		var messengerInstance *messenger.Messenger
+		var messengerInstance messenger.Messenger
 		container.Make(&messengerInstance)
 
 		if request.Method == "GET" {

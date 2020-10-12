@@ -15,7 +15,7 @@ type MessengerNotificationService struct {
 
 // SendNotification sends notification to messenger user
 func (service *MessengerNotificationService) SendNotification(recipientID string, notification domain.Notification) error {
-	if err := notification.Validate(true); err != nil {
+	if err := notification.Validate(false); err != nil {
 		return err
 	}
 

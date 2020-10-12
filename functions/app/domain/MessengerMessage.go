@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"log"
+
 	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 	"gopkg.in/validator.v2"
 )
@@ -18,6 +20,7 @@ func (message MessengerMessage) Validate() error {
 
 // OnNew handles new message
 func (message *MessengerMessage) OnNew(container *ioccontainer.Container) error {
+	log.Printf("MessengerMessage.OnNew: %+v", message)
 	err := message.Validate()
 	if err != nil {
 		return err
