@@ -27,6 +27,7 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "1024MB"
 ) &
 
@@ -38,6 +39,7 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "256MB"
 ) &
 
@@ -49,6 +51,7 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "256MB"
 ) &
 
@@ -60,6 +63,7 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "256MB"
 ) &
 
@@ -71,6 +75,7 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "256MB"
 ) &
 
@@ -82,6 +87,7 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "256MB"
 ) &
 
@@ -93,6 +99,7 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "256MB"
 ) &
 
@@ -104,6 +111,7 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "256MB"
 ) &
 
@@ -115,18 +123,20 @@ gcloud config set project "${GCP_PROJECT_ID}"
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=3s \
     --memory "256MB"
 ) &
 
 (
-echo "Deploying FnOnEventVoteDeleted"
-gcloud functions deploy FnOnEventVoteDeleted \
-  --trigger-event providers/cloud.firestore/eventTypes/document.delete \
-  --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
-  --region "${GCP_PROJECT_REGION}" \
-  --runtime go113 \
-  --quiet \
-  --memory "256MB"
+  echo "Deploying FnOnEventVoteDeleted"
+  gcloud functions deploy FnOnEventVoteDeleted \
+    --trigger-event providers/cloud.firestore/eventTypes/document.delete \
+    --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}/votes/{uid}" \
+    --region "${GCP_PROJECT_REGION}" \
+    --runtime go113 \
+    --quiet \
+    --timeout=3s \
+    --memory "256MB"
 ) &
 
 
@@ -137,7 +147,7 @@ gcloud functions deploy FnOnEventVoteDeleted \
   CHECK_EVENTS_SCHEDULER_JOB="job_check-events-state"
   gcloud pubsub topics create "${CHECK_EVENTS_PUBSUB_TOPIC}" || echo "Cannot create topic"
   gcloud pubsub subscriptions create "${CHECK_EVENTS_PUBSUB_SUBSCRIPTION}" --topic "${CHECK_EVENTS_PUBSUB_TOPIC}" || echo "Cannot create subscription"
-  gcloud alpha scheduler jobs delete "${CHECK_EVENTS_SCHEDULER_JOB}" || echo "Failed to delete scheduler job"
+  gcloud alpha scheduler jobs delete --quiet "${CHECK_EVENTS_SCHEDULER_JOB}" || echo "Failed to delete scheduler job"
   gcloud alpha scheduler jobs create pubsub "${CHECK_EVENTS_SCHEDULER_JOB}" \
     --topic "${CHECK_EVENTS_PUBSUB_TOPIC}" \
     --schedule "*/10 * * * *" \
@@ -147,6 +157,7 @@ gcloud functions deploy FnOnEventVoteDeleted \
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=30s \
     --memory "512MB"
 ) &
 
@@ -157,6 +168,7 @@ gcloud functions deploy FnOnEventVoteDeleted \
     --region "${GCP_PROJECT_REGION}" \
     --runtime go113 \
     --quiet \
+    --timeout=5s \
     --memory "512MB"
 ) &
 
