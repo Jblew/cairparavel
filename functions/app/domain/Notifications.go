@@ -1,8 +1,6 @@
 package domain
 
-import (
-	"github.com/golobby/container/pkg/container"
-)
+import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
 
 // Notification is a notification to be sent to an user
 type Notification struct {
@@ -19,7 +17,7 @@ type PlainNotification struct {
 }
 
 // OnQueued handles new notification in queue
-func (notification *Notification) OnQueued(container container.Container) error {
+func (notification *Notification) OnQueued(container *ioccontainer.Container) error {
 	var queue NotificationQueue
 	container.Make(&queue)
 

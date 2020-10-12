@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	"github.com/golobby/container/pkg/container"
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 )
 
 // User stored in db. Do not confuse with firestore user
@@ -14,7 +14,7 @@ type User struct {
 }
 
 // OnAccountCreated handles situation when user logs in and doesnt have an account stored
-func (temporaryUser *User) OnAccountCreated(container container.Container) error {
+func (temporaryUser *User) OnAccountCreated(container *ioccontainer.Container) error {
 	var usersRepository UsersRepository
 	container.Make(&usersRepository)
 

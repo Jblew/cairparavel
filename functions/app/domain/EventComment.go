@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/golobby/container/pkg/container"
+import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
 
 // EventComment is a comment on an event
 type EventComment struct {
@@ -12,7 +12,7 @@ type EventComment struct {
 }
 
 // OnAdded handles comment added to event
-func (comment *EventComment) OnAdded(container container.Container) error {
+func (comment *EventComment) OnAdded(container *ioccontainer.Container) error {
 	var eventRepository EventRepository
 	container.Make(&eventRepository)
 

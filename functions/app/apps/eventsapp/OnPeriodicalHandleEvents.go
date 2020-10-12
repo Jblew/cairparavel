@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/Jblew/cairparavel/functions/app/domain"
-	"github.com/golobby/container/pkg/container"
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 )
 
 // OnPeriodicalHandleEvents performs periodical checks of events (eg state changed based on time)
-func OnPeriodicalHandleEvents(container container.Container) error {
+func OnPeriodicalHandleEvents(container *ioccontainer.Container) error {
 	var eventsRepo domain.EventRepository
 	container.Make(&eventsRepo)
 

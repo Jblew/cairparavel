@@ -7,7 +7,7 @@ require (
 	cloud.google.com/go/firestore v1.2.0
 	cloud.google.com/go/storage v1.9.0 // indirect
 	firebase.google.com/go v3.13.0+incompatible
-	github.com/golobby/container v1.3.0
+	github.com/Jblew/ioccontainer v1.6.0
 	golang.org/x/net v0.0.0-20200602114024-627f9648deb9 // indirect
 	golang.org/x/sys v0.0.0-20200610111108-226ff32320da // indirect
 	golang.org/x/tools v0.0.0-20200612220849-54c614fe050c // indirect

@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/golobby/container/pkg/container"
+import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
 
 // MessengerReferral is a referral sent using messenger link to our app
 type MessengerReferral struct {
@@ -9,7 +9,7 @@ type MessengerReferral struct {
 }
 
 // OnNew handles new referral
-func (referral *MessengerReferral) OnNew(container container.Container) error {
+func (referral *MessengerReferral) OnNew(container *ioccontainer.Container) error {
 	var messengerRecipientRepository MessengerRecipientRepository
 	container.Make(&messengerRecipientRepository)
 	var usersRepository UsersRepository

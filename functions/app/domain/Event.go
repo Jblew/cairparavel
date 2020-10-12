@@ -5,7 +5,7 @@ import (
 
 	"log"
 
-	"github.com/golobby/container/pkg/container"
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 )
 
 // Event an event organised at some time
@@ -27,7 +27,7 @@ type Event struct {
 }
 
 // GetStateAt retrives state of an event at any given time
-func (event *Event) GetStateAt(atTime time.Time, container container.Container) (EventState, error) {
+func (event *Event) GetStateAt(atTime time.Time, container *ioccontainer.Container) (EventState, error) {
 	var signupRepo EventSignupRepository
 	container.Make(&signupRepo)
 
@@ -58,7 +58,7 @@ func (event *Event) GetStateAt(atTime time.Time, container container.Container) 
 }
 
 // OnStateChanged handler
-func (event *Event) OnStateChanged(previousState EventState, container container.Container) error {
+func (event *Event) OnStateChanged(previousState EventState, container *ioccontainer.Container) error {
 	payload := make(map[string]interface{})
 	payload["event"] = event
 	payload["previousState"] = previousState
@@ -98,7 +98,7 @@ func (event *Event) OnStateChanged(previousState EventState, container container
 }
 
 // OnCreated handler
-func (event *Event) OnCreated(container container.Container) error {
+func (event *Event) OnCreated(container *ioccontainer.Container) error {
 	err := event.Observe(event.OwnerUID, container)
 	if err != nil {
 		return err
@@ -114,7 +114,7 @@ func (event *Event) OnCreated(container container.Container) error {
 }
 
 // OnModified handler
-func (event *Event) OnModified(container container.Container) error {
+func (event *Event) OnModified(container *ioccontainer.Container) error {
 	payload := make(map[string]interface{})
 	payload["event"] = event
 
@@ -125,7 +125,7 @@ func (event *Event) OnModified(container container.Container) error {
 }
 
 // NotifyOwner notifies owner of the event
-func (event *Event) NotifyOwner(notification Notification, container container.Container) error {
+func (event *Event) NotifyOwner(notification Notification, container *ioccontainer.Container) error {
 	var notificationQueue NotificationQueue
 	container.Make(&notificationQueue)
 
@@ -137,7 +137,7 @@ func (event *Event) NotifyOwner(notification Notification, container container.C
 }
 
 // NotifyObservers notifies people observing the event
-func (event *Event) NotifyObservers(notification Notification, container container.Container) error {
+func (event *Event) NotifyObservers(notification Notification, container *ioccontainer.Container) error {
 	var observersRepo EventObserverRepository
 	container.Make(&observersRepo)
 
@@ -161,7 +161,7 @@ func (event *Event) NotifyObservers(notification Notification, container contain
 }
 
 // Observe observes an event
-func (event *Event) Observe(userID string, container container.Container) error {
+func (event *Event) Observe(userID string, container *ioccontainer.Container) error {
 	var observersRepo EventObserverRepository
 	container.Make(&observersRepo)
 

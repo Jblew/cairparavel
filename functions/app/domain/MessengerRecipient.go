@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/golobby/container/pkg/container"
+import "github.com/Jblew/ioccontainer/pkg/ioccontainer"
 
 // MessengerRecipient message recipient or sender in FB messenger
 type MessengerRecipient struct {
@@ -8,7 +8,7 @@ type MessengerRecipient struct {
 }
 
 // Notify sends notification to messenger user
-func (recipient *MessengerRecipient) Notify(notification Notification, container container.Container) error {
+func (recipient *MessengerRecipient) Notify(notification Notification, container *ioccontainer.Container) error {
 	var service MessengerNotificationService
 	container.Make(&service)
 

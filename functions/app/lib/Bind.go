@@ -2,12 +2,12 @@ package lib
 
 import (
 	"github.com/Jblew/cairparavel/functions/app/lib/messenger"
-	"github.com/golobby/container/pkg/container"
+	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 )
 
 // Bind to IoC
-func Bind(container container.Container) {
-	container.Singleton(func(config messenger.Config) *messenger.Messenger {
-		return messenger.Init(config)
+func Bind(container *ioccontainer.Container) {
+	container.Singleton(func(config messenger.Config) messenger.Messenger {
+		return *messenger.Init(config)
 	})
 }
