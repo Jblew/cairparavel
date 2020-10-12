@@ -2,11 +2,12 @@ package services
 
 import (
 	"context"
-	"log"
 
 	"cloud.google.com/go/firestore"
 	"github.com/Jblew/cairparavel/functions/app/config"
 	"github.com/Jblew/cairparavel/functions/app/domain"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // EventStateChangedRepositoryFirestore implements EventStateChangedRepository
@@ -19,8 +20,9 @@ type EventStateChangedRepositoryFirestore struct {
 func (repo *EventStateChangedRepositoryFirestore) GetPreviousAndUpdateEventState(eventID string, state domain.EventState) (domain.EventState, error) {
 	docPath := config.FirestorePaths.EventLastStateDoc(eventID)
 	docRef := repo.Firestore.Doc(docPath)
+
 	snapshot, err := docRef.Get(repo.Context)
-	if err != nil {
+	if err != nil && status.Code(err) != codes.NotFound {
 		return domain.EventStateNonexistent, err
 	}
 	previousState := domain.EventStateNonexistent
