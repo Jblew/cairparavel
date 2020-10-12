@@ -32,14 +32,18 @@ func (referral *MessengerReferral) OnNew(container *ioccontainer.Container) erro
 	container.Make(&usersRepository)
 
 	userID := referral.Code
+	log.Printf("Loaded dependencies. Storing recipient %+v for user %s...", referral.Recipient, userID)
 	err = messengerRecipientRepository.StoreForUser(userID, referral.Recipient)
 	if err != nil {
 		return err
 	}
+
+	log.Printf("Stored recipient, fetching user...")
 	user, err := usersRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
+	log.Printf("Fetched user %+v, sending welcome message...", user)
 
 	payload := make(map[string]interface{})
 	payload["user"] = user

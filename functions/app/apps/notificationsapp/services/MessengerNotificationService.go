@@ -2,7 +2,6 @@ package services
 
 import (
 	"github.com/Jblew/cairparavel/functions/app/apps/notificationsapp/notificationsdomain"
-	"github.com/Jblew/cairparavel/functions/app/domain"
 	"github.com/Jblew/cairparavel/functions/app/lib/messenger"
 )
 
@@ -14,17 +13,13 @@ type MessengerNotificationService struct {
 }
 
 // SendNotification sends notification to messenger user
-func (service *MessengerNotificationService) SendNotification(recipientID string, notification domain.Notification) error {
-	if err := notification.Validate(false); err != nil {
-		return err
-	}
-
-	template, err := service.TemplateRepository.GetTemplate(notification.Template)
+func (service *MessengerNotificationService) SendNotification(recipientID string, templateName string, payload map[string]interface{}) error {
+	template, err := service.TemplateRepository.GetTemplate(templateName)
 	if err != nil {
 		return err
 	}
 
-	messageStr, err := service.TemplatingService.ResolveTemplate(template.Template, notification.Payload)
+	messageStr, err := service.TemplatingService.ResolveTemplate(template.Template, payload)
 	if err != nil {
 		return err
 	}

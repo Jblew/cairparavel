@@ -14,7 +14,7 @@ var templates = map[string]string{
 	"event_started":                "Event {{ .event.name }} started",
 	"event_cancelled":              "Event {{ .event.name }} cancelled",
 	"messenger_respond":            "This is a bot account. Please visit https://cairparavelapp.web.app to check information on your events",
-	"messenger_welcome":            "Hi {{ .user.DisplayName }}! You have just enabled updates on our events.",
+	"messenger_welcome":            "Hi! You have just enabled updates on our events. Visit https://cairparavelapp.web.app to subscribe or unsubscribe particular events.",
 	"member_signed_in":             "New person signed in on event {{ .event.name }}",
 	"member_signed_out":            "One person signed out on event {{ .event.name }}",
 	"event_voted":                  "New vote on event {{ .event.name }}",

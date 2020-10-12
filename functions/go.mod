@@ -14,6 +14,6 @@ require (
 	golang.org/x/tools v0.0.0-20200612220849-54c614fe050c // indirect
 	google.golang.org/appengine v1.6.6
 	google.golang.org/genproto v0.0.0-20200612171551-7676ae05be11 // indirect
-	google.golang.org/grpc v1.33.0 // indirect
+	google.golang.org/grpc v1.33.0
 	gopkg.in/validator.v2 v2.0.0-20200605151824-2b28d334fa05
 )

@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"log"
+
 	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 	"gopkg.in/validator.v2"
 )
@@ -25,7 +27,8 @@ func (recipient *MessengerRecipient) Notify(notification Notification, container
 	var service MessengerNotificationService
 	container.Make(&service)
 
-	return service.SendNotification(recipient.ID, notification)
+	log.Printf("Sending notification to messenger recipient %s: %+v", recipient.ID, notification)
+	return service.SendNotification(recipient.ID, notification.Template, notification.Payload)
 }
 
 // MessengerRecipientRepository stores or retrives FB messenger recipient ID based on our UID
@@ -36,5 +39,5 @@ type MessengerRecipientRepository interface {
 
 // MessengerNotificationService sends notification to messenger user
 type MessengerNotificationService interface {
-	SendNotification(recipientID string, notification Notification) error
+	SendNotification(recipientID string, templateName string, payload map[string]interface{}) error
 }
