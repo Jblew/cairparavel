@@ -19,7 +19,7 @@ var templates = map[string]string{
 	"member_signed_out":            "One person signed out on event {{ .event.Name }}",
 	"event_voted":                  "New vote on event {{ .event.Name }}",
 	"event_vote_deleted":           "Vote deleted on event {{ .event.Name }}",
-	"event_created":                "New event created {{ .event.Name }} {{ event.Name }}",
+	"event_created":                "New event created {{ .event.Name }}",
 }
 
 // NotificationTemplateRepositoryStatic implements NotificationTemplateRepository
