@@ -9,11 +9,12 @@ import (
 
 // EventComment is a comment on an event
 type EventComment struct {
-	ID        string `json:"id"`
-	EventID   string `json:"eventId" validate:"nonzero"`
-	AuthorUID string `json:"authorUid" validate:"nonzero"`
-	Contents  string `json:"contents" validate:"nonzero"`
-	Time      int64  `json:"time"`
+	ID                string `json:"id"`
+	EventID           string `json:"eventId" validate:"nonzero"`
+	AuthorUID         string `json:"authorUid" validate:"nonzero"`
+	AuthorDisplayName string `json:"authorDisplayName" validate:"nonzero"`
+	Contents          string `json:"contents" validate:"nonzero"`
+	Time              int64  `json:"time"`
 }
 
 // Validate validates
