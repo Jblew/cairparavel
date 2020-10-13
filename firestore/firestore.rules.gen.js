@@ -141,8 +141,8 @@ function events() {
     }
 
     match /event_observers/{eventId}/uids/{uid} {
-      allow create: if uid == request.auth.uid;
-      allow delete: if uid == request.auth.uid;
+      allow read: if uid == request.auth.uid;
+      allow write: if uid == request.auth.uid;
     }
 
     match /event_laststate/{eventId} {
