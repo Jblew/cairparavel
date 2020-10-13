@@ -28,4 +28,7 @@ export const projectConfig = {
       `${envCol}/events/${eventId}/signedMembers/${uid}`,
     eventUrl: ({ name, id }: { name: string, id?: string }) => `/event/${toPrettySlug(name)}/${id}`
   },
+  comments: {
+    firestoreEventCommentsCol: (eventId: string) => `${envCol}/event_comments/${eventId}/messages`,
+  }
 }

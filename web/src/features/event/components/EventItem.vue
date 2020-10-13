@@ -65,6 +65,7 @@
         <event-item-deleted :interpreter="interpreter" :state="state" />
       </template>
     </state-matches>
+    <event-comments :event="event" />
   </div>
 </template>
 <script lang="ts">
@@ -91,6 +92,7 @@ import {
   EventItemDeleted,
 } from './states'
 import { StateMatches } from '@/components'
+import { EventComments } from '@/features/comments'
 
 @Component({
   components: {
@@ -112,13 +114,14 @@ import { StateMatches } from '@/components'
     EventItemDoUpdateDetails,
     EventItemDoDelete,
     EventItemDeleted,
+    EventComments,
   },
 })
 export default class extends Vue {
   @Prop({ required: true })
-  event!: Event
+  eventInitial!: Event
 
-  interpreter: EventMachineInterpreter = getEventInterpreter({ eventId: this.event.id!, event: this.event })
+  interpreter: EventMachineInterpreter = getEventInterpreter({ eventId: this.eventInitial.id!, event: this.eventInitial })
   state: EventMachineInterpreter['state'] = this.interpreter.initialState
 
   created() {
@@ -126,7 +129,7 @@ export default class extends Vue {
   }
 
   startEventMachine() {
-    if (!this.event.id) throw new Error('Event does not have an ID assigned')
+    if (!this.eventInitial.id) throw new Error('Event does not have an ID assigned')
     this.interpreter
       .onTransition(state => {
         this.state = state
@@ -149,6 +152,10 @@ export default class extends Vue {
 
   onMachineError(errorEvt: { type: 'ERROR', message: string }) {
     alert(`Error: ${errorEvt.message}`)
+  }
+
+  get event(): Event {
+    return this.state.context.event!
   }
 }
 </script>

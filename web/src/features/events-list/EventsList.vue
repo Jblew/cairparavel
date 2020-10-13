@@ -2,7 +2,7 @@
   <stateful-resource :resource="eventsResource">
     <ul data-test="events-list">
       <li v-for="event in events" :key="event.id">
-        <event-item :event="event" />
+        <event-item :event-initial="event" />
       </li>
     </ul>
   </stateful-resource>

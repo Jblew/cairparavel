@@ -1,7 +1,7 @@
 import { Event } from './Event'
 
 export interface EventRepository {
-  subscribeToEvent(optd: { eventId: string, onUpdated: (e: Event) => void, onError: (err: Error) => void }): () => void
+  subscribeToEvent(opts: { eventId: string, onUpdated: (e: Event) => void, onError: (err: Error) => void }): () => void
   saveEvent(event: Event): Promise<string>
   fetchEvents(): Promise<Event[]>
   timeVote(opts: { eventId: string, currentUid: string, time: number }): Promise<void>
