@@ -16,5 +16,6 @@ func (observer EventObserver) Validate() error {
 // EventObserverRepository is a repository of event observers
 type EventObserverRepository interface {
 	GetAllForEvent(eventID string) ([]EventObserver, error)
+	DeleteAllForEvent(eventID string) error
 	Add(observer EventObserver) error
 }

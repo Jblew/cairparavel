@@ -68,6 +68,18 @@ gcloud config set project "${GCP_PROJECT_ID}"
 ) &
 
 (
+  echo "Deploying FnOnEventDeleted"
+  gcloud functions deploy FnOnEventDeleted \
+    --trigger-event providers/cloud.firestore/eventTypes/document.delete \
+    --trigger-resource "projects/${GCP_PROJECT_ID}/databases/(default)/documents/envs/{env}/events/{eventId}" \
+    --region "${GCP_PROJECT_REGION}" \
+    --runtime go113 \
+    --quiet \
+    --timeout=3s \
+    --memory "256MB"
+) &
+
+(
   echo "Deploying FnOnEventModified"
   gcloud functions deploy FnOnEventModified \
     --trigger-event providers/cloud.firestore/eventTypes/document.update \

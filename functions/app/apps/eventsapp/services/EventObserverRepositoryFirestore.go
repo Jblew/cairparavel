@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"cloud.google.com/go/firestore"
@@ -17,6 +18,10 @@ type EventObserverRepositoryFirestore struct {
 
 // GetAllForEvent retrives observers of an event
 func (repo *EventObserverRepositoryFirestore) GetAllForEvent(eventID string) ([]domain.EventObserver, error) {
+	if len(eventID) == 0 {
+		return []domain.EventObserver{}, fmt.Errorf("InvalidArgument: Empty eventID")
+	}
+
 	collectionRef := repo.Firestore.Collection(config.FirestorePaths.ObserversForEventCol(eventID))
 	snapshots, err := collectionRef.Documents(repo.Context).GetAll()
 	if err != nil {
@@ -34,6 +39,25 @@ func (repo *EventObserverRepositoryFirestore) GetAllForEvent(eventID string) ([]
 		}
 	}
 	return results, nil
+}
+
+// DeleteAllForEvent retrives observers of an event
+func (repo *EventObserverRepositoryFirestore) DeleteAllForEvent(eventID string) error {
+	if len(eventID) == 0 {
+		return fmt.Errorf("InvalidArgument: Empty eventID")
+	}
+	collectionRef := repo.Firestore.Collection(config.FirestorePaths.ObserversForEventCol(eventID))
+	documentRefs, err := collectionRef.DocumentRefs(repo.Context).GetAll()
+	if err != nil {
+		return err
+	}
+
+	batch := repo.Firestore.Batch()
+	for _, docRef := range documentRefs {
+		batch = batch.Delete(docRef)
+	}
+	_, err = batch.Commit(repo.Context)
+	return err
 }
 
 // Add saves event observer

@@ -136,6 +136,30 @@ func (event *Event) OnCreated(container *ioccontainer.Container) error {
 	}, container)
 }
 
+// OnDeleted handler
+func (event *Event) OnDeleted(container *ioccontainer.Container) error {
+	err := event.Validate(true)
+	if err != nil {
+		return err
+	}
+
+	var observersRepo EventObserverRepository
+	container.Make(&observersRepo)
+
+	payload := make(map[string]interface{})
+	payload["event"] = event
+
+	err = event.NotifyObservers(Notification{
+		Template: "event_deleted",
+		Payload:  payload,
+	}, container)
+	if err != nil {
+		return err
+	}
+
+	return observersRepo.DeleteAllForEvent(event.ID)
+}
+
 // OnModified handler
 func (event *Event) OnModified(container *ioccontainer.Container) error {
 	err := event.Validate(true)
