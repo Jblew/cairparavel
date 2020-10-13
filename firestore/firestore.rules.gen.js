@@ -189,8 +189,8 @@ function notifications() {
     }
 
     match /messenger_recipients/{uid} {
-      allow create: if uid == request.auth.uid;
-      allow delete: if uid == request.auth.uid;
+      allow create: if false;
+      allow delete: if false;
     }
   `
 }
