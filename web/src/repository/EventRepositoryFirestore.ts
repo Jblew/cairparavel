@@ -187,6 +187,10 @@ export class EventRepositoryFirestore implements EventRepository {
     const docPath = projectConfig.events.firestoreEventSignupDoc(eventId, currentUid)
     return firebase.firestore().doc(docPath).withConverter(eventSignupConverter)
   }
+
+  async deleteEvent(eventId: string) {
+    return firebase.firestore().collection(projectConfig.events.firestoreEventCol).doc(eventId).delete()
+  }
 }
 
 const eventConverter = {

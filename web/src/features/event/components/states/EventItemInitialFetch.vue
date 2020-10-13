@@ -1,7 +1,7 @@
 <template>
   <span>
-    <event-header :event="event" />
-    signing in...
+    <event-header :interpreter="interpreter" :state="state" :event="event" />
+    Loading...
   </span>
 </template>
 <script lang="ts">

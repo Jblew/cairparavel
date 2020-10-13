@@ -1,5 +1,5 @@
 <template>
-  <span class="event">
+  <div class="event">
     <state-matches :state="state">
       <template #InitialFetch>
         <event-item-initial-fetch :interpreter="interpreter" :state="state" />
@@ -58,13 +58,19 @@
           :state="state"
         />
       </template>
+      <template #DoDelete>
+        <event-item-do-delete :interpreter="interpreter" :state="state" />
+      </template>
+      <template #Deleted>
+        <event-item-deleted :interpreter="interpreter" :state="state" />
+      </template>
     </state-matches>
-  </span>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Event, EventMachineInterpreter } from '@/businesslogic'
-import { getEventInterpreter } from '../event/eventInterpreter'
+import { getEventInterpreter } from '../eventInterpreter'
 import {
   EventItemInitialFetch,
   EventItemError,
@@ -81,6 +87,8 @@ import {
   EventItemInProggress,
   EventItemFinished,
   EventItemDoUpdateDetails,
+  EventItemDoDelete,
+  EventItemDeleted,
 } from './states'
 import { StateMatches } from '@/components'
 
@@ -102,6 +110,8 @@ import { StateMatches } from '@/components'
     EventItemInProggress,
     EventItemFinished,
     EventItemDoUpdateDetails,
+    EventItemDoDelete,
+    EventItemDeleted,
   },
 })
 export default class extends Vue {

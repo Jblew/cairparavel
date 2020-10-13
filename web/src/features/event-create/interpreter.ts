@@ -7,5 +7,5 @@ export function interpretCreateEventMachine(): CreateEventInterpreter {
     services: {
       saveEvent: (ctx) => saveEvent(ctx.event)
     }
-  }))
+  })).onTransition(console.log).onEvent(console.log)
 }

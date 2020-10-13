@@ -1,18 +1,18 @@
 <template>
   <span>
-    <event-header :event="event" />
+    <event-header :interpreter="interpreter" :state="state" :event="event" />
     <event-path>
       <event-path-item-created :event="event" />
       <event-path-separator />
-      <event-path-item :enabled="true" :checked="true" name="Voting for time">
-        TODO Voting
+      <event-path-item :enabled="true" :checked="true" name="Signup">
+        TODO List of members
       </event-path-item>
       <event-path-separator />
-      <event-path-item :enabled="false" :checked="false" name="Signup" />
-      <event-path-separator />
-      <event-path-item :enabled="false" :checked="false" name="Meeting">
+      <event-path-item :enabled="true" :checked="true" name="Meeting">
         TODO meeting time
       </event-path-item>
+      <event-path-separator />
+      <event-path-item :enabled="true" :checked="true" name="Finished" />
     </event-path>
   </span>
 </template>

@@ -1,14 +1,16 @@
 <template>
   <span>
-    <event-header :event="event" />
+    <event-header :interpreter="interpreter" :state="state" :event="event" />
     <event-path>
       <event-path-item-created :event="event" />
       <event-path-separator />
-      <event-path-item :enabled="true" :checked="true" name="Signup (closed)">
+      <event-path-item :enabled="true" :checked="true" name="Signup">
         TODO List of members
       </event-path-item>
       <event-path-separator />
-      <event-path-item :enabled="true" :checked="false" name="Meeting">
+      <event-path-item :enabled="true" :checked="true" name="Cancelled" />
+      <event-path-separator />
+      <event-path-item :enabled="false" :checked="false" name="Meeting">
         TODO meeting time
       </event-path-item>
     </event-path>
@@ -21,8 +23,8 @@ import {
   EventHeader,
   EventPath,
   EventPathItem,
-  EventPathItemCreated,
   EventPathSeparator,
+  EventPathItemCreated,
 } from '../components'
 
 @Component({

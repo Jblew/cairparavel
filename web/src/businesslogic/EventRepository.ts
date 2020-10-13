@@ -14,4 +14,5 @@ export interface EventRepository {
   updateDetails(
     { eventId, name, description }: { eventId: string, name: string; description: string },
   ): Promise<void>
+  deleteEvent(eventId: string): Promise<void>
 }

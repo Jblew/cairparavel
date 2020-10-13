@@ -24,6 +24,8 @@ interface Schema {
     InProggress: {}
     Finished: {}
     DoUpdateDetails: {}
+    DoDelete: {}
+    Deleted: {}
   }
 }
 
@@ -48,6 +50,7 @@ type Events =
   | { type: 'SIGNOUT_MEMBER' }
   | { type: 'UPDATE_DETAILS'; name: string; description: string }
   | { type: 'ERROR'; message: string }
+  | { type: 'DELETE' }
 
 interface Context {
   currentUid: string
@@ -85,6 +88,10 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
             TIME_UNVOTE: 'DoTimeUnvote',
             UPDATE_DETAILS: {
               target: 'DoUpdateDetails',
+              cond: ctx => ctx.currentUid === ctx.event!.ownerUid,
+            },
+            DELETE: {
+              target: 'DoDelete',
               cond: ctx => ctx.currentUid === ctx.event!.ownerUid,
             },
             UPDATED: { actions: 'assignUpdatedEvent' },
@@ -137,6 +144,10 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
               target: 'DoUpdateDetails',
               cond: ctx => ctx.currentUid === ctx.event!.ownerUid,
             },
+            DELETE: {
+              target: 'DoDelete',
+              cond: ctx => ctx.currentUid === ctx.event!.ownerUid,
+            },
             CONFIRM_TIME: {
               target: 'DoTimeConfirm',
               cond: ctx =>
@@ -179,6 +190,14 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
                   ctx.event!.minParticipants,
               },
             ],
+            UPDATE_DETAILS: {
+              target: 'DoUpdateDetails',
+              cond: ctx => ctx.currentUid === ctx.event!.ownerUid,
+            },
+            DELETE: {
+              target: 'DoDelete',
+              cond: ctx => ctx.currentUid === ctx.event!.ownerUid,
+            },
             UPDATED: { target: '.Initial', actions: 'assignUpdatedEvent' },
           },
           after: { 1000: '.Initial' },
@@ -276,6 +295,20 @@ export function eventMachineFactory({ now, syncActor }: { now(): number, syncAct
             UPDATED: { target: 'TimeVoting', actions: 'assignUpdatedEvent' },
           },
         },
+        DoDelete: {
+          invoke: {
+            src: 'deleteEvent',
+            onDone: 'Deleted',
+            onError: {
+              target: 'TimeVoting',
+              actions: [
+                'logError',
+                send({ type: 'ERROR', message: 'Cannot delete event' }),
+              ],
+            },
+          },
+        },
+        Deleted: {}
       },
     },
     {

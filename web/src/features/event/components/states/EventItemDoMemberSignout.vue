@@ -1,7 +1,7 @@
 <template>
   <span>
-    <event-header :event="event" />
-    voting...
+    <event-header :interpreter="interpreter" :state="state" :event="event" />
+    ... signing out
   </span>
 </template>
 <script lang="ts">

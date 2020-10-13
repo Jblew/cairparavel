@@ -1,7 +1,7 @@
 <template>
   <span>
-    <event-header :event="event" />
-    [ERROR LOADING]
+    <event-header :interpreter="interpreter" :state="state" :event="event" />
+    confirming event time...
   </span>
 </template>
 <script lang="ts">

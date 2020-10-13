@@ -1,7 +1,7 @@
 <template>
   <span>
-    <event-header :event="event" />
-    updating details...
+    <event-header :interpreter="interpreter" :state="state" :event="event" />
+    ... deleting
   </span>
 </template>
 <script lang="ts">

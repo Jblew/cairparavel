@@ -12,7 +12,7 @@ import { Component, Prop, Vue, Inject } from 'vue-property-decorator'
 import { StatefulResource, Resource } from 'vue-stateful-resource'
 import { fetchEvents } from './fetchEvents'
 import { Event } from '@/businesslogic'
-import EventItem from './EventItem.vue'
+import { EventItem } from '@/features/event'
 
 @Component({
   components: {

@@ -48,6 +48,10 @@ export async function memberSignout({ eventId, currentUid }: EventMachineContext
   return eventRepositoryFirestore.memberSignout({ eventId, currentUid })
 }
 
+export async function deleteEvent({ eventId }: EventMachineContext) {
+  return eventRepositoryFirestore.deleteEvent(eventId)
+}
+
 export async function updateDetails(
   { eventId }: EventMachineContext,
   { name, description }: { name: string; description: string } | any,

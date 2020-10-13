@@ -13,6 +13,7 @@ import {
   memberSignup,
   memberSignout,
   updateDetails,
+  deleteEvent,
 } from './services'
 import Vue from 'vue'
 
@@ -38,9 +39,10 @@ export function getEventInterpreter({ eventId, event }: { eventId: string, event
         memberSignup,
         memberSignout,
         updateDetails,
+        deleteEvent,
       },
     }),
-  )
+  ).onTransition(state => console.log(state.toStrings(), state.context.event)).onEvent(console.log)
 }
 
 function now() {
