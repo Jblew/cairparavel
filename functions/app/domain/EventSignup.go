@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"log"
+
 	"github.com/Jblew/ioccontainer/pkg/ioccontainer"
 	"gopkg.in/validator.v2"
 )
@@ -19,15 +21,6 @@ func (signup EventSignup) Validate() error {
 
 // OnAdded handles added signup
 func (signup *EventSignup) OnAdded(container *ioccontainer.Container) error {
-	return signup.sendNotificationAndObserve("member_signed_in", container)
-}
-
-// OnDeleted handles added signup
-func (signup *EventSignup) OnDeleted(container *ioccontainer.Container) error {
-	return signup.sendNotificationAndObserve("member_signed_out", container)
-}
-
-func (signup *EventSignup) sendNotificationAndObserve(templateName string, container *ioccontainer.Container) error {
 	err := signup.Validate()
 	if err != nil {
 		return err
@@ -41,10 +34,33 @@ func (signup *EventSignup) sendNotificationAndObserve(templateName string, conta
 		return err
 	}
 
-	err = event.Observe(event.OwnerUID, container)
+	err = event.Observe(signup.UID, container)
+	if err != nil {
+		log.Printf("Cannot observe event: %v", err)
+	}
+
+	return signup.sendNotification(event, "member_signed_in", container)
+}
+
+// OnDeleted handles added signup
+func (signup *EventSignup) OnDeleted(container *ioccontainer.Container) error {
+	err := signup.Validate()
 	if err != nil {
 		return err
 	}
+
+	var eventRepository EventRepository
+	container.Make(&eventRepository)
+
+	event, err := eventRepository.GetEventByID(signup.EventID)
+	if err != nil {
+		return err
+	}
+
+	return signup.sendNotification(event, "member_signed_out", container)
+}
+
+func (signup *EventSignup) sendNotification(event Event, templateName string, container *ioccontainer.Container) error {
 
 	notification := Notification{
 		Template: templateName,

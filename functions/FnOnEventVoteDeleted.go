@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/functions/metadata"
@@ -27,7 +28,8 @@ func FnOnEventVoteDeleted(ctx context.Context, e firestoreEventFnOnEventVoteDele
 		log.Printf("Old value: %+v", e.OldValue)
 		log.Printf("New value: %+v", e.Value)
 
-		votes := e.Value.Fields.ToEventTimeVotes()
+		votes := e.OldValue.Fields.ToEventTimeVotes()
+		votes.UID = filepath.Base(e.OldValue.Name)
 		log.Printf("Parsed votes %+v", votes)
 		return votes.OnDeleted(container)
 	})

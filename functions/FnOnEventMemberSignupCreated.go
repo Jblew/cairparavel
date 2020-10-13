@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/functions/metadata"
@@ -28,6 +29,7 @@ func FnOnEventMemberSignupCreated(ctx context.Context, e firestoreEventFnOnEvent
 		log.Printf("New value: %+v", e.Value)
 
 		signup := e.Value.Fields.ToEventSignup()
+		signup.UID = filepath.Base(e.Value.Name)
 		log.Printf("Parsed signup %+v", signup)
 		return signup.OnAdded(container)
 	})

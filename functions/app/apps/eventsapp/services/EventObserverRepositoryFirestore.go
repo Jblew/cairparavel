@@ -52,12 +52,15 @@ func (repo *EventObserverRepositoryFirestore) DeleteAllForEvent(eventID string) 
 		return err
 	}
 
-	batch := repo.Firestore.Batch()
-	for _, docRef := range documentRefs {
-		batch = batch.Delete(docRef)
+	if len(documentRefs) > 0 {
+		batch := repo.Firestore.Batch()
+		for _, docRef := range documentRefs {
+			batch = batch.Delete(docRef)
+		}
+		_, err = batch.Commit(repo.Context)
+		return err
 	}
-	_, err = batch.Commit(repo.Context)
-	return err
+	return nil
 }
 
 // Add saves event observer
@@ -66,7 +69,7 @@ func (repo *EventObserverRepositoryFirestore) Add(observer domain.EventObserver)
 		return err
 	}
 	docRef := repo.Firestore.Doc(config.FirestorePaths.ObserversForEventForUserDoc(observer.EventID, observer.UID))
-	_, err := docRef.Create(repo.Context, observer)
+	_, err := docRef.Set(repo.Context, observer)
 	return err
 }
 

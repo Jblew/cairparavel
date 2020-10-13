@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/functions/metadata"
@@ -27,7 +28,8 @@ func FnOnEventMemberSignupDeleted(ctx context.Context, e firestoreEventFnOnEvent
 		log.Printf("Old value: %+v", e.OldValue)
 		log.Printf("New value: %+v", e.Value)
 
-		signup := e.Value.Fields.ToEventSignup()
+		signup := e.OldValue.Fields.ToEventSignup()
+		signup.UID = filepath.Base(e.OldValue.Name)
 		log.Printf("Parsed signup %+v", signup)
 		return signup.OnDeleted(container)
 	})

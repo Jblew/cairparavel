@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/functions/metadata"
@@ -28,6 +29,7 @@ func FnOnEventVoteModified(ctx context.Context, e firestoreEventFnOnEventVoteMod
 		log.Printf("New value: %+v", e.Value)
 
 		votes := e.Value.Fields.ToEventTimeVotes()
+		votes.UID = filepath.Base(e.Value.Name)
 		log.Printf("Parsed votes %+v", votes)
 		return votes.OnModified(container)
 	})

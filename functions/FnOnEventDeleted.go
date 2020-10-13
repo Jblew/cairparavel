@@ -29,7 +29,7 @@ func FnOnEventDeleted(ctx context.Context, e firestoreEventFnOnEventDeleted) err
 		log.Printf("New value: %+v", e.Value)
 
 		event := e.OldValue.Fields.ToEvent()
-		event.ID = filepath.Base(e.Value.Name)
+		event.ID = filepath.Base(e.OldValue.Name)
 		log.Printf("Parsed event %+v", event)
 		return event.OnDeleted(container)
 	})
