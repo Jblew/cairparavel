@@ -37,6 +37,7 @@ export function validateEvent(e: Event) {
 }
 
 export interface EventTimeVotes {
+  eventId: string
   uid?: string
   displayName: UserDisplayName
   times: number[]
@@ -45,6 +46,7 @@ export interface EventTimeVotes {
 export interface EventSignup {
   uid?: string
   displayName: UserDisplayName
+  eventId: string
 }
 
 type Uid = string

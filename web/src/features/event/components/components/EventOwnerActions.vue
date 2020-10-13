@@ -58,12 +58,10 @@ export default class extends Vue {
   }
 
   get canDelete(): boolean {
-    console.log('NEXT_EVENTS: ', this.state.nextEvents)
     return this.state.nextEvents.includes('DELETE')
   }
 
   get canEdit(): boolean {
-    console.log('NEXT_EVENTS: ', this.state.nextEvents)
     return this.state.nextEvents.includes('UPDATE_DETAILS')
   }
 

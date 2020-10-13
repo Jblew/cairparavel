@@ -98,6 +98,8 @@ export class EventRepositoryFirestore implements EventRepository {
     const votes: EventTimeVotes = {
       displayName,
       times,
+      uid: currentUid,
+      eventId,
     }
     return docRef.set(votes)
   }
@@ -116,6 +118,8 @@ export class EventRepositoryFirestore implements EventRepository {
     const votes: EventTimeVotes = {
       displayName,
       times,
+      uid: currentUid,
+      eventId,
     }
     return docRef.set(votes)
   }
@@ -136,7 +140,8 @@ export class EventRepositoryFirestore implements EventRepository {
   async memberSignup({ eventId, currentUid }: { eventId: string, currentUid: string }) {
     const docRef = this.getEventSignupDocRef({ eventId, currentUid })
     const displayName = firebase.auth().currentUser!.displayName || 'Unknown'
-    return docRef.set({ displayName })
+    const signup = { displayName, uid: currentUid, eventId }
+    return docRef.set(signup)
   }
 
   async memberSignout({ eventId, currentUid }: { eventId: string, currentUid: string }) {
