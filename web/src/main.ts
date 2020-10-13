@@ -14,10 +14,16 @@ import VueHotkey from 'v-hotkey'
 import 'firebase/app'
 import 'firebase/auth'
 import 'firebase/functions'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 Vue.use(VueHotkey)
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
 
 const firebase = constructFirebaseApp()
 
