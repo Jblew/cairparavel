@@ -65,6 +65,7 @@
         <event-item-deleted :interpreter="interpreter" :state="state" />
       </template>
     </state-matches>
+    <event-observe-button :event="event" />
     <event-comments :event="event" />
   </div>
 </template>
@@ -93,6 +94,7 @@ import {
 } from './states'
 import { StateMatches } from '@/components'
 import { EventComments } from '@/features/comments'
+import { EventObserveButton } from '@/features/observership'
 
 @Component({
   components: {
@@ -115,6 +117,7 @@ import { EventComments } from '@/features/comments'
     EventItemDoDelete,
     EventItemDeleted,
     EventComments,
+    EventObserveButton,
   },
 })
 export default class extends Vue {

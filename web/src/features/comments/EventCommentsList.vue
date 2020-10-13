@@ -36,7 +36,7 @@ export default class extends Vue {
     this.unsubscribeFn?.()
     this.unsubscribeFn = eventCommentRepositoryFirestore.subscribe({
       eventId,
-      on: (res) => this.commentsResource = res
+      on: (res) => { this.commentsResource = res }
     })
   }
 

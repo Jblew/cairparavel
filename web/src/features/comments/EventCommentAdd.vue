@@ -4,6 +4,8 @@
     <button data-test="btn-add" @click="add()">
       Comment
     </button>
+    <span v-if="loading">Commenting...</span>
+    <span v-if="error">Error</span>
   </div>
 </template>
 <script lang="ts">
@@ -17,10 +19,10 @@ export default class extends Vue {
   @Prop({ required: true })
   event!: Event
 
-  contents: string = ""
+  contents = ""
 
-  loading: boolean = false
-  error: boolean = false
+  loading = false
+  error = false
 
   async add() {
     this.loading = true
