@@ -1,8 +1,9 @@
 # Cairparavel
-Planning software for Teal Associations
+Planning software for Teal Associations (mainly NGO operating in Teal Mode)
 
 ![Use cases](./doc/img/use-cases.png)
 
+Green = implemented
 
 
 ## Statecharts
