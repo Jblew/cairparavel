@@ -12,9 +12,11 @@
         @signout="signout()"
       />
       <event-path-separator />
-      <event-path-item :enabled="true" :checked="false" name="Meeting">
-        TODO meeting time
-      </event-path-item>
+      <event-path-item-meeting
+        :enabled="true"
+        :checked="false"
+        :event="event"
+      />
     </event-path>
   </span>
 </template>
@@ -27,6 +29,7 @@ import {
   EventPathItem,
   EventPathSeparator,
   EventPathItemCreated,
+  EventPathItemMeeting,
   EventPathItemMembersSignup,
 } from '../components'
 
@@ -37,6 +40,7 @@ import {
     EventPathItem,
     EventPathSeparator,
     EventPathItemCreated,
+    EventPathItemMeeting,
     EventPathItemMembersSignup,
   }
 })

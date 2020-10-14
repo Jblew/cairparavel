@@ -36,7 +36,7 @@ export class EventRepositoryFirestore implements EventRepository {
         ...event,
         votes,
       }
-      console.log(event)
+      onUpdated(event)
     }
 
     const unsubscribeEvent =
@@ -153,7 +153,7 @@ export class EventRepositoryFirestore implements EventRepository {
     { eventId, name, description }: { eventId: string, name: string; description: string },
   ) {
     const docRef = this.getEventDocRef(eventId)
-    return docRef.set({
+    return docRef.update({
       name,
       description,
     } as Event)

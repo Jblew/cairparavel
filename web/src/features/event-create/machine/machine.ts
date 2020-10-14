@@ -163,7 +163,12 @@ export const createEventMachine = Machine<Context, Schema, Events>(
         event: ctx => ({ ...ctx.event, votingTime: -1, timeConfirmed: true }),
       }),
       assignVoting: assign({
-        event: (ctx, evt: any) => ({ ...ctx.event, ...evt.voting }),
+        event: (ctx, evt: any) => ({
+          ...ctx.event,
+          ...evt.voting,
+          startTime: DateTime.fromMillis(evt.voting.votingTime).plus({ hours: 24 }).toMillis(),
+          endTime: DateTime.fromMillis(evt.voting.votingTime).plus({ hours: 25 }).toMillis(),
+        }),
       }),
       assignEventTime: assign({
         event: (ctx, evt: any) => {

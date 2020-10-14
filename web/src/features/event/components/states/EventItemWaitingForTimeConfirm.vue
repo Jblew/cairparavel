@@ -20,11 +20,11 @@
         TODO confirmation button for owner
       </event-path-item>
       <event-path-separator />
-      <event-path-item :enabled="true" :checked="false" name="Meeting">
-        TODO meeting time
-      </event-path-item>
-      <event-path-separator />
-      <event-path-item :enabled="true" :checked="false" name="Finished" />
+      <event-path-item-meeting-unknown-time
+        :enabled="false"
+        :checked="false"
+        :event="event"
+      />
     </event-path>
   </span>
 </template>
@@ -37,6 +37,7 @@ import {
   EventPathItem,
   EventPathSeparator,
   EventPathItemCreated,
+  EventPathItemMeetingUnknownTime,
 } from '../components'
 
 @Component({
@@ -46,6 +47,7 @@ import {
     EventPathItem,
     EventPathItemCreated,
     EventPathSeparator,
+    EventPathItemMeetingUnknownTime,
   }
 })
 export default class extends Vue {

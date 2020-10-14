@@ -8,9 +8,11 @@
         TODO List of members
       </event-path-item>
       <event-path-separator />
-      <event-path-item :enabled="true" :checked="false" name="Meeting">
-        TODO meeting time
-      </event-path-item>
+      <event-path-item-meeting
+        :enabled="true"
+        :checked="false"
+        :event="event"
+      />
     </event-path>
   </span>
 </template>
@@ -23,6 +25,7 @@ import {
   EventPathItem,
   EventPathItemCreated,
   EventPathSeparator,
+  EventPathItemMeeting,
 } from '../components'
 
 @Component({
@@ -30,6 +33,7 @@ import {
     EventHeader,
     EventPath,
     EventPathItem,
+    EventPathItemMeeting,
     EventPathSeparator,
     EventPathItemCreated,
   }

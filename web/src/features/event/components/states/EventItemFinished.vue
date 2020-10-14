@@ -8,9 +8,7 @@
         TODO List of members
       </event-path-item>
       <event-path-separator />
-      <event-path-item :enabled="true" :checked="true" name="Meeting">
-        TODO meeting time
-      </event-path-item>
+      <event-path-item-meeting :enabled="true" :checked="true" :event="event" />
       <event-path-separator />
       <event-path-item :enabled="true" :checked="true" name="Finished" />
     </event-path>
@@ -25,6 +23,7 @@ import {
   EventPathItem,
   EventPathSeparator,
   EventPathItemCreated,
+  EventPathItemMeeting,
 } from '../components'
 
 @Component({
@@ -34,6 +33,7 @@ import {
     EventPathItem,
     EventPathSeparator,
     EventPathItemCreated,
+    EventPathItemMeeting,
   }
 })
 export default class extends Vue {

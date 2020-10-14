@@ -1,12 +1,10 @@
 <template>
   <span class="event-owner-actions">
-    <b-button
+    <event-details-edit-modal
       v-if="canEdit"
-      v-b-modal="'modal-edit-event-' + event.id"
-      size="sm"
-    >
-      Edit
-    </b-button>
+      :event="event"
+      @save="saveDetails"
+    />
     &nbsp;
     <b-button
       v-if="canDelete"
@@ -15,14 +13,6 @@
     >
       Delete
     </b-button>
-
-    <b-modal
-      :id="'modal-edit-event-' + event.id"
-      :title="'Edit event ' + event.name"
-    >
-      Edit event
-    </b-modal>
-
     <b-modal
       :id="'modal-delete-event-' + event.id"
       :title="'Delete event ' + event.name"
@@ -39,11 +29,13 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Event, EventMachineInterpreter } from '@/businesslogic'
 import EventLink from './EventLink.vue'
 import EventOwnerActions from './EventOwnerActions.vue'
+import EventDetailsEditModal from './EventDetailsEditModal.vue'
 
 @Component({
   components: {
     EventLink,
     EventOwnerActions,
+    EventDetailsEditModal,
   }
 })
 export default class extends Vue {
@@ -67,6 +59,10 @@ export default class extends Vue {
 
   deleteEvent() {
     this.interpreter.send('DELETE')
+  }
+
+  saveDetails(details: { description: string, name: string }) {
+    this.interpreter.send({ type: 'UPDATE_DETAILS', ...details })
   }
 }
 </script>

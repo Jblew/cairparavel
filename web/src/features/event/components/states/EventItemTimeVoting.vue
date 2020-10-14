@@ -10,9 +10,11 @@
       <event-path-separator />
       <event-path-item :enabled="false" :checked="false" name="Signup" />
       <event-path-separator />
-      <event-path-item :enabled="false" :checked="false" name="Meeting">
-        TODO meeting time
-      </event-path-item>
+      <event-path-item-meeting-unknown-time
+        :enabled="false"
+        :checked="false"
+        :event="event"
+      />
     </event-path>
   </span>
 </template>
@@ -25,6 +27,7 @@ import {
   EventPathItem,
   EventPathSeparator,
   EventPathItemCreated,
+  EventPathItemMeetingUnknownTime,
 } from '../components'
 
 @Component({
@@ -34,6 +37,7 @@ import {
     EventPathItem,
     EventPathSeparator,
     EventPathItemCreated,
+    EventPathItemMeetingUnknownTime,
   }
 })
 export default class extends Vue {
