@@ -129,8 +129,8 @@ function events() {
 
       match /votes/{uid} {
         allow read: if isAuthenticatedMember();
-        allow delete: if uid == request.auth.uid && inVotingModificationPeriod();
-        allow create, update: if uid == request.auth.uid && inVotingModificationPeriod();
+        allow delete: if uid == request.auth.uid; // && inVotingModificationPeriod();
+        allow create, update: if uid == request.auth.uid; // && inVotingModificationPeriod();
       }
 
       match /signedMembers/{uid} {
