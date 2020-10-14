@@ -13,15 +13,15 @@ type EventTimeVotesFirestoreInput struct {
 		StringValue string `json:"stringValue"`
 	} `json:"eventId"`
 	DisplayName struct {
-		StringValue string `json:"displayName"`
-	} `json:"eventId"`
+		StringValue string `json:"stringValue"`
+	} `json:"displayName"`
 	Times struct {
 		ArrayValue struct {
 			Values []struct {
 				NumberValue string `json:"integerValue"`
 			} `json:"values"`
 		} `json:"arrayValue"`
-	} `json:"allowedTimes"`
+	} `json:"times"`
 }
 
 // ToEventTimeVotes converter
@@ -38,3 +38,12 @@ func (input *EventTimeVotesFirestoreInput) ToEventTimeVotes() domain.EventTimeVo
 		Times:       times,
 	}
 }
+
+/*
+map[
+	displayName:map[stringValue:Jedrzej Lew]
+	eventId:map[stringValue:pYqj0CxB23S1bq0yhVr7]
+	times:map[
+		arrayValue:map[values:[map[integerValue:1603402133890] map[integerValue:1603315733890]]
+	]] uid:map[stringValue:WuHBEm64OxQMqc5PHqN9rVj1Inm2]]
+*/

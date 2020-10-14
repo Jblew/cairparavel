@@ -18,6 +18,7 @@ var templates = map[string]string{
 	"member_signed_in":             "New person signed in on event {{ .event.name }}",
 	"member_signed_out":            "One person signed out on event {{ .event.name }}",
 	"event_voted":                  "New vote on event {{ .event.name }}",
+	"event_vote_modified":          "Modified vote on event {{ .event.name }}",
 	"event_vote_deleted":           "Vote deleted on event {{ .event.name }}",
 	"event_created":                "New event created {{ .event.name }}",
 	"event_deleted":                "Event {{ .event.name }} was deleted",
