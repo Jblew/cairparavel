@@ -22,3 +22,19 @@ export function installFirebaseAuthHooksToVueRouter(router: VueRouter) {
     }
   });
 }
+
+const router!: VueRouter
+const routes = [
+  { path: '/members', component: MembersPage, meta: { requiresAuth: true } },
+  { path: '/login', component: LoginPage },
+  { path: '/logout', component: LogoutPage },
+]
+router.beforeEach(async (to, _, next) => {
+  const isLoggedIn = firebase.auth().currentUser !== null
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  if (requiresAuth && !await getCurrentFirebaseUser()) {
+    next('/login');
+  } else {
+    next();
+  }
+});
